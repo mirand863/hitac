@@ -34,9 +34,6 @@ if [ -s $pred ] ; then
         exit 0
 fi
 
-export PATH=/data/lgcm/ufpa_ufmg/taxxi_github/benchmark/bin:$PATH
-source activate taxxi
-
 if [ ! -s $traindir/model ] ; then
         ./hitac.py --kmer 6 $trainfa $testfa $pred
 fi
