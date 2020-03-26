@@ -14,7 +14,7 @@ parser.add_argument('--kmer', type=int, default=6, help='Kmer size for feature e
 parser.add_argument('--threads', type=int, default=-1, help='Number of threads [default: all threads available]')
 parser.add_argument('train', type=str, help='Input FASTA file containing the sequences for training')
 parser.add_argument('test', type=str, help='Input FASTA file containing the sequences for taxonomy prediction')
-parser.add_argument('predictions', type=str, help='Output file to write the prediction')
+parser.add_argument('predictions', type=str, help='Output file to write the predictions')
 args = parser.parse_args()
 
 # Computes all kmer possibilities based on alphabet ACGT
