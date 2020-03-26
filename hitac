@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -x
+
+name=$1
+testfa=../testfa/$name
+trainfa=../trainfa/$name
+
+if [ ! -f $testfa ] ; then
+        echo Not found testfa=$testfa >> /dev/stderr
+        exit 1
+fi
+
+if [ ! -f $trainfa ] ; then
+        echo Not found trainfa=$trainfa >> /dev/stderr
+        exit 1
+fi
+
+traindir=../train/hitac/$name
+mkdir -p $traindir
+
+rawdir=../raw/
+mkdir -p $rawdir
+raw=$rawdir/$name
+
+preddir=../pred/hitac
+mkdir -p $preddir
+
+pred=$preddir/$name
+
+if [ -s $pred ] ; then
+        ls -lh $pred
+        echo Skipping existing pred=$pred
+        exit 0
+fi
+
+export PATH=/data/lgcm/ufpa_ufmg/taxxi_github/benchmark/bin:$PATH
+source activate taxxi
+
+if [ ! -s $traindir/model ] ; then
+        ./hitac.py --kmer 6 $trainfa $testfa $pred
+fi
