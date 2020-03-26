@@ -25,7 +25,7 @@ positional arguments:
   train              Input FASTA file containing the sequences for training
   test               Input FASTA file containing the sequences for taxonomy
                      prediction
-  predictions        Output file to write the prediction
+  predictions        Output file to write the predictions
 
 optional arguments:
   -h, --help         show this help message and exit
