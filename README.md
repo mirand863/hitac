@@ -1,6 +1,6 @@
-# HiTaC
+# HiTaC [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-A Hierarchical Taxonomy Classifier for Fungal ITS Sequences.
+A hierarchical taxonomy classifier for fungal ITS sequences.
 
 ## Installation
 
@@ -17,7 +17,7 @@ conda install -c bioconda hitac
 To see the usage run `hitac -h`
 
 ~~~
-usage: hitac.py [-h] [--kmer KMER] [--threads THREADS] train test predictions
+usage: hitac [-h] [--kmer KMER] [--threads THREADS] train test predictions
 
 HiTaC, a hierarchical taxonomy classifier for fungal ITS sequences
 
