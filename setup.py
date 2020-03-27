@@ -16,7 +16,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="hitac",
     install_requires=install_requires,
-    version="1.0",
+    version="1.1",
     author="Fabio Malcher Miranda",
     author_email="fabio.malchermiranda@hpi.de",
     description="A hierarchical taxonomy classifier for fungal ITS sequences",
@@ -30,6 +30,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3',
+    scripts=['hitac.py']
 )
 
 
