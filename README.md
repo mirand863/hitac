@@ -37,7 +37,7 @@ AGGCAGCGGCGGCGCCGCGTCCGATCCTCGAGCGTATGGGGCTTTGTCACGCGCTCTGGTAGGGTCGGCCGGCTGGCCAG
 CCAGCGACCTCACGGTCACCTATTTTTTCTCTTAGG
 ```
 
-## Output Files
+## Output File
 
 The predictions are written in a TSV file, where the first column contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
 
