@@ -57,7 +57,7 @@ AF398455	d:Fungi,p:Basidiomycota,c:Exobasidiomycetes,o:Tilletiales,f:Tilletiacea
 
 ## Running
 
-To see the usage run `hitac -h`
+To see the usage run `hitac.py -h`
 
 ```
 usage: hitac.py [-h] [--kmer KMER] [--threads THREADS] train test predictions
