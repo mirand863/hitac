@@ -14,6 +14,12 @@ HiTaC can be easily installed with conda:
 conda install -c bioconda hitac
 ```
 
+Alternatively, HiTaC can be installed with pip:
+
+```
+pip install hitac
+```
+
 ## Input Files
 
 HiTaC accepts training and test files in FASTA format. However, the taxonomy in the training file must be specified in the header in TAXXI format. For example:
