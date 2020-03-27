@@ -79,9 +79,9 @@ optional arguments:
 To test the installation, run the following commands:
 
 ```
-wget -O train_sp_rdp_its.100.fasta https://drive5.com/taxxi/benchmark/trainfa/sp_rdp_its.100
-wget -O test_sp_rdp_its.100.fasta https://drive5.com/taxxi/benchmark/testfa/sp_rdp_its.100
-hitac.py --kmer 6 train_sp_rdp_its.100.fasta test_sp_rdp_its.100.fasta predictions_sp_rdp_its.100.tsv
+wget -O train_rdp_its.90.fasta https://drive5.com/taxxi/benchmark/trainfa/rdp_its.90
+wget -O test_rdp_its.90.fasta https://drive5.com/taxxi/benchmark/testfa/rdp_its.90
+hitac.py train_rdp_its.90.fasta test_rdp_its.90.fasta predictions_rdp_its.90.tsv
 ```
 
-If everything is OK, a file called `predictions_sp_rdp_its.100.tsv` will be created.
+If everything is OK, a file called `predictions_rdp_its.90.tsv` will be created.
