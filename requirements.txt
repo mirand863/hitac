@@ -1,0 +1,5 @@
+python >=3
+biopython
+pandas
+scikit-learn >=0.21.3
+numpy

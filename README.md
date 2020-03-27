@@ -54,7 +54,7 @@ AF398455	d:Fungi,p:Basidiomycota,c:Exobasidiomycetes,o:Tilletiales,f:Tilletiacea
 To see the usage run `hitac -h`
 
 ```
-usage: hitac [-h] [--kmer KMER] [--threads THREADS] train test predictions
+usage: hitac.py [-h] [--kmer KMER] [--threads THREADS] train test predictions
 
 HiTaC, a hierarchical taxonomy classifier for fungal ITS sequences
 
@@ -75,7 +75,7 @@ To test the installation, run the following commands:
 ```
 wget -O train_sp_rdp_its.100.fasta https://drive5.com/taxxi/benchmark/trainfa/sp_rdp_its.100
 wget -O test_sp_rdp_its.100.fasta https://drive5.com/taxxi/benchmark/testfa/sp_rdp_its.100
-hitac --kmer 6 train_sp_rdp_its.100.fasta test_sp_rdp_its.100.fasta predictions_sp_rdp_its.100.tsv
+hitac.py --kmer 6 train_sp_rdp_its.100.fasta test_sp_rdp_its.100.fasta predictions_sp_rdp_its.100.tsv
 ```
 
 If everything is OK, a file called `predictions_sp_rdp_its.100.tsv` will be created.
