@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
+from joblib import Parallel, delayed, parallel_backend
 from sklearn.linear_model import LogisticRegression
 from itertools import product
-from joblib import Parallel, delayed, parallel_backend
 from tqdm import tqdm
 from Bio import SeqIO
 import pandas as pd
@@ -97,7 +97,7 @@ Y_test = createYTest(args.test, Y_train)
 # And we do not need a classifier if there is only one class to predict
 unique_kingdom = Y_train.loc[:, 'kingdom'].unique()
 if len(unique_kingdom) > 1:
-    with parallel_backend('loky', n_jobs=args.threads, inner_max_num_threads=2):
+    with parallel_backend('loky', n_jobs=args.threads, inner_max_num_threads=args.threads):
         model = LogisticRegression(solver='lbfgs', multi_class='auto', class_weight='balanced', max_iter=1000, verbose=0)
         model.fit(X_train, Y_train.loc[:, 'kingdom'])
         Y_test.at[:, 'kingdom'] = model.predict(X_test)
