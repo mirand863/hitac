@@ -2,7 +2,7 @@
 
 from sklearn.linear_model import LogisticRegression
 from itertools import product
-from joblib import Parallel, delayed
+from joblib import Parallel, delayed, parallel_backend
 from tqdm import tqdm
 from Bio import SeqIO
 import pandas as pd
@@ -97,11 +97,27 @@ Y_test = createYTest(args.test, Y_train)
 # And we do not need a classifier if there is only one class to predict
 unique_kingdom = Y_train.loc[:, 'kingdom'].unique()
 if len(unique_kingdom) > 1:
-    model = LogisticRegression(solver='lbfgs', multi_class='auto', class_weight='balanced', max_iter=1000, verbose=0, n_jobs=args.threads)
-    model.fit(X_train, Y_train.loc[:, 'kingdom'])
-    Y_test.at[:, 'kingdom'] = model.predict(X_test)
+    with parallel_backend('loky', n_jobs=args.threads, inner_max_num_threads=2):
+        model = LogisticRegression(solver='lbfgs', multi_class='auto', class_weight='balanced', max_iter=1000, verbose=0)
+        model.fit(X_train, Y_train.loc[:, 'kingdom'])
+        Y_test.at[:, 'kingdom'] = model.predict(X_test)
 else:
     Y_test.at[:, 'kingdom'] = np.full(X_test.shape[0], unique_kingdom)
+
+def classify(parent_index):
+    parent = parents[parent_index]
+    X_train_node = X_train.loc[Y_train.iloc[:, rank_index - 2] == parent]
+    Y_train_node = Y_train.loc[Y_train.iloc[:, rank_index - 2] == parent].iloc[:, rank_index - 1]
+    X_test_node = X_test.loc[Y_test.iloc[:, rank_index - 1] == parent]
+    children = Y_train_node.unique()
+    # Use logistic regression only if there is more than one class to predict
+    if len(children) > 1:
+        with parallel_backend('loky', n_jobs=args.threads, inner_max_num_threads=args.threads):
+            model = LogisticRegression(solver='lbfgs', multi_class='auto', class_weight='balanced', max_iter=1000, verbose=0)
+            model.fit(X_train_node, Y_train_node)
+            Y_test.at[Y_test.iloc[:, rank_index - 1] == parent, ranks[rank_index - 1]] = model.predict(X_test_node)
+    else:
+        Y_test.at[Y_test.iloc[:, rank_index - 1] == parent, ranks[rank_index - 1]] = np.full(X_test_node.shape[0], children)
 
 # Iterative approach for the hierarchical model
 # Consumes less memory than the recursive version
@@ -111,19 +127,9 @@ ranks = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species']
 for rank_index in range(2, Y_test.shape[1]):
     print("Predicting labels for %s" % (ranks[rank_index]))
     parents = Y_test.iloc[:, rank_index - 1].unique()
-    for parent_index in tqdm(range(len(parents))):
-        parent = parents[parent_index]
-        X_train_node = X_train.loc[Y_train.iloc[:, rank_index - 2] == parent]
-        Y_train_node = Y_train.loc[Y_train.iloc[:, rank_index - 2] == parent].iloc[:, rank_index - 1]
-        X_test_node = X_test.loc[Y_test.iloc[:, rank_index - 1] == parent]
-        children = Y_train_node.unique()
-        # Use logistic regression only if there is more than one class to predict
-        if len(children) > 1:
-            model = LogisticRegression(solver='lbfgs', multi_class='auto', class_weight='balanced', max_iter=1000, verbose=0, n_jobs=args.threads)
-            model.fit(X_train_node, Y_train_node)
-            Y_test.at[Y_test.iloc[:, rank_index - 1] == parent, ranks[rank_index - 1]] = model.predict(X_test_node)
-        else:
-            Y_test.at[Y_test.iloc[:, rank_index - 1] == parent, ranks[rank_index - 1]] = np.full(X_test_node.shape[0], children)
+    for i in tqdm(range(len(parents))):
+        classify(i)
+#    Parallel(n_jobs=min(args.threads, len(parents)), backend="threading")(delayed(classify)(i) for i in tqdm(range(len(parents))))
 
 # Saves predictions
 predictions = open(args.predictions, 'w+')
