@@ -109,7 +109,7 @@ else:
 # Saving even more memory
 ranks = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species']
 for rank_index in range(2, Y_test.shape[1]):
-    print("Predicting labels for rank %s" % (ranks[rank_index]))
+    print("Predicting labels for %s" % (ranks[rank_index]))
     parents = Y_test.iloc[:, rank_index - 1].unique()
     for parent_index in tqdm(range(len(parents))):
         parent = parents[parent_index]
