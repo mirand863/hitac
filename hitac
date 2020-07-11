@@ -132,8 +132,9 @@ for rank_index in range(2, Y_test.shape[1]):
 #    Parallel(n_jobs=min(args.threads, len(parents)), backend="threading")(delayed(classify)(i) for i in tqdm(range(len(parents))))
 
 # Saves predictions
+print("Saving predictions")
 predictions = open(args.predictions, 'w+')
-for i in range(Y_test.shape[0]):
+for i in tqdm(range(Y_test.shape[0])):
     predictions.write(Y_test.at[i, 'id'] + '\t')
     predictions.write(Y_test.at[i, 'kingdom'] + ',')
     predictions.write(Y_test.at[i, 'phylum'] + ',')
