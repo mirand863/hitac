@@ -14,7 +14,7 @@ HiTaC can be easily installed with conda:
 conda install -c bioconda hitac
 ```
 
-Alternatively, if you already have qiime2 installed, HiTaC can be installed with pip:
+Alternatively, if you already have QIIME 2 installed, HiTaC can be installed with pip:
 
 ```
 pip install hitac
@@ -22,7 +22,7 @@ pip install hitac
 
 ## Input Files
 
-HiTaC accepts taxonomy in TSV format and training and test files in FASTA format. All these files must be previously imported by qiime2. For example:
+HiTaC accepts taxonomy in TSV format and training and test files in FASTA format. All these files must be previously imported by QIIME 2. For example:
 
 ```
 qiime tools import \
@@ -54,7 +54,7 @@ qiime hitac classify \
 
 ## Output File
 
-The predictions can be exported from qiime2 to a TSV file, where the first column contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
+The predictions can be exported from QIIME 2 to a TSV file, where the first column contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
 
 ```
 qiime tools export \
