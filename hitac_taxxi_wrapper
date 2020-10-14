@@ -1,42 +1,55 @@
 #!/bin/bash
 
-# This script is meant to be used as a wraper for hitac inside the TAXXI benchmark
-# It automates running hitac on multiple datasets
-
-set -x
-
 name=$1
-testfa=../testfa/$name
-trainfa=../trainfa/$name
 
-if [ ! -f $testfa ] ; then
-        echo Not found testfa=$testfa >> /dev/stderr
-        exit 1
-fi
+qfa=../testfa/$name
+dbfa=../trainfa/$name
 
-if [ ! -f $trainfa ] ; then
-        echo Not found trainfa=$trainfa >> /dev/stderr
-        exit 1
-fi
-
-traindir=../train/hitac/$name
-mkdir -p $traindir
-
-rawdir=../raw/
+rawdir=../raw/hitac
 mkdir -p $rawdir
 raw=$rawdir/$name
 
 preddir=../pred/hitac
 mkdir -p $preddir
+pred=../pred/hitac/$name
 
-pred=$preddir/$name
+# Must be at same level as scripts/
+tmpdir=../tmp_hitac.$$.$RANDOM
+mkdir -p $tmpdir
+cd $tmpdir
 
-if [ -s $pred ] ; then
-        ls -lh $pred
-        echo Skipping existing pred=$pred
-        exit 0
-fi
+python2 ../py/fasta_utax2qiime.py $dbfa dbq.fa db-tax.txt
 
-if [ ! -s $traindir/model ] ; then
-        ./hitac.py --kmer 6 $trainfa $testfa $pred
-fi
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
+qiime tools import \
+--input-path $qfa \
+--output-path q-seqs.qza \
+--type 'FeatureData[Sequence]'
+
+qiime tools import \
+--input-path dbq.fa \
+--output-path db-seqs.qza \
+--type 'FeatureData[Sequence]'
+
+qiime tools import \
+--type 'FeatureData[Taxonomy]' \
+--input-format HeaderlessTSVTaxonomyFormat \
+--input-path db-tax.txt \
+--output-path db-tax.qza
+
+qiime hitac classify \
+--i-reference-reads db-seqs.qza \
+--i-reference-taxonomy db-tax.qza \
+--i-query q-seqs.qza \
+--o-classification classifier_output.qza --verbose
+
+qiime tools export \
+--input-path classifier_output.qza \
+--output-path output_dir
+
+cp -v output_dir/taxonomy.tsv $raw
+
+python2 ../py/qiime2tax2tab.py $raw > $pred
+rm -rf $tmpdir

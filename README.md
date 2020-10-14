@@ -14,74 +14,85 @@ HiTaC can be easily installed with conda:
 conda install -c bioconda hitac
 ```
 
-Alternatively, HiTaC can be installed with pip:
+Alternatively, if you already have QIIME 2 installed, HiTaC can be installed with pip:
 
 ```
-pip install hitac
+pip install q2-hitac
 ```
 
 ## Input Files
 
-HiTaC accepts training and test files in FASTA format. However, the taxonomy in the training file must be specified in the header in TAXXI format. For example:
+HiTaC accepts taxonomy in TSV format and training and test files in FASTA format. All these files must be previously imported by QIIME 2. For example:
 
 ```
->DQ286276;tax=d:Fungi,p:Ascomycota,c:Sordariomycetes,o:Diaporthales,f:Diaporthaceae,g:Diaporthe,s:Diaporthe_aspalathi;
-GGATCATTGCTGGAACGCGCCCCAGGCGCACCCAGAAACCCTTTGTGAACTCATACCTTACTGTTGCCTCGGCGCAGGCC
-GGCCCCCCAGGGGGCCCCTCGGAGACGAGGAGCAGGCCCGCCGGCGGCCAAGCCAACTCTTGTTTTTACACCGAAACTCT
-GAGCAAAAAACACAAATGAATCAAAACTTTCAACAACGGATCTCTTGGTTCTGGCATCGATGAAGAACGCAGCGAAATGC
-GATAAGTAATGTGAATTGCAGAATTCAGTGAATCATCGAATCTTTGAACGCACATTGCGCCCTCTGGTATTCCGGAGGGC
-ATGCCTGTTCGAGCGTCATTTCAACCCTCAAGCCTGGCTTGGTGTTGGGGCACTGCCTGTAGAAGGGCAGGCCCTGAAAT
-CTAGTGGCGGGCTCGCCAGGACCCCGAGCGCAGTAGTTAAACCCTCGCTCGGGAGGCCCTGGCGGTGCCCTGCCGTTAAA
-CCCCCAACTTCTGAAAAT
->EU272527;tax=d:Fungi,p:Ascomycota,c:Eurotiomycetes,o:Eurotiales,f:Trichocomaceae,g:Paecilomyces,s:Paecilomyces_sinensis;
-CCGAGTGAGGGTCCCACGAGGCCCAACCTCCCATCCGTGTTGAACTACACCTGTTGCTTCGGCGGGCCCGCCGTGGTTCA
-CGCCCGGCCGCCGGGGGGCCTTGTGCTCCCGGGCCCGCGCCCGCCGAAGACCCCTCGAACGCTGCCCTGAAGGTTGCCGT
-CTGAGTATAAAATCAATCATTAAAACTTTCAACAACGGATCTCTTGGTTCCGGCATCGATGAAGAACGCAGCGAAATGCG
-ATAAGTAATGTGAATTGCAGAATTCCGTGAATCATCGAATCTTTGAACGCACATTGCGCCCCCTGGCATTCCGGGGGGCA
-TGCCTGTCCGAGCGTCATTGCTAACCCTCCAGCCCGGCTGGTGTGTTGGGTCGACGTCCCCCCCGGGGGACGGGCCCGAA
-AGGCAGCGGCGGCGCCGCGTCCGATCCTCGAGCGTATGGGGCTTTGTCACGCGCTCTGGTAGGGTCGGCCGGCTGGCCAG
-CCAGCGACCTCACGGTCACCTATTTTTTCTCTTAGG
+qiime tools import \
+--input-path $qfa \
+--output-path q-seqs.qza \
+--type 'FeatureData[Sequence]'
+
+qiime tools import \
+--input-path dbq.fa \
+--output-path db-seqs.qza \
+--type 'FeatureData[Sequence]'
+
+qiime tools import \
+--type 'FeatureData[Taxonomy]' \
+--input-format HeaderlessTSVTaxonomyFormat \
+--input-path db-tax.txt \
+--output-path db-tax.qza
+```
+
+To train the model and classify, simply run:
+
+```
+qiime hitac classify \
+--i-reference-reads db-seqs.qza \
+--i-reference-taxonomy db-tax.qza \
+--i-query q-seqs.qza \
+--o-classification classifier_output.qza --verbose
 ```
 
 ## Output File
 
-The predictions are written in a TSV file, where the first column contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
+The predictions can be exported from QIIME 2 to a TSV file:
 
 ```
-EF535685	d:Fungi,p:Ascomycota,c:Dothideomycetes,o:Capnodiales,f:Mycosphaerellaceae,g:Pseudocercospora,s:Pseudocercospora_basitruncata
-JN943699	d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea,s:Melanohalea_elegantula
-FJ596843	d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Agaricales,f:Agaricaceae,g:Agaricus,s:Agaricus_pseudopratensis
-HM017845	d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Agaricales,f:Cortinariaceae,g:Cortinarius,s:Cortinarius_biformis
-AF398455	d:Fungi,p:Basidiomycota,c:Exobasidiomycetes,o:Tilletiales,f:Tilletiaceae,g:Tilletia,s:Tilletia_bromi
+qiime tools export \
+--input-path classifier_output.qza \
+--output-path output_dir
+```
+
+The first column in the TSV file contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
+
+```
+Feature ID	Taxon	Confidence
+EU254776;tax=d:Fungi,p:Ascomycota,c:Sordariomycetes,o:Diaporthales,f:Gnomoniaceae,g:Gnomonia;	d__Fungi; p__Ascomycota; c__Sordariomycetes; o__Diaporthales; f__Valsaceae; g__Cryptosporella	-1
+FJ711636;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Agaricales,f:Marasmiaceae,g:Armillaria;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Agaricales; f__Marasmiaceae; g__Armillaria	-1
+UDB016040;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Russulales; f__Russulaceae; g__Russula	-1
+GU827310;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
+JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
 ```
 
 ## Running
 
-To see the usage run `hitac.py -h`
+To see the usage run `qiime hitac --help`
 
 ```
-usage: hitac.py [-h] [--kmer KMER] [--threads THREADS] train test predictions
+Usage: qiime hitac [OPTIONS] COMMAND [ARGS]...
 
-HiTaC, a hierarchical taxonomy classifier for fungal ITS sequences
+  Description: This QIIME 2 plugin wraps HiTaC and supports hierarchical
+  taxonomic classification.
 
-positional arguments:
-  train              Input FASTA file containing the sequences for training
-  test               Input FASTA file containing the sequences for taxonomy
-                     prediction
-  predictions        Output file to write the predictions
+  Plugin website: https://gitlab.com/dacs-hpi/hitac
 
-optional arguments:
-  -h, --help         show this help message and exit
-  --kmer KMER        Kmer size for feature extraction [default: 6]
-  --threads THREADS  Number of threads [default: all threads available]
+  Getting user support: Please post to the QIIME 2 forum for help with this
+  plugin: https://forum.qiime2.org
+
+Options:
+  --version    Show the version and exit.
+  --citations  Show citations and exit.
+  --help       Show this message and exit.
+
+Commands:
+  classify  HiTaC
 ```
-
-To test the installation, run the following commands:
-
-```
-wget -O train_rdp_its.90.fasta https://drive5.com/taxxi/benchmark/trainfa/rdp_its.90
-wget -O test_rdp_its.90.fasta https://drive5.com/taxxi/benchmark/testfa/rdp_its.90
-hitac.py train_rdp_its.90.fasta test_rdp_its.90.fasta predictions_rdp_its.90.tsv
-```
-
-If everything is OK, a file called `predictions_rdp_its.90.tsv` will be created.

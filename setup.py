@@ -1,36 +1,20 @@
-#!/usr/bin/env python3
+from setuptools import setup, find_packages
+import versioneer
 
-import setuptools
-import os
-
-thelibFolder = os.path.dirname(os.path.realpath(__file__))
-requirementPath = thelibFolder + '/requirements.txt'
-install_requires = []
-if os.path.isfile(requirementPath):
-    with open(requirementPath) as f:
-        install_requires = f.read().splitlines()
-
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
-setuptools.setup(
-    name="hitac",
-    install_requires=install_requires,
-    version="1.1",
+setup(
+    name="q2-hitac",
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
+    packages=find_packages(),
     author="Fabio Malcher Miranda",
     author_email="fabio.malchermiranda@hpi.de",
-    description="A hierarchical taxonomy classifier for fungal ITS sequences",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
+    description="Hierarchical taxonomic classification",
+    license='GPLv3',
     url="https://gitlab.com/dacs-hpi/hitac",
-    packages=setuptools.find_packages(),
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Operating System :: OS Independent",
-    ],
-    python_requires='>=3',
-    scripts=['hitac.py']
+    entry_points={
+        'qiime2.plugins':
+        ['q2-hitac=q2_hitac.plugin_setup:plugin']
+    },
+    package_data={'q2_hitac': ['citations.bib']},
+    zip_safe=False,
 )
-
-
