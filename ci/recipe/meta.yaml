@@ -1,0 +1,37 @@
+{% set data = load_setup_py_data() %}
+{% set version = data.get('version') or 'placehold' %}
+{% set release = '.'.join(version.split('.')[:2]) %}
+
+package:
+  name: q2-hitac
+  version: {{ version }}
+
+source:
+  path: ../..
+
+build:
+  script: make install
+
+requirements:
+  host:
+    - python {{ python }}
+    - setuptools
+
+  run:
+    - python {{ python }}
+    - numpy
+    - pandas
+    - hitac
+    - qiime2 {{ release }}.*
+    - q2templates {{ release }}.*
+    - q2-types {{ release }}.*
+
+test:
+  imports:
+    - q2_hitac
+    - qiime2.plugins.hitac
+
+about:
+  home: https://gitlab.com/dacs-hpi/hitac
+  license: GPLv3
+  license_family: GPL
