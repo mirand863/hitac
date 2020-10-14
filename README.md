@@ -17,7 +17,7 @@ conda install -c bioconda hitac
 Alternatively, if you already have QIIME 2 installed, HiTaC can be installed with pip:
 
 ```
-pip install hitac
+pip install q2-hitac
 ```
 
 ## Input Files
