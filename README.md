@@ -20,7 +20,7 @@ With QIIME 2 installed, you can install HiTaC using either conda or pip:
 
 ```
 conda install hitac
-pip install q2-hitac
+pip install hitac
 ```
 
 ## Running
