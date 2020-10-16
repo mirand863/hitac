@@ -14,7 +14,7 @@ with open("README.md", "r") as fh:
 setup(
     name="q2-hitac",
     install_requires=install_requires,
-    version="1.3",
+    version="1.4",
     author="Fabio Malcher Miranda",
     author_email="fabio.malchermiranda@hpi.de",
     description="Hierarchical taxonomic classification",

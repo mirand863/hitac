@@ -18,7 +18,7 @@ PARAMETERS_DESC = {
 
 plugin = Plugin(
     name='hitac',
-    version=q2_hitac.__version__,
+    version=1.4,
     website='https://gitlab.com/dacs-hpi/hitac',
     package='q2_hitac',
     citations=Citations.load('citations.bib', package='q2_hitac'),
