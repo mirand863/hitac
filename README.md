@@ -6,8 +6,6 @@ A hierarchical taxonomy classifier for fungal ITS sequences.
 
 ## Installation
 
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/hitac/README.html)
-
 HiTaC dependends on QIIME 2. We recommend using QIIME 2 version 2020.2. To install it, please run:
 
 ```
