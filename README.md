@@ -23,6 +23,30 @@ conda install tqdm -y
 pip install q2-hitac
 ```
 
+## Running
+
+To see the usage run `qiime hitac --help`
+
+```
+Usage: qiime hitac [OPTIONS] COMMAND [ARGS]...
+
+  Description: This QIIME 2 plugin wraps HiTaC and supports hierarchical
+  taxonomic classification.
+
+  Plugin website: https://gitlab.com/dacs-hpi/hitac
+
+  Getting user support: Please post to the QIIME 2 forum for help with this
+  plugin: https://forum.qiime2.org
+
+Options:
+  --version    Show the version and exit.
+  --citations  Show citations and exit.
+  --help       Show this message and exit.
+
+Commands:
+  classify  HiTaC
+```
+
 ## Input Files
 
 HiTaC accepts taxonomy in TSV format and training and test files in FASTA format. All these files must be previously imported by QIIME 2. For example:
@@ -74,28 +98,4 @@ FJ711636;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Agaricales,f:Marasmiacea
 UDB016040;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Russulales; f__Russulaceae; g__Russula	-1
 GU827310;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
 JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
-```
-
-## Running
-
-To see the usage run `qiime hitac --help`
-
-```
-Usage: qiime hitac [OPTIONS] COMMAND [ARGS]...
-
-  Description: This QIIME 2 plugin wraps HiTaC and supports hierarchical
-  taxonomic classification.
-
-  Plugin website: https://gitlab.com/dacs-hpi/hitac
-
-  Getting user support: Please post to the QIIME 2 forum for help with this
-  plugin: https://forum.qiime2.org
-
-Options:
-  --version    Show the version and exit.
-  --citations  Show citations and exit.
-  --help       Show this message and exit.
-
-Commands:
-  classify  HiTaC
 ```
