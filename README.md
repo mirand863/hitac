@@ -8,15 +8,18 @@ A hierarchical taxonomy classifier for fungal ITS sequences.
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/hitac/README.html)
 
-HiTaC can be easily installed with conda:
+HiTaC dependends on QIIME 2. We recommend using QIIME 2 version 2020.2. To install it, please run:
 
 ```
-conda install -c bioconda hitac
+wget https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml
+conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
 ```
 
-Alternatively, if you already have QIIME 2 installed, HiTaC can be installed with pip:
+Now you can activate the new environment and install HiTaC using pip:
 
 ```
+conda activate qiime2-2020.2
+conda install tqdm -y
 pip install q2-hitac
 ```
 
