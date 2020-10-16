@@ -1,20 +1,38 @@
 from setuptools import setup, find_packages
-import versioneer
+import os
+
+thelibFolder = os.path.dirname(os.path.realpath(__file__))
+requirementPath = thelibFolder + '/requirements.txt'
+install_requires = []
+if os.path.isfile(requirementPath):
+    with open(requirementPath) as f:
+        install_requires = f.read().splitlines()
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setup(
     name="q2-hitac",
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
-    packages=find_packages(),
+    install_requires=install_requires,
+    version="1.3",
     author="Fabio Malcher Miranda",
     author_email="fabio.malchermiranda@hpi.de",
     description="Hierarchical taxonomic classification",
-    license='GPLv3',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    packages=find_packages(),
     url="https://gitlab.com/dacs-hpi/hitac",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: OS Independent",
+    ],
     entry_points={
         'qiime2.plugins':
         ['q2-hitac=q2_hitac.plugin_setup:plugin']
     },
     package_data={'q2_hitac': ['citations.bib']},
     zip_safe=False,
+    python_requires='>=3',
+    scripts=['hitac']
 )
