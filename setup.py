@@ -1,4 +1,6 @@
 from setuptools import setup, find_packages
+import versioneer
+
 import os
 
 thelibFolder = os.path.dirname(os.path.realpath(__file__))
@@ -12,9 +14,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="q2-hitac",
+    name="hitac",
     install_requires=install_requires,
-    version="1.4",
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     author="Fabio Malcher Miranda",
     author_email="fabio.malchermiranda@hpi.de",
     description="Hierarchical taxonomic classification",
@@ -29,7 +32,7 @@ setup(
     ],
     entry_points={
         'qiime2.plugins':
-        ['q2-hitac=q2_hitac.plugin_setup:plugin']
+        ['hitac=q2_hitac.plugin_setup:plugin']
     },
     package_data={'q2_hitac': ['citations.bib']},
     zip_safe=False,
