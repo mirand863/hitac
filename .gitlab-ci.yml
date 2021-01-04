@@ -21,10 +21,6 @@ build-test-image:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
-  only:
-    changes:
-      - q2_hitac/tests/Dockerfile
-
 
 test-functions:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
@@ -34,10 +30,6 @@ test-functions:
   script:
     - flake8 --statistics --exclude versioneer.py
     - pytest -v --cov=q2_hitac
-  only:
-    changes:
-      - q2_hitac/_classify.py
-      - q2_hitac/tests/test_classify.py
 
 test-sp-rdp-its-90:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
@@ -58,10 +50,6 @@ test-sp-rdp-its-90:
     - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
     - echo $ACCURACY
     - python -c "exit(0) if $ACCURACY >= $THRESHOLD else exit(1)"
-  only:
-    changes:
-      - q2_hitac/_classify.py
-      - q2_hitac/tests/test_classify.py
 
 test-sp-rdp-its-95:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
@@ -82,10 +70,6 @@ test-sp-rdp-its-95:
     - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
     - echo $ACCURACY
     - python -c "exit(0) if $ACCURACY >= $THRESHOLD else exit(1)"
-  only:
-    changes:
-      - q2_hitac/_classify.py
-      - q2_hitac/tests/test_classify.py
 
 test-sp-rdp-its-97:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
@@ -106,10 +90,6 @@ test-sp-rdp-its-97:
     - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
     - echo $ACCURACY
     - python -c "exit(0) if $ACCURACY >= $THRESHOLD else exit(1)"
-  only:
-    changes:
-      - q2_hitac/_classify.py
-      - q2_hitac/tests/test_classify.py
 
 test-sp-rdp-its-99:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
@@ -130,10 +110,6 @@ test-sp-rdp-its-99:
     - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
     - echo $ACCURACY
     - python -c "exit(0) if $ACCURACY >= $THRESHOLD else exit(1)"
-  only:
-    changes:
-      - q2_hitac/_classify.py
-      - q2_hitac/tests/test_classify.py
 
 test-sp-rdp-its-100:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
@@ -154,7 +130,3 @@ test-sp-rdp-its-100:
     - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
     - echo $ACCURACY
     - python -c "exit(0) if $ACCURACY == $THRESHOLD else exit(1)"
-  only:
-    changes:
-      - q2_hitac/_classify.py
-      - q2_hitac/tests/test_classify.py
