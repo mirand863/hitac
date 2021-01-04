@@ -1,0 +1,6 @@
+.coverage
+.coverage.*
+__pycache__/
+dist/
+hitac.egg-info/
+build/

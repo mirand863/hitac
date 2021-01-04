@@ -36,6 +36,5 @@ setup(
     },
     package_data={'q2_hitac': ['citations.bib']},
     zip_safe=False,
-    python_requires='>=3',
-    scripts=['hitac']
+    python_requires='>=3'
 )
