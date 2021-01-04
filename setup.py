@@ -20,7 +20,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     author="Fabio Malcher Miranda",
     author_email="fabio.malchermiranda@hpi.de",
-    description="Hierarchical taxonomic classification",
+    description="Hierarchical taxonomic classifier",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(),
