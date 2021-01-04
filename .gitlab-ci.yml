@@ -1,0 +1,160 @@
+stages:
+  - build
+  - test
+
+
+build-test-image:
+  image: docker:latest
+  stage: build
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    # See https://github.com/docker-library/docker/pull/166
+    DOCKER_TLS_CERTDIR: ""
+    IMAGE_TAG: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
+  script:
+    - cd q2_hitac/tests/
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  only:
+    changes:
+      - q2_hitac/tests/Dockerfile
+
+
+test-functions:
+  image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
+  stage: test
+  before_script:
+    - export PYTHONPATH="$PYTHONPATH:$PWD/q2_hitac"
+  script:
+    - flake8 --statistics --exclude versioneer.py
+    - pytest -v --cov=q2_hitac
+  only:
+    changes:
+      - q2_hitac/_classify.py
+      - q2_hitac/tests/test_classify.py
+
+test-sp-rdp-its-90:
+  image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
+  stage: test
+  before_script:
+    - python setup.py install
+    - git clone https://github.com/mirand863/taxxi.git
+    - export PATH=$(pwd)/taxxi/benchmark/py:$PATH
+    - export DATASET=sp_rdp_its.90
+    - export RANK=g
+    - export THRESHOLD=69.5
+  script:
+    - cd taxxi/benchmark/methods
+    - ./hitac $DATASET
+    - cd ../scripts
+    - ./metrics1 $DATASET hitac $RANK
+    - cd ../metrics
+    - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
+    - echo $ACCURACY
+    - python -c "exit(0) if $ACCURACY >= $THRESHOLD else exit(1)"
+  only:
+    changes:
+      - q2_hitac/_classify.py
+      - q2_hitac/tests/test_classify.py
+
+test-sp-rdp-its-95:
+  image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
+  stage: test
+  before_script:
+    - python setup.py install
+    - git clone https://github.com/mirand863/taxxi.git
+    - export PATH=$(pwd)/taxxi/benchmark/py:$PATH
+    - export DATASET=sp_rdp_its.95
+    - export RANK=g
+    - export THRESHOLD=83.6
+  script:
+    - cd taxxi/benchmark/methods
+    - ./hitac $DATASET
+    - cd ../scripts
+    - ./metrics1 $DATASET hitac $RANK
+    - cd ../metrics
+    - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
+    - echo $ACCURACY
+    - python -c "exit(0) if $ACCURACY >= $THRESHOLD else exit(1)"
+  only:
+    changes:
+      - q2_hitac/_classify.py
+      - q2_hitac/tests/test_classify.py
+
+test-sp-rdp-its-97:
+  image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
+  stage: test
+  before_script:
+    - python setup.py install
+    - git clone https://github.com/mirand863/taxxi.git
+    - export PATH=$(pwd)/taxxi/benchmark/py:$PATH
+    - export DATASET=sp_rdp_its.97
+    - export RANK=g
+    - export THRESHOLD=91.5
+  script:
+    - cd taxxi/benchmark/methods
+    - ./hitac $DATASET
+    - cd ../scripts
+    - ./metrics1 $DATASET hitac $RANK
+    - cd ../metrics
+    - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
+    - echo $ACCURACY
+    - python -c "exit(0) if $ACCURACY >= $THRESHOLD else exit(1)"
+  only:
+    changes:
+      - q2_hitac/_classify.py
+      - q2_hitac/tests/test_classify.py
+
+test-sp-rdp-its-99:
+  image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
+  stage: test
+  before_script:
+    - python setup.py install
+    - git clone https://github.com/mirand863/taxxi.git
+    - export PATH=$(pwd)/taxxi/benchmark/py:$PATH
+    - export DATASET=sp_rdp_its.99
+    - export RANK=s
+    - export THRESHOLD=73
+  script:
+    - cd taxxi/benchmark/methods
+    - ./hitac $DATASET
+    - cd ../scripts
+    - ./metrics1 $DATASET hitac $RANK
+    - cd ../metrics
+    - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
+    - echo $ACCURACY
+    - python -c "exit(0) if $ACCURACY >= $THRESHOLD else exit(1)"
+  only:
+    changes:
+      - q2_hitac/_classify.py
+      - q2_hitac/tests/test_classify.py
+
+test-sp-rdp-its-100:
+  image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
+  stage: test
+  before_script:
+    - python setup.py install
+    - git clone https://github.com/mirand863/taxxi.git
+    - export PATH=$(pwd)/taxxi/benchmark/py:$PATH
+    - export DATASET=sp_rdp_its.100
+    - export RANK=s
+    - export THRESHOLD=100
+  script:
+    - cd taxxi/benchmark/methods
+    - ./hitac $DATASET
+    - cd ../scripts
+    - ./metrics1 $DATASET hitac $RANK
+    - cd ../metrics
+    - ACCURACY=$(tail -n 1 $DATASET.hitac.$RANK | awk '{ print $7}')
+    - echo $ACCURACY
+    - python -c "exit(0) if $ACCURACY == $THRESHOLD else exit(1)"
+  only:
+    changes:
+      - q2_hitac/_classify.py
+      - q2_hitac/tests/test_classify.py

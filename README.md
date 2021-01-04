@@ -1,14 +1,14 @@
 # HiTaC
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![pipeline status](https://gitlab.com/mirand863/hitac/badges/master/pipeline.svg)](https://gitlab.com/mirand863/hitac/-/commits/master) [![coverage report](https://gitlab.com/mirand863/hitac/badges/master/coverage.svg)](https://gitlab.com/mirand863/hitac/-/commits/master)
 
-A hierarchical taxonomy classifier for fungal ITS sequences.
+A hierarchical taxonomic classifier for fungal ITS sequences.
 
 ## Installation
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/hitac/README.html)
 
-HiTaC dependends on QIIME 2. We recommend using QIIME 2 version 2020.2. To install it and activate the new environment, please run:
+HiTaC dependends on QIIME 2. We recommend using QIIME 2 version 2020.2. To install QIIME 2 in a new conda environment and activate it, please run:
 
 ```
 wget https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml
@@ -16,7 +16,7 @@ conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
 conda activate qiime2-2020.2
 ```
 
-With QIIME 2 installed, you can install HiTaC using either conda or pip:
+Afterwards, HiTaC can be installed using either conda or pip:
 
 ```
 conda install hitac

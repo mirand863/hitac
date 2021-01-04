@@ -2,10 +2,9 @@ import q2_hitac
 
 from ._classify import classify
 
-from q2_types.feature_data import (FeatureData, Taxonomy, Sequence, DNAIterator, DNAFASTAFormat)
-from q2_types.feature_table import FeatureTable, RelativeFrequency
+from q2_types.feature_data import (FeatureData, Taxonomy, Sequence)
 import qiime2
-from qiime2.plugin import (Plugin, Metadata, Str, List, Citations, Range, Int, Bool, Properties)
+from qiime2.plugin import (Plugin, Metadata, Citations, Int)
 
 TaxonomicClassifier = qiime2.plugin.SemanticType('TaxonomicClassifier')
 
@@ -24,7 +23,8 @@ plugin = Plugin(
     citations=Citations.load('citations.bib', package='q2_hitac'),
     description=('This QIIME 2 plugin wraps HiTaC and '
                  'supports hierarchical taxonomic classification.'),
-    short_description='Plugin for hierarchical taxonomic classification with HiTaC.'
+    short_description='Plugin for hierarchical '
+                      'taxonomic classification with HiTaC.'
 )
 
 plugin.methods.register_function(
