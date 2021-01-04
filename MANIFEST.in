@@ -1,0 +1,7 @@
+include versioneer.py
+include q2_hitac/_version.py
+include README.md
+include LICENSE
+include requirements.txt
+graft q2_hitac
+recursive-exclude * *.py[co]
