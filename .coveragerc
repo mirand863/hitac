@@ -1,0 +1,5 @@
+[run]
+omit =
+    q2_hitac/_version.py
+    q2_hitac/plugin_setup.py
+    q2_hitac/__init__.py
