@@ -16,11 +16,32 @@ conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
 conda activate qiime2-2020.2
 ```
 
-Afterwards, HiTaC can be installed using either conda or pip:
+Afterwards, HiTaC can also be installed with conda:
 
 ```
 conda install hitac
+```
+
+[![install with pip](https://gitlab.com/dacs-hpi/hitac/-/raw/readme/q2_hitac/resources/pip.svg)](https://pypi.org/project/hitac/)
+
+Alternatively, HiTaC can be installed with pip in an environment where QIIME 2 was previously installed:
+
+```
 pip install hitac
+```
+
+[![install with docker](https://gitlab.com/dacs-hpi/hitac/-/raw/readme/q2_hitac/resources/docker.svg)](https://hub.docker.com/r/mirand863/hitac)
+
+Lastly, HiTaC and all its dependencies can be download as a docker image:
+
+```
+docker pull mirand863/hitac:latest
+```
+
+The downloaded image can then be started with:
+
+```
+docker run -it mirand863/hitac:latest /bin/bash
 ```
 
 ## Input Files
@@ -99,3 +120,4 @@ UDB016040;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulacea
 GU827310;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
 JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
 ```
+
