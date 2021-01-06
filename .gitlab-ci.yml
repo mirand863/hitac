@@ -198,7 +198,7 @@ deploy-docker:
     - cp hitac.tar.gz hitac/q2_hitac/deploy/
   script:
     - cd hitac/q2_hitac/deploy
-    - docker login --username $DOCKER_HUB_USERNAME --password-stdin < $DOCKER_HUB_PASSWORD
+    - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
     - docker build -t $REPOSITORY:$CI_COMMIT_TAG -t $REPOSITORY:latest .
     - docker push $REPOSITORY --all-tags
     - cd ../..
