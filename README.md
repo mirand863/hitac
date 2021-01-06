@@ -22,7 +22,7 @@ Afterwards, HiTaC can also be installed with conda:
 conda install hitac
 ```
 
-[![install with pip](https://gitlab.com/dacs-hpi/hitac/-/raw/readme/q2_hitac/resources/pip.svg)](https://pypi.org/project/hitac/)
+[![install with pip](https://gitlab.com/dacs-hpi/hitac/-/raw/master/q2_hitac/resources/pip.svg)](https://pypi.org/project/hitac/)
 
 Alternatively, HiTaC can be installed with pip in an environment where QIIME 2 was previously installed:
 
@@ -30,7 +30,7 @@ Alternatively, HiTaC can be installed with pip in an environment where QIIME 2 w
 pip install hitac
 ```
 
-[![install with docker](https://gitlab.com/dacs-hpi/hitac/-/raw/readme/q2_hitac/resources/docker.svg)](https://hub.docker.com/r/mirand863/hitac)
+[![install with docker](https://gitlab.com/dacs-hpi/hitac/-/raw/master/q2_hitac/resources/docker.svg)](https://hub.docker.com/r/mirand863/hitac)
 
 Lastly, HiTaC and all its dependencies can be download as a docker image:
 
