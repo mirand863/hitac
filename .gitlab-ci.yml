@@ -17,10 +17,10 @@ build-test-image:
     # See https://github.com/docker-library/docker/pull/166
     DOCKER_TLS_CERTDIR: ""
     IMAGE_TAG: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
+    DOCKERFILE: q2_hitac/tests/Dockerfile
   script:
-    - cd q2_hitac/tests/
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $IMAGE_TAG .
+    - docker build -t $IMAGE_TAG --file $DOCKERFILE .
     - docker push $IMAGE_TAG
   only:
     changes:
@@ -30,6 +30,8 @@ build-test-image:
 test-functions:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
+  tags:
+    - denbi
   before_script:
     - export PYTHONPATH="$PYTHONPATH:$PWD/q2_hitac"
   script:
@@ -40,6 +42,8 @@ test-functions:
 test-sp-rdp-its-90:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
+  tags:
+    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -65,6 +69,8 @@ test-sp-rdp-its-90:
 test-sp-rdp-its-95:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
+  tags:
+    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -90,6 +96,8 @@ test-sp-rdp-its-95:
 test-sp-rdp-its-97:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
+  tags:
+    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -115,6 +123,8 @@ test-sp-rdp-its-97:
 test-sp-rdp-its-99:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
+  tags:
+    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -140,6 +150,8 @@ test-sp-rdp-its-99:
 test-sp-rdp-its-100:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
+  tags:
+    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -189,19 +201,15 @@ deploy-docker:
     DOCKER_TLS_CERTDIR: ""
     REPOSITORY: mirand863/hitac
     PUSHRM: https://github.com/christian-korneck/docker-pushrm/releases/download/v1.7.0/docker-pushrm_linux_amd64
+    DOCKERFILE: q2_hitac/deploy/Dockerfile
   before_script:
     - mkdir -p $HOME/.docker/cli-plugins/
     - wget -O $HOME/.docker/cli-plugins/docker-pushrm $PUSHRM
     - chmod +x $HOME/.docker/cli-plugins/docker-pushrm
-    - cd ..
-    - tar -cvzf hitac.tar.gz hitac
-    - cp hitac.tar.gz hitac/q2_hitac/deploy/
   script:
-    - cd hitac/q2_hitac/deploy
     - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
-    - docker build -t $REPOSITORY:$CI_COMMIT_TAG -t $REPOSITORY:latest .
+    - docker build -t $REPOSITORY:$CI_COMMIT_TAG -t $REPOSITORY:latest --file $DOCKERFILE .
     - docker push $REPOSITORY --all-tags
-    - cd ../..
     - docker pushrm $REPOSITORY
   only:
     - tags
