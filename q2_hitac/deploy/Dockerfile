@@ -1,10 +1,5 @@
 FROM qiime2/core:2020.2
 
-COPY hitac.tar.gz hitac.tar.gz
+COPY ./ ./
 
-RUN pip install tqdm && \
-tar -xvzf hitac.tar.gz && \
-cd hitac && \
-python setup.py install && \
-cd .. && \
-rm -rf hitac.tar.gz hitac
+RUN python setup.py install
