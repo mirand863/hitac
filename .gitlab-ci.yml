@@ -202,6 +202,6 @@ deploy-docker:
     - docker build -t $REPOSITORY:$CI_COMMIT_TAG -t $REPOSITORY:latest .
     - docker push $REPOSITORY --all-tags
     - cd ../..
-    - docker pushrm mirand863/hitac
+    - docker pushrm $REPOSITORY
   only:
     - tags
