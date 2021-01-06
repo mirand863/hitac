@@ -188,7 +188,11 @@ deploy-docker:
     # See https://github.com/docker-library/docker/pull/166
     DOCKER_TLS_CERTDIR: ""
     REPOSITORY: mirand863/hitac
+    PUSHRM: https://github.com/christian-korneck/docker-pushrm/releases/download/v1.7.0/docker-pushrm_linux_amd64
   before_script:
+    - mkdir -p $HOME/.docker/cli-plugins/
+    - wget -O $HOME/.docker/cli-plugins/docker-pushrm $PUSHRM
+    - chmod +x $HOME/.docker/cli-plugins/docker-pushrm
     - cd ..
     - tar -cvzf hitac.tar.gz hitac
     - cp hitac.tar.gz hitac/q2_hitac/deploy/
@@ -197,5 +201,7 @@ deploy-docker:
     - docker login --username $DOCKER_HUB_USERNAME --password-stdin < $DOCKER_HUB_PASSWORD
     - docker build -t $REPOSITORY:$CI_COMMIT_TAG -t $REPOSITORY:latest .
     - docker push $REPOSITORY --all-tags
+    - cd ../..
+    - docker pushrm mirand863/hitac
   only:
     - tags
