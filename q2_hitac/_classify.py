@@ -179,20 +179,21 @@ def predict(X_train, Y_train, X_test, Y_test, threads):
         parents = Y_test.iloc[:, rank_index - 1].unique()
         for i in tqdm(range(len(parents))):
             classify(i)
+    return Y_test
+
+
+def convertTaxonomy2Qiime(Y_test, Y_train):
     # Saves predictions
     print("Saving predictions")
     predictions = []
     for i in tqdm(range(Y_test.shape[0])):
-        taxonomy = Y_test.at[i, 'kingdom'] + ';'
-        taxonomy = taxonomy + Y_test.at[i, 'phylum'] + ';'
-        taxonomy = taxonomy + Y_test.at[i, 'class'] + ';'
-        taxonomy = taxonomy + Y_test.at[i, 'order'] + ';'
-        taxonomy = taxonomy + Y_test.at[i, 'family'] + ';'
-        if Y_train.shape[1] == 7:
-            taxonomy = taxonomy + Y_test.at[i, 'genus'] + ';'
-            taxonomy = taxonomy + Y_test.at[i, 'species']
-        else:
-            taxonomy = taxonomy + Y_test.at[i, 'genus']
+        taxonomy = ''
+        for rank_index in range(1, Y_test.shape[1] - 1):
+            taxonomy = taxonomy + Y_test.iloc[i, rank_index]
+            if Y_test.iloc[i, rank_index + 1] != '':
+                taxonomy = taxonomy + ';'
+        if Y_test.iloc[i, Y_test.shape[1] - 1] != '':
+            taxonomy = taxonomy + Y_test.iloc[i, Y_test.shape[1] - 1]
         predictions.append(taxonomy)
     return predictions
 
@@ -218,8 +219,79 @@ def classify(reference_reads: DNAIterator,
     X_test = computeFrequencies(test_sequences, kmers, threads)
     Y_test = createYTest(test_ids, X_test, Y_train)
     # Predict
-    taxonomy = predict(X_train, Y_train, X_test, Y_test, threads)
+    Y_test = predict(X_train, Y_train, X_test, Y_test, threads)
+    taxonomy = convertTaxonomy2Qiime(Y_test, Y_train)
     confidence = [-1] * len(test_ids)
+    result = pd.DataFrame({'Taxon': taxonomy,
+                           'Confidence': confidence},
+                          index=test_ids,
+                          columns=['Taxon', 'Confidence'])
+    result.index.name = 'Feature ID'
+    return result
+
+
+def computeConfidence(X_train, Y_train, X_test, Y_test, threads):
+    parameters = {'solver': 'liblinear',
+                  'multi_class': 'auto',
+                  'class_weight': 'balanced',
+                  'max_iter': 10000,
+                  'verbose': 0,
+                  'n_jobs': 1}
+    model = LogisticRegression(**parameters)
+    ranks = ['kingdom', 'phylum', 'class',
+             'order', 'family', 'genus', 'species']
+    confidence = [-1] * Y_test.shape[0]
+    for rank_index in reversed(range(2, Y_test.shape[1])):
+        print('Correcting labels for %s' % (ranks[rank_index - 1]))
+        pbar = tqdm(total=1)
+        model.fit(X_train, Y_train.iloc[:, rank_index - 1])
+        probabilities = model.predict_proba(X_test)
+        classes = model.classes_
+        index = {}
+        for i in range(len(classes)):
+            index[classes[i]] = i
+        for i in tqdm(range(len(probabilities))):
+            prediction_probability = \
+                probabilities[i][index[Y_test.iloc[i, rank_index]]]
+            if confidence[i] == -1:
+                if prediction_probability > 0.7:
+                    confidence[i] = prediction_probability
+                else:
+                    Y_test.iloc[i, rank_index] = ''
+        pbar.update(1)
+        pbar.close()
+    return Y_test, confidence
+
+
+def classify_and_filter(reference_reads: DNAIterator,
+                        reference_taxonomy: pd.Series,
+                        query: DNAFASTAFormat,
+                        kmer: int = 6,
+                        threads: int = -1,
+                        threshold: float = 0.7) -> pd.DataFrame:
+    print("Computing k-mer frequencies")
+    kmers = calculatePossibleKmers(kmer)
+    if threads == -1:
+        threads = multiprocessing.cpu_count()
+    # Train
+    training_ids, training_sequences = _extract_reads(reference_reads)
+    X_train = computeFrequencies(training_sequences, kmers, threads)
+    Y_train = getTaxonomy(reference_taxonomy)
+    # Test
+    query = DNAIterator(skbio.read(str(query),
+                        format='fasta',
+                        constructor=skbio.DNA))
+    test_ids, test_sequences = _extract_reads(query)
+    X_test = computeFrequencies(test_sequences, kmers, threads)
+    Y_test = createYTest(test_ids, X_test, Y_train)
+    # Predict
+    Y_test = predict(X_train, Y_train, X_test, Y_test, threads)
+    Y_test, confidence = computeConfidence(X_train,
+                                           Y_train,
+                                           X_test,
+                                           Y_test,
+                                           threads)
+    taxonomy = convertTaxonomy2Qiime(Y_test, Y_train)
     result = pd.DataFrame({'Taxon': taxonomy,
                            'Confidence': confidence},
                           index=test_ids,

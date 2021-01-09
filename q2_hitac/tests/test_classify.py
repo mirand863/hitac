@@ -313,19 +313,21 @@ class TestClassify:
             [a == b for a, b in zip(ground_truth_seq, result_seq)]
         )
 
-    def test_predict_1(self):
+    def test_convertTaxonomy2Qiime_1(self):
         with open('q2_hitac/tests/predict_1.pkl', 'rb') as f:
             X_train, Y_train, X_test, Y_test, ground_truth = pickle.load(f)
-            predicted = _classify.predict(X_train, Y_train, X_test, Y_test, -1)
+            Y_test = _classify.predict(X_train, Y_train, X_test, Y_test, -1)
+            predicted = _classify.convertTaxonomy2Qiime(Y_test, Y_train)
         assert len(predicted) == len(ground_truth)
         assert all(
             [a == b for a, b in zip(predicted, ground_truth)]
         )
 
-    def test_predict_2(self):
+    def test_convertTaxonomy2Qiime_2(self):
         with open('q2_hitac/tests/predict_2.pkl', 'rb') as f:
             X_train, Y_train, X_test, Y_test, ground_truth = pickle.load(f)
-            predicted = _classify.predict(X_train, Y_train, X_test, Y_test, -1)
+            Y_test = _classify.predict(X_train, Y_train, X_test, Y_test, -1)
+            predicted = _classify.convertTaxonomy2Qiime(Y_test, Y_train)
         assert len(predicted) == len(ground_truth)
         assert all(
             [a == b for a, b in zip(predicted, ground_truth)]
