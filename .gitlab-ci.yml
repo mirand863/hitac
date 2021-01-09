@@ -36,7 +36,7 @@ test-functions:
     - export PYTHONPATH="$PYTHONPATH:$PWD/q2_hitac"
   script:
     - flake8 --statistics --exclude versioneer.py
-    - pytest -v --cov=q2_hitac
+    - pytest -v --cov=q2_hitac --cov-report term-missing --cov-report html
 
 
 test-sp-rdp-its-90:

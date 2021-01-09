@@ -1,10 +1,10 @@
 import q2_hitac
 
-from ._classify import classify
+from ._classify import classify, classify_and_filter
 
 from q2_types.feature_data import (FeatureData, Taxonomy, Sequence)
 import qiime2
-from qiime2.plugin import (Plugin, Metadata, Citations, Int)
+from qiime2.plugin import (Plugin, Metadata, Citations, Int, Float)
 
 TaxonomicClassifier = qiime2.plugin.SemanticType('TaxonomicClassifier')
 
@@ -33,6 +33,18 @@ plugin.methods.register_function(
             'reference_taxonomy': FeatureData[Taxonomy],
             'query': FeatureData[Sequence]},
     parameters={'kmer': Int, 'threads': Int},
+    outputs=[('classification', FeatureData[Taxonomy])],
+    name='HiTaC',
+    description='Hierarchical logistic regression classifier',
+    citations=[citations['miranda2020hitac']]
+)
+
+plugin.methods.register_function(
+    function=classify_and_filter,
+    inputs={'reference_reads': FeatureData[Sequence],
+            'reference_taxonomy': FeatureData[Taxonomy],
+            'query': FeatureData[Sequence]},
+    parameters={'kmer': Int, 'threads': Int, 'threshold': Float},
     outputs=[('classification', FeatureData[Taxonomy])],
     name='HiTaC',
     description='Hierarchical logistic regression classifier',
