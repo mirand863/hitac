@@ -30,8 +30,6 @@ build-test-image:
 test-functions:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
-  tags:
-    - denbi
   before_script:
     - export PYTHONPATH="$PYTHONPATH:$PWD/q2_hitac"
   script:
@@ -42,8 +40,6 @@ test-functions:
 test-sp-rdp-its-90:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
-  tags:
-    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -69,8 +65,6 @@ test-sp-rdp-its-90:
 test-sp-rdp-its-95:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
-  tags:
-    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -96,8 +90,6 @@ test-sp-rdp-its-95:
 test-sp-rdp-its-97:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
-  tags:
-    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -123,8 +115,6 @@ test-sp-rdp-its-97:
 test-sp-rdp-its-99:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
-  tags:
-    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
@@ -150,8 +140,6 @@ test-sp-rdp-its-99:
 test-sp-rdp-its-100:
   image: $CI_REGISTRY/dacs-hpi/hitac/testimage:latest
   stage: test
-  tags:
-    - denbi
   before_script:
     - python setup.py install
     - git clone https://github.com/mirand863/taxxi.git
