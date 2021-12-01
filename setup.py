@@ -1,40 +1,142 @@
-from setuptools import setup, find_packages
-import versioneer
+"""setup file for the project."""
+# code gratefully take from https://github.com/navdeep-G/setup.py
 
+# Note: To use the 'upload' functionality of this file, you must:
+#   $ pipenv install twine --dev
+
+import io
 import os
+import sys
+import versioneer
+from shutil import rmtree
 
-thelibFolder = os.path.dirname(os.path.realpath(__file__))
-requirementPath = thelibFolder + '/requirements.txt'
-install_requires = []
-if os.path.isfile(requirementPath):
-    with open(requirementPath) as f:
-        install_requires = f.read().splitlines()
+from setuptools import find_packages, setup, Command
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+# Package meta-data.
+NAME = "hitac"
+DESCRIPTION = "Hierarchical taxonomic classifier."
 
+# URL = 'https://gitlab.com/dacs-hpi/hitac'
+# URL_DOKU = "https://gitlab.com/dacs-hpi/hitac
+URL_GITHUB = "https://gitlab.com/dacs-hpi/hitac"
+URL_ISSUES = "https://gitlab.com/dacs-hpi/hitac/-/issues"
+EMAIL = "fabio.malchermiranda@hpi.de"
+AUTHOR = "Fabio Malcher Miranda"
+REQUIRES_PYTHON = ">=3.8.3"
+KEYWORDS = ["hierarchical taxonomic classifier"]
+DACS_SOFTWARE = "https://gitlab.com/dacs-hpi"
+# What packages are required for this module to be executed?
+REQUIRED = ["pandas", "numpy", "scikit-learn", "hiclass"]
+
+# What packages are optional?
+# 'fancy feature': ['django'],}
+EXTRAS = {}
+
+# The rest you shouldn't have to touch too much :)
+# ------------------------------------------------
+# Except, perhaps the License and Trove Classifiers!
+# If you do change the License, remember to change the Trove Classifier for that!
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+# Import the README and use it as the long-description.
+# Note: this will only work if 'README.md' is present in your MANIFEST.in file!
+try:
+    with io.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
+        long_description = "\n" + f.read()
+except FileNotFoundError:
+    long_description = DESCRIPTION
+
+# Load the package's _version.py module as a dictionary.
+about = {}
+# project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
+project_slug = "hitac"
+# with open(os.path.join(here, project_slug, '_version.py')) as f:
+#    exec(f.read(), about)
+
+
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = "Build and publish the package."
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Print things in bold."""
+        print("\033[1m{0}\033[0m".format(s))
+
+    def initialize_options(self):
+        """Init options."""
+        pass
+
+    def finalize_options(self):
+        """Finalize method."""
+        pass
+
+    def run(self):
+        """Run method."""
+        try:
+            self.status("Removing previous builds…")
+            rmtree(os.path.join(here, "dist"))
+        except OSError:
+            pass
+
+        self.status("Building Source and Wheel (universal) distribution…")
+        os.system("{0} setup.py sdist bdist_wheel --universal".format(sys.executable))
+
+        self.status("Uploading the package to PyPI via Twine…")
+        os.system("twine upload dist/*")
+
+        self.status("Pushing git tags…")
+        os.system("git tag v{0}".format(about["__version__"]))
+        os.system("git push --tags")
+
+        sys.exit()
+
+
+# Where the magic happens:
 setup(
-    name="hitac",
-    install_requires=install_requires,
+    name=NAME,
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    author="Fabio Malcher Miranda",
-    author_email="fabio.malchermiranda@hpi.de",
-    description="Hierarchical taxonomic classifier",
+    description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=find_packages(),
-    url="https://gitlab.com/dacs-hpi/hitac",
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Operating System :: OS Independent",
-    ],
+    author=AUTHOR,
+    author_email=EMAIL,
+    python_requires=REQUIRES_PYTHON,
+    project_urls={
+        "Bug Tracker": URL_ISSUES,
+        "Source Code": URL_GITHUB,
+        # "Documentation": URL_DOKU,
+        # "Homepage": URL,
+        "Related Software": DACS_SOFTWARE,
+    },
+    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    # If your package is a single module, use this instead of 'packages':
+    # py_modules=['mypackage'],
+    # 'mycli=mymodule:cli'
     entry_points={
         'qiime2.plugins':
-        ['hitac=q2_hitac.plugin_setup:plugin']
+        ['hitac=hitac.plugin_setup:plugin']
     },
-    package_data={'q2_hitac': ['citations.bib']},
-    zip_safe=False,
-    python_requires='>=3'
+    package_data={'hitac': ['citations.bib']},
+    install_requires=REQUIRED,
+    extras_require=EXTRAS,
+    include_package_data=True,
+    license="BSD 3-Clause",
+    keywords=KEYWORDS,
+    classifiers=[
+        # Trove classifiers
+        # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: Implementation :: PyPy",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    ],
 )
+#    # $ setup.py publish support.
+#    cmdclass={
+#        'upload': UploadCommand,
+#    },

@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+import os
+import re
+import sys
+import semver
+import subprocess
+
+
+# For this script to work you need to change the git strategy to clone
+# under settings->CI/CD->general pipelines.
+# You also need to create and add an SSH
+# key to a protected variable called SSH_PRIVATE_KEY
+# under settings->CI/CD->Variables.
+# The pubkey should be added to settings->deploy keys.
+# The branch should be protected, as well as the tags created
+# by this script. To do this go to settings->repository
+
+def git(*args):
+    print(["git"] + list(args))
+    return subprocess.check_output(["git"] + list(args))
+
+
+def tag_repo(tag, message):
+    url = os.environ["CI_REPOSITORY_URL"]
+
+    # Transforms the repository URL to the SSH URL
+    # Example input: https://gitlab-ci-token:xxxxxxxxxxxxxxxxxxxx@gitlab.com/threedotslabs/ci-examples.git
+    # Example output: git@gitlab.com:threedotslabs/ci-examples.git
+    push_url = re.sub(r'.+@([^/]+)/', r'git@\1:', url)
+
+    git("remote", "set-url", "--push", "origin", push_url)
+    git("config", "--global", "user.email", "miranda.fmm@gmail.com")
+    git("config", "--global", "user.name", "Fabio Malcher Miranda")
+    git("tag", "-a", tag, "-m", message)
+    git("push", "origin", tag)
+
+
+# decides from the commit message if this is a major, minor or patch bump
+def bump(latest, message):
+    if bool(re.search('#major', message)):
+        return semver.bump_major(latest)
+    elif bool(re.search('#minor', message)):
+        return semver.bump_minor(latest)
+    else:
+        return semver.bump_patch(latest)
+
+
+def main():
+    try:
+        message = git("log", "-2").decode().strip().split("\n")[-1].strip()
+        print("Last commit message:", message)
+        latest = git("describe", "--tags").decode().strip()
+    except subprocess.CalledProcessError:
+        # No tags in the repository
+        version = "1.0.0"
+    else:
+        # Skip already tagged commits
+        if '-' not in latest:
+            print('latest', latest)
+            return 0
+
+        version = bump(latest, message)
+
+    tag_repo(version, message)
+    print('version', version)
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+
