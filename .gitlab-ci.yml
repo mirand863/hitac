@@ -6,7 +6,7 @@ stages:
 
 
 bump-version:
-  image: python:3.6.7-buster
+  image: python:3.8.3-buster
   stage: version
   script:
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
@@ -50,7 +50,7 @@ test-functions:
 
 
 deploy-pypi:
-  image: python:3.6.7-buster
+  image: python:latest
   stage: deploy
   script:
     - python setup.py sdist bdist_wheel
