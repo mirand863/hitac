@@ -5,7 +5,6 @@ from itertools import product
 from multiprocessing import cpu_count
 
 import numpy as np
-from q2_types.feature_data._transformer import DNAIterator
 
 
 def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
@@ -179,7 +178,7 @@ def extract_qiime2_taxonomy(taxonomy: list) -> np.array:
     return np.array(extracted_taxonomy)
 
 
-def _extract_reads(reads: DNAIterator) -> zip:
+def _extract_reads(reads) -> zip:
     """
     Extract IDs and sequences from DNAIterator.
 
