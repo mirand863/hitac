@@ -187,10 +187,10 @@ def fit_filter(
         class_weight="balanced",
         max_iter=10000,
         verbose=0,
-        n_jobs=threads,
+        n_jobs=1,
     )
     hierarchical_classifier = LocalClassifierPerLevel(
-        local_classifier=logistic_regression, n_jobs=1
+        local_classifier=logistic_regression, n_jobs=threads
     )
     hierarchical_classifier.fit(X_train, Y_train)
     return hierarchical_classifier

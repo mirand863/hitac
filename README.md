@@ -8,11 +8,13 @@ A hierarchical taxonomic classifier for fungal ITS sequences.
 
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/hitac/README.html)
 
-HiTaC dependends on QIIME 2. We recommend using QIIME 2 version 2020.2. To install QIIME 2 in a new conda environment and activate it, please run:
+HiTaC dependends on QIIME 2. We recommend using QIIME 2 version 2021.8. To install QIIME 2 in a new conda environment and activate it, please run:
 
 ```
-wget https://data.qiime2.org/distro/core/qiime2-2020.2-py36-linux-conda.yml
-conda env create -n qiime2-2020.2 --file qiime2-2020.2-py36-linux-conda.yml
+wget https://data.qiime2.org/distro/core/qiime2-2021.8-py38-linux-conda.yml
+conda env create -n qiime2-2021.8 --file qiime2-2021.8-py38-linux-conda.yml
+# OPTIONAL CLEANUP
+rm qiime2-2021.8-py38-linux-conda.yml
 conda activate qiime2-2020.2
 ```
 
@@ -44,6 +46,35 @@ The downloaded image can then be started with:
 docker run -it mirand863/hitac:latest /bin/bash
 ```
 
+## Running
+
+To see the usage run `qiime hitac --help` or `qiime hitac [command] --help` if you want further help with a specific command.
+
+```
+Usage: qiime hitac [OPTIONS] COMMAND [ARGS]...
+
+  Description: This QIIME 2 plugin wraps HiTaC for hierarchical taxonomic
+  classification.
+
+  Plugin website: https://gitlab.com/dacs-hpi/hitac
+
+  Getting user support: Please post to the QIIME 2 forum for help with this
+  plugin: https://forum.qiime2.org
+
+Options:
+  --version    Show the version and exit.
+  --citations  Show citations and exit.
+  --help       Show this message and exit.
+
+Commands:
+  classify    Hierarchical classification with HiTaC's pre-fitted model
+  filter      Hierarchical classification filtering with HiTaC's pre-fitted
+              model
+
+  fit         Train HiTaC's hierarchical classifier
+  fit-filter  Train HiTaC's hierarchical filter
+```
+
 ## Input Files
 
 HiTaC accepts taxonomy in TSV format and training and test files in FASTA format. All these files must be previously imported by QIIME 2. For example:
@@ -66,38 +97,35 @@ qiime tools import \
 --output-path db-tax.qza
 ```
 
+## Training and predicting taxonomies
+
 To train the model and classify, simply run:
 
 ```
-qiime hitac classify \
+qiime hitac fit \
 --i-reference-reads db-seqs.qza \
 --i-reference-taxonomy db-tax.qza \
---i-query q-seqs.qza \
---o-classification classifier_output.qza --verbose
+--o-classifier classifier.qza
+
+qiime hitac classify \
+--i-classifier classifier.qza \
+--i-reads q-seqs.qza \
+--o-classification classifier_output.qza
 ```
 
-## Running
-
-To see the usage run `qiime hitac --help`
+Additionally, a filter can be trained to remove ranks where the predictions might be inaccurate and to compute the confidence score:
 
 ```
-Usage: qiime hitac [OPTIONS] COMMAND [ARGS]...
+qiime hitac fit-filter \
+--i-reference-reads db-seqs.qza \
+--i-reference-taxonomy db-tax.qza \
+--o-filter filter.qza
 
-  Description: This QIIME 2 plugin wraps HiTaC and supports hierarchical
-  taxonomic classification.
-
-  Plugin website: https://gitlab.com/dacs-hpi/hitac
-
-  Getting user support: Please post to the QIIME 2 forum for help with this
-  plugin: https://forum.qiime2.org
-
-Options:
-  --version    Show the version and exit.
-  --citations  Show citations and exit.
-  --help       Show this message and exit.
-
-Commands:
-  classify  HiTaC
+qiime hitac filter \
+--i-filter filter.qza \
+--i-reads q-seqs.qza \
+--i-classification classifier_output.qza \
+--o-filtered-classification filter_output.qza
 ```
 
 ## Output File
@@ -107,6 +135,14 @@ The predictions can be exported from QIIME 2 to a TSV file:
 ```
 qiime tools export \
 --input-path classifier_output.qza \
+--output-path output_dir
+```
+
+or alternativelly if the filter was used:
+
+```
+qiime tools export \
+--input-path filter_output.qza \
 --output-path output_dir
 ```
 
@@ -120,4 +156,3 @@ UDB016040;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulacea
 GU827310;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
 JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
 ```
-
