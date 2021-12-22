@@ -223,7 +223,7 @@ def filter(
     threads: int = cpu_count(),
 ) -> pd.DataFrame:
     """
-    Classify sequences with HiTaC.
+    Filter sequences with HiTaC.
 
     Parameters
     ----------
