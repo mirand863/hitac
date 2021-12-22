@@ -270,13 +270,15 @@ def compute_confidence(
     confidence = []
     for row in range(len(classification)):
         predictions.append([])
-        confidence.append(1)
-        for rank in range(len(classification[row])):
-            index = search(classification[row][rank], classes[rank])
-            conf = predict_proba[rank][row][index] * confidence[row]
-            if conf >= threshold:
-                predictions[row].append(classification[row][rank])
-                confidence[row] = conf
+        confidence.append(-1)
+        for rank in reversed(range(len(classification[row]))):
+            if confidence[row] == -1:
+                index = search(classification[row][rank], classes[rank])
+                conf = predict_proba[rank][row][index]
+                if conf >= threshold:
+                    confidence[row] = conf
+            if confidence[row] >= threshold:
+                predictions[row].insert(0, classification[row][rank])
             else:
-                break
+                predictions[row].insert(0, '')
     return predictions, confidence
