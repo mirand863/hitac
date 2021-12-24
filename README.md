@@ -160,3 +160,19 @@ UDB016040;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulacea
 GU827310;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
 JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
 ```
+
+## Citation
+
+If you use HiTaC, please cite:
+
+>Miranda, Fábio M., et al. "HiTaC: Hierarchical Taxonomic Classification of Fungal ITS Sequences." bioRxiv (2020).
+
+```
+@article{miranda2020hitac,
+  title={HiTaC: Hierarchical Taxonomic Classification of Fungal ITS Sequences},
+  author={Miranda, F{\'a}bio M and Azevedo, Vasco AC and Renard, Bernhard Y and Piro, Vitor C and Ramos, Rommel TJ},
+  journal={bioRxiv},
+  year={2020},
+  publisher={Cold Spring Harbor Laboratory}
+}
+```
