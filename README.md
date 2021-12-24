@@ -24,6 +24,8 @@ Afterwards, HiTaC can also be installed with conda:
 conda install -c conda-forge -c bioconda hitac
 ```
 
+For conda installation instructions, we refer the reader to [https://conda.io/projects/conda/en/latest/user-guide/install/index.html](https://conda.io/projects/conda/en/latest/user-guide/install/index.html).
+
 [![install with pip](https://gitlab.com/dacs-hpi/hitac/-/raw/master/resources/pip.svg)](https://pypi.org/project/hitac/)
 
 Alternatively, HiTaC can be installed with pip in an environment where QIIME 2 was previously installed:
@@ -47,6 +49,8 @@ docker run -it mirand863/hitac:latest /bin/bash
 ```
 
 ## Running
+
+For an interactive tutorial, we refer the reader to our [Google Colabs notebook](https://colab.research.google.com/drive/12XicbyNhUQB2eVaiJG2b-0HMsOqvQTNs).
 
 To see the usage run `qiime hitac --help` or `qiime hitac [command] --help` if you want further help with a specific command.
 
