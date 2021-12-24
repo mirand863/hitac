@@ -21,7 +21,7 @@ conda activate qiime2-2020.2
 Afterwards, HiTaC can also be installed with conda:
 
 ```
-conda install -c bioconda hitac
+conda install -c conda-forge -c bioconda hitac
 ```
 
 [![install with pip](https://gitlab.com/dacs-hpi/hitac/-/raw/master/resources/pip.svg)](https://pypi.org/project/hitac/)
