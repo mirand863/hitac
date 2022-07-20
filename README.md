@@ -1,6 +1,6 @@
 # HiTaC
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![pipeline status](https://gitlab.com/dacs-hpi/hitac/badges/master/pipeline.svg)](https://gitlab.com/dacs-hpi/hitac/-/commits/master) [![coverage report](https://gitlab.com/dacs-hpi/hitac/badges/master/coverage.svg)](https://gitlab.com/dacs-hpi/hitac/-/commits/master)
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![pipeline status](https://gitlab.com/dacs-hpi/hitac/badges/master/pipeline.svg)](https://gitlab.com/dacs-hpi/hitac/-/commits/master) [![coverage report](https://gitlab.com/dacs-hpi/hitac/badges/master/coverage.svg)](https://gitlab.com/dacs-hpi/hitac/-/commits/master)
 
 A hierarchical taxonomic classifier for fungal ITS sequences.
 
