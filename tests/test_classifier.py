@@ -83,10 +83,12 @@ class TestClassifier:
         ground_truth.sort()
         hierarchical_classifier = classifier.fit(reference_reads_1, reference_taxonomy)
         classification = classifier.classify(query_reads, hierarchical_classifier)
-        hierarchical_filter = classifier.fit_filter(reference_reads_2, reference_taxonomy)
-        predictions = classifier.filter(query_reads, hierarchical_filter, classification)[
-            "Taxon"
-        ].values.tolist()
+        hierarchical_filter = classifier.fit_filter(
+            reference_reads_2, reference_taxonomy
+        )
+        predictions = classifier.filter(
+            query_reads, hierarchical_filter, classification
+        )["Taxon"].values.tolist()
         predictions.sort()
         assert len(ground_truth) == len(predictions)
         assert all([a == b for a, b in zip(predictions, ground_truth)])

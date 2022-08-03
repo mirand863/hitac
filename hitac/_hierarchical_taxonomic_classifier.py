@@ -7,8 +7,9 @@ import joblib
 import qiime2.plugin
 import qiime2.plugin.model as model
 import sklearn
-from hiclass import LocalClassifierPerLevel, LocalClassifierPerParent
+from hiclass import LocalClassifierPerParentNode
 
+from .filter import Filter
 from .plugin_setup import plugin
 
 # Semantic Types
@@ -73,7 +74,7 @@ class HierarchicalTaxonomicClassiferTemporaryPickleDirFmt(model.DirectoryFormat)
 @plugin.register_transformer
 def _1(
     dirfmt: HierarchicalTaxonomicClassiferTemporaryPickleDirFmt,
-) -> LocalClassifierPerParent:
+) -> LocalClassifierPerParentNode:
     sklearn_version = dirfmt.version_info.view(dict)["sklearn-version"]
     if sklearn_version != sklearn.__version__:
         raise ValueError(
@@ -99,7 +100,7 @@ def _1(
 
 @plugin.register_transformer
 def _2(
-    data: LocalClassifierPerParent,
+    data: LocalClassifierPerParentNode,
 ) -> HierarchicalTaxonomicClassiferTemporaryPickleDirFmt:
     sklearn_pipeline = PickleFormat()
     with tarfile.open(str(sklearn_pipeline), "w") as tar:
@@ -117,7 +118,7 @@ def _2(
 
 
 @plugin.register_transformer
-def _3(dirfmt: HierarchicalTaxonomicClassifierDirFmt) -> LocalClassifierPerParent:
+def _3(dirfmt: HierarchicalTaxonomicClassifierDirFmt) -> LocalClassifierPerParentNode:
     raise ValueError(
         "The scikit-learn version could not be determined for"
         " this artifact, please retrain your classifier for your"
@@ -143,7 +144,7 @@ def _5(data: dict) -> JSONFormat:
 @plugin.register_transformer
 def _6(
     dirfmt: HierarchicalTaxonomicClassiferTemporaryPickleDirFmt,
-) -> LocalClassifierPerLevel:
+) -> Filter:
     sklearn_version = dirfmt.version_info.view(dict)["sklearn-version"]
     if sklearn_version != sklearn.__version__:
         raise ValueError(
@@ -169,7 +170,7 @@ def _6(
 
 @plugin.register_transformer
 def _7(
-    data: LocalClassifierPerLevel,
+    data: Filter,
 ) -> HierarchicalTaxonomicClassiferTemporaryPickleDirFmt:
     sklearn_pipeline = PickleFormat()
     with tarfile.open(str(sklearn_pipeline), "w") as tar:
@@ -187,7 +188,7 @@ def _7(
 
 
 @plugin.register_transformer
-def _8(dirfmt: HierarchicalTaxonomicClassifierDirFmt) -> LocalClassifierPerLevel:
+def _8(dirfmt: HierarchicalTaxonomicClassifierDirFmt) -> Filter:
     raise ValueError(
         "The scikit-learn version could not be determined for"
         " this artifact, please retrain your classifier for your"

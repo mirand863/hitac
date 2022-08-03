@@ -3,7 +3,7 @@ from multiprocessing import cpu_count
 
 import pandas as pd
 import skbio
-from hiclass import LocalClassifierPerLevel, LocalClassifierPerParent
+from hiclass import LocalClassifierPerParentNode
 from q2_types.feature_data import (
     DNAFASTAFormat,
     DNAIterator,
@@ -23,6 +23,7 @@ from ._utils import (
     convert_taxonomy_to_qiime2,
     extract_qiime2_taxonomy,
 )
+from .filter import Filter
 from .plugin_setup import citations, plugin
 
 
@@ -31,7 +32,7 @@ def fit(
     reference_taxonomy: pd.Series,
     kmer: int = 6,
     threads: int = cpu_count(),
-) -> LocalClassifierPerParent:
+) -> LocalClassifierPerParentNode:
     """
     Fit HiTaC's classifier.
 
@@ -48,7 +49,7 @@ def fit(
 
     Returns
     -------
-    hierarchical_classifier : LocalClassifierPerParent
+    hierarchical_classifier : LocalClassifierPerParentNode
         Local hierarchical classifier based on the taxonomic hierarchy.
     """
     kmers = compute_possible_kmers(kmer)
@@ -63,7 +64,7 @@ def fit(
         verbose=0,
         n_jobs=1,
     )
-    hierarchical_classifier = LocalClassifierPerParent(
+    hierarchical_classifier = LocalClassifierPerParentNode(
         local_classifier=logistic_regression, n_jobs=threads
     )
     hierarchical_classifier.fit(X_train, Y_train)
@@ -90,7 +91,7 @@ plugin.methods.register_function(
 
 def classify(
     reads: DNAFASTAFormat,
-    classifier: LocalClassifierPerParent,
+    classifier: LocalClassifierPerParentNode,
     kmer: int = 6,
     threads: int = cpu_count(),
 ) -> pd.DataFrame:
@@ -101,7 +102,7 @@ def classify(
     ----------
     reads : DNAFASTAFormat
         Reads to classify.
-    classifier : LocalClassifierPerParent
+    classifier : LocalClassifierPerParentNode
         Pre-fitted hierarchical classifier.
     kmer : int, default=6
         K-mer size.
@@ -157,7 +158,7 @@ def fit_filter(
     reference_taxonomy: pd.Series,
     kmer: int = 6,
     threads: int = cpu_count(),
-) -> LocalClassifierPerLevel:
+) -> Filter:
     """
     Fit HiTaC's filter.
 
@@ -174,7 +175,7 @@ def fit_filter(
 
     Returns
     -------
-    hierarchical_classifier : LocalClassifierPerLevel
+    hierarchical_classifier : Filter
         Local hierarchical filter based on the taxonomic hierarchy.
     """
     kmers = compute_possible_kmers(kmer)
@@ -189,7 +190,7 @@ def fit_filter(
         verbose=0,
         n_jobs=1,
     )
-    hierarchical_classifier = LocalClassifierPerLevel(
+    hierarchical_classifier = Filter(
         local_classifier=logistic_regression, n_jobs=threads
     )
     hierarchical_classifier.fit(X_train, Y_train)
@@ -216,7 +217,7 @@ plugin.methods.register_function(
 
 def filter(
     reads: DNAFASTAFormat,
-    filter: LocalClassifierPerLevel,
+    filter: Filter,
     classification: pd.DataFrame,
     threshold: float = 0.7,
     kmer: int = 6,
@@ -229,7 +230,7 @@ def filter(
     ----------
     reads : DNAFASTAFormat
         Reads to filter.
-    filter : LocalClassifierPerLevel
+    filter : Filter
         Pre-fitted hierarchical filter.
     classification : pd.DataFrame
         Predictions made by HiTaC's classifier.

@@ -26,7 +26,7 @@ REQUIRES_PYTHON = ">=3.8.3"
 KEYWORDS = ["hierarchical taxonomic classifier"]
 DACS_SOFTWARE = "https://gitlab.com/dacs-hpi"
 # What packages are required for this module to be executed?
-REQUIRED = ["pandas", "numpy", "scikit-learn", "hiclass", "scikit-bio"]
+REQUIRED = ["pandas", "numpy", "scikit-learn", "hiclass", "scikit-bio", "ray"]
 
 # What packages are optional?
 # 'fancy feature': ['django'],}
