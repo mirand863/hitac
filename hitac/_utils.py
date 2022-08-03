@@ -280,5 +280,5 @@ def compute_confidence(
             if confidence[row] >= threshold:
                 predictions[row].insert(0, classification[row][rank])
             else:
-                predictions[row].insert(0, '')
+                predictions[row].insert(0, "")
     return predictions, confidence

@@ -19,5 +19,5 @@ pytest-pydocstyle==2.2.0 \
 snowballstemmer==2.1.0 \
 toml==0.10.2 \
 black==21.11b1 \
-hiclass==2.0.6 \
+hiclass==4.1.7 \
 --quiet
