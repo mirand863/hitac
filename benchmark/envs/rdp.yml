@@ -1,0 +1,6 @@
+channels:
+  - gtcg
+  - anaconda
+dependencies:
+  - oraclejdk
+  - python=2.7

@@ -1,0 +1,5 @@
+sp_rdp_its	fl	100	TPR	sintax80	o	100.0
+sp_rdp_its	fl	100	UCR	sintax80	o	0.0
+sp_rdp_its	fl	100	MCR	sintax80	o	0.0
+sp_rdp_its	fl	100	OCR	sintax80	o	.
+sp_rdp_its	fl	100	Acc	sintax80	o	100.0

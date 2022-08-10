@@ -1,0 +1,5 @@
+sp_rdp_its	fl	90	TPR	q2vs	g	64.2
+sp_rdp_its	fl	90	UCR	q2vs	g	16.4
+sp_rdp_its	fl	90	MCR	q2vs	g	19.5
+sp_rdp_its	fl	90	OCR	q2vs	g	61.7
+sp_rdp_its	fl	90	Acc	q2vs	g	58.5

@@ -1,0 +1,5 @@
+sp_rdp_its	fl	90	TPR	btop	c	99.8
+sp_rdp_its	fl	90	UCR	btop	c	0.0
+sp_rdp_its	fl	90	MCR	btop	c	0.2
+sp_rdp_its	fl	90	OCR	btop	c	.
+sp_rdp_its	fl	90	Acc	btop	c	99.8

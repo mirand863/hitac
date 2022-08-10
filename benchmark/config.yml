@@ -1,0 +1,80 @@
+workdir: /home/fabio/Desktop/hitac/benchmark
+
+threads: 8
+
+benchmark:
+    repeat: 5
+
+datasets:
+    - sp_rdp_its.90
+    - sp_rdp_its.95
+    - sp_rdp_its.97
+    - sp_rdp_its.99
+    - sp_rdp_its.100
+
+scripts:
+    - fasta_utax2_to_blca.py
+    - blca2tab.py
+    - bbc_cutoff.py
+    - spingo2tab.py
+    - fasta.py
+    - qiime2tax2tab.py
+    - fasta_utax2_to_metaxa2.py
+    - progress.py
+    - utax2.py
+    - sortdict.py
+    - metaxa2tab.py
+    - fasta_utax2qiime.py
+    - fasta_utax2spingo.py
+    - die.py
+    - mothur_make_taxtrainfiles.py
+    - qiimetax2tab.py
+    - rdpc2tab3.py
+    - motknn2utax2.py
+    - taxbenchx.py
+    - btop2tab.py
+    - microclass.R
+    - microclass2tab.py
+    - fasta_utax2rdp.py
+
+methods:
+    - blca
+    - btop
+    - ct1
+    - ct2
+    - hitac
+    - hitac_filter
+    - knn
+    - ktop
+    - metaxa2
+    - microclass
+    - nbc50
+    - nbc80
+    - q1
+    - q2blast
+    - q2sk
+    - q2vs
+    - rdp50
+    - rdp80
+    - sintax50
+    - sintax80
+    - spingo
+    - top
+
+ranks:
+    - p  # phylum
+    - c  # class
+    - o  # order
+    - f  # family
+    - g  # genus
+    - s  # species
+
+urls:
+    blca: "https://github.com/qunfengdong/BLCA/archive/refs/tags/v2.3-alpha.tar.gz"
+    usearch: "https://www.drive5.com/downloads/usearch11.0.667_i86linux32.gz"
+    rdp: "https://zenodo.org/record/6950218/files/rdp_classifier_2.13.zip?download=1"
+    spingo: "https://github.com/GuyAllard/SPINGO/archive/refs/tags/v1.3.zip"
+    train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"
+    test: "https://drive5.com/taxxi/benchmark/testfa/{dataset}"
+    scripts: "https://raw.githubusercontent.com/mirand863/taxxi/master/benchmark/py/{script}"
+    namecounts: "https://raw.githubusercontent.com/mirand863/taxxi/master/benchmark/namecounts/{dataset}"

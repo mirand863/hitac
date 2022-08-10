@@ -1,0 +1,5 @@
+sp_rdp_its	fl	95	TPR	q2blast	f	95.6
+sp_rdp_its	fl	95	UCR	q2blast	f	2.0
+sp_rdp_its	fl	95	MCR	q2blast	f	2.5
+sp_rdp_its	fl	95	OCR	q2blast	f	.
+sp_rdp_its	fl	95	Acc	q2blast	f	95.6

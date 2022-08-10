@@ -1,0 +1,11 @@
+channels:
+  - anaconda
+  - bioconda
+  - conda-forge
+dependencies:
+  - python=2.7
+  - numpy>=1.10
+  - pip
+  - pip:
+    - qiime==1.9
+    - biom-format==2.1.7

@@ -1,0 +1,5 @@
+sp_rdp_its	fl	99	TPR	top	o	99.9
+sp_rdp_its	fl	99	UCR	top	o	0.0
+sp_rdp_its	fl	99	MCR	top	o	0.1
+sp_rdp_its	fl	99	OCR	top	o	.
+sp_rdp_its	fl	99	Acc	top	o	99.9

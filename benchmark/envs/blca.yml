@@ -1,0 +1,9 @@
+channels:
+  - anaconda
+  - bioconda
+dependencies:
+  - blast=2.10.1
+  - clustalo<=1.2.4
+  - biopython=1.72
+  - muscle=3.8.1551
+  - python=2.7

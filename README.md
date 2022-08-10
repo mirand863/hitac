@@ -1,8 +1,20 @@
 # HiTaC
 
+HiTaC is an open-source hierarchical taxonomic classifier for fungal ITS sequences compatible with QIIME 2.
+
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![pipeline status](https://gitlab.com/dacs-hpi/hitac/badges/master/pipeline.svg)](https://gitlab.com/dacs-hpi/hitac/-/commits/master) [![coverage report](https://gitlab.com/dacs-hpi/hitac/badges/master/coverage.svg)](https://gitlab.com/dacs-hpi/hitac/-/commits/master)
 
-A hierarchical taxonomic classifier for fungal ITS sequences.
+## Quick links
+
+- [Benchmark](#benchmark)
+
+## Benchmark
+
+HiTaC was thoroughly evaluated with the [TAXXI benchmark](https://peerj.com/articles/4652/). Below are some of the results achieved.
+
+![Accuracy](./benchmark/results/images/accuracy.svg)
+
+![True positive rate](./benchmark/results/images/tpr.svg)
 
 ## Installation
 

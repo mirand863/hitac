@@ -1,0 +1,5 @@
+sp_rdp_its	fl	90	TPR	hitac	c	99.9
+sp_rdp_its	fl	90	UCR	hitac	c	0.0
+sp_rdp_its	fl	90	MCR	hitac	c	0.1
+sp_rdp_its	fl	90	OCR	hitac	c	.
+sp_rdp_its	fl	90	Acc	hitac	c	99.9

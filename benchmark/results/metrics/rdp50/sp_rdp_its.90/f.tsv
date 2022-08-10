@@ -1,0 +1,5 @@
+sp_rdp_its	fl	90	TPR	rdp50	f	93.3
+sp_rdp_its	fl	90	UCR	rdp50	f	0.8
+sp_rdp_its	fl	90	MCR	rdp50	f	5.9
+sp_rdp_its	fl	90	OCR	rdp50	f	.
+sp_rdp_its	fl	90	Acc	rdp50	f	93.2
