@@ -29,10 +29,12 @@ sed -i "s?workdir.*?workdir: `pwd`?" config.yml
 
 After a successful installation, you can activate the newly created environment and run the pipelines (please don't forget to modify the config file with your working directory as described in the last section).
 
-```
+```shell
 conda activate snakemake
-snakemake --keep-going --printshellcmds --reason --use-conda --cores 12 --conda-frontend mamba -s workflows/methods
-snakemake --keep-going --printshellcmds --reason --use-conda --cores 12 --conda-frontend mamba -s workflows/metrics
+snakemake --keep-going --printshellcmds --reason --use-conda \
+    --cores 12 --conda-frontend mamba -s workflows/methods
+snakemake --keep-going --printshellcmds --reason --use-conda \
+    --cores 12 --conda-frontend mamba -s workflows/metrics
 ```
 
 The parameter --keep-going forces Snakemake to keep executing independent tasks if an unrelated one fails, while the parameter --printshellcmds enables printing the commands that will be executed, the parameter --reason makes Snakemake print the reason for each executed rule, the parameter --use-conda is necessary to indicate that conda will be used to manage the software dependencies of the pipeline, the parameter --cores tells Snakemake how many cpus can be used overall (the more cpus you can spare, the faster the pipeline will finish), the parameter --conda-frontend switches from conda to mamba for faster dependency management, and the parameter -s selects the workflow to be executed.
