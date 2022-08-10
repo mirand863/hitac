@@ -10,11 +10,13 @@ HiTaC is an open-source hierarchical taxonomic classifier for fungal ITS sequenc
 
 ## Benchmark
 
-HiTaC was thoroughly evaluated with the [TAXXI benchmark](https://peerj.com/articles/4652/). Below are some of the results achieved.
+HiTaC was thoroughly evaluated with the [TAXXI benchmark](https://peerj.com/articles/4652/), consistently achieving higher accuracy and sensitivity as evidenced in the figures below.
 
 ![Accuracy](./benchmark/results/images/accuracy.svg)
 
 ![True positive rate](./benchmark/results/images/tpr.svg)
+
+For reproducibility, a Snakemake pipeline was created. Instructions on how to run it and source code are available at [https://gitlab.com/dacs-hpi/hitac/-/tree/master/benchmark](https://gitlab.com/dacs-hpi/hitac/-/tree/master/benchmark).
 
 ## Installation
 
