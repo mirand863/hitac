@@ -12,7 +12,7 @@ Please make sure all tests pass before submitting a pull request. It is also goo
 
 To test the code locally you need to install the dependencies for the library in the current environment. Additionally, you need to install the following dependencies for testing:
 
-```
+```shell
 pip install coverage==5.5
 pip install flake8==3.9.2
 pip install iniconfig==1.1.1
@@ -34,6 +34,6 @@ pip install toml==0.10.2
 
 To run the tests simply execute:
 
-```
-pytest -v --cov=hitac --cov-report term-missing --cov-report html
+```shell
+pytest -v --flake8 --pydocstyle --cov=hitac --cov-fail-under=75 --cov-report html
 ```
