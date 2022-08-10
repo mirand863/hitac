@@ -1,4 +1,4 @@
-FROM quay.io/qiime2/core:2021.8
+FROM quay.io/qiime2/core:2022.2
 
 RUN pip install \
 coverage==5.5 \
