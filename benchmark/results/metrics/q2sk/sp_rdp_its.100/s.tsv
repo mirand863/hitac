@@ -1,0 +1,5 @@
+sp_rdp_its	fl	100	TPR	q2sk	s	95.3
+sp_rdp_its	fl	100	UCR	q2sk	s	3.8
+sp_rdp_its	fl	100	MCR	q2sk	s	0.8
+sp_rdp_its	fl	100	OCR	q2sk	s	.
+sp_rdp_its	fl	100	Acc	q2sk	s	95.3

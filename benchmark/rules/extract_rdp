@@ -1,0 +1,11 @@
+rule extract_rdp:
+    input:
+        "bin/rdp_classifier_2.13.zip"
+    output:
+        "bin/rdp_classifier_2.13/dist/classifier.jar"
+    params:
+        output_dir = "bin"
+    shell:
+        """
+        unzip {input} -d {params.output_dir}
+        """

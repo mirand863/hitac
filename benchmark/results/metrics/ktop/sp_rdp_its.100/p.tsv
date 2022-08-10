@@ -1,0 +1,5 @@
+sp_rdp_its	fl	100	TPR	ktop	p	100.0
+sp_rdp_its	fl	100	UCR	ktop	p	0.0
+sp_rdp_its	fl	100	MCR	ktop	p	0.0
+sp_rdp_its	fl	100	OCR	ktop	p	.
+sp_rdp_its	fl	100	Acc	ktop	p	100.0

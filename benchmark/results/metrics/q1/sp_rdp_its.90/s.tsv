@@ -1,0 +1,5 @@
+sp_rdp_its	fl	90	TPR	q1	s	.
+sp_rdp_its	fl	90	UCR	q1	s	.
+sp_rdp_its	fl	90	MCR	q1	s	.
+sp_rdp_its	fl	90	OCR	q1	s	64.9
+sp_rdp_its	fl	90	Acc	q1	s	0.0

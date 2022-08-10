@@ -1,0 +1,44 @@
+rule btop:
+    input:
+        train = "data/train/{dataset}.fasta",
+        test = "data/test/{dataset}.fasta",
+        scripts = expand("scripts/{script}", script=config["scripts"])
+    output:
+        predictions = "results/predictions/{dataset}/btop.tsv",
+        tmpdir= temp(directory("results/temp/{dataset}/btop"))
+    benchmark:
+        repeat("results/benchmark/{dataset}/btop.tsv", config["benchmark"]["repeat"])
+    threads:
+        config["threads"]
+    conda:
+        "../envs/btop.yml"
+    shell:
+        """
+        mkdir -p {output.tmpdir}
+        
+        sed \
+            "-es/;.*//" \
+            < {input.train} \
+            > {output.tmpdir}/db.fa
+        
+        makeblastdb \
+            -in {output.tmpdir}/db.fa \
+            -dbtype nucl \
+            -parse_seqids \
+            -out {output.tmpdir}/db
+        
+        blastn \
+            -task megablast \
+            -db {output.tmpdir}/db \
+            -query {input.test} \
+            -num_threads {threads} \
+            -max_target_seqs 1 \
+            -outfmt "6 qseqid sseqid" \
+            -evalue 0.01 \
+            > {output.tmpdir}/raw
+        
+        python scripts/btop2tab.py \
+            {output.tmpdir}/raw \
+            {input.train} \
+            {output.predictions}
+        """

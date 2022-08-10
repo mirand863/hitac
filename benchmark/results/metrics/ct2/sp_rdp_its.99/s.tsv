@@ -1,0 +1,5 @@
+sp_rdp_its	fl	99	TPR	ct2	s	3.6
+sp_rdp_its	fl	99	UCR	ct2	s	95.5
+sp_rdp_its	fl	99	MCR	ct2	s	0.9
+sp_rdp_its	fl	99	OCR	ct2	s	3.3
+sp_rdp_its	fl	99	Acc	ct2	s	3.6

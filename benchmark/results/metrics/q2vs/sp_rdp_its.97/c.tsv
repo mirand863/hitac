@@ -1,0 +1,5 @@
+sp_rdp_its	fl	97	TPR	q2vs	c	99.9
+sp_rdp_its	fl	97	UCR	q2vs	c	0.1
+sp_rdp_its	fl	97	MCR	q2vs	c	0.1
+sp_rdp_its	fl	97	OCR	q2vs	c	.
+sp_rdp_its	fl	97	Acc	q2vs	c	99.9

@@ -4,3 +4,4 @@ include README.md
 include LICENSE
 graft hitac
 recursive-exclude * *.py[co]
+prune benchmark*

@@ -1,0 +1,5 @@
+sp_rdp_its	fl	99	TPR	q1	p	99.7
+sp_rdp_its	fl	99	UCR	q1	p	0.3
+sp_rdp_its	fl	99	MCR	q1	p	0.0
+sp_rdp_its	fl	99	OCR	q1	p	.
+sp_rdp_its	fl	99	Acc	q1	p	99.7

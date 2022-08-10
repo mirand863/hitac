@@ -1,0 +1,5 @@
+sp_rdp_its	fl	95	TPR	ct2	o	99.1
+sp_rdp_its	fl	95	UCR	ct2	o	0.2
+sp_rdp_its	fl	95	MCR	ct2	o	0.7
+sp_rdp_its	fl	95	OCR	ct2	o	.
+sp_rdp_its	fl	95	Acc	ct2	o	99.1
