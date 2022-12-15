@@ -22,7 +22,7 @@ HiTaC was thoroughly evaluated with the [TAXXI benchmark](https://peerj.com/arti
 
 ![True positive rate](benchmark/results/images/tpr.svg)
 
-For reproducibility, a Snakemake pipeline was created. Instructions on how to run it and source code are available at [https://gitlab.com/dacs-hpi/hitac/-/tree/master/benchmark](https://github.com/mirand863/hitac/tree/main/benchmark).
+For reproducibility, a Snakemake pipeline was created. Instructions on how to run it and source code are available at [https://github.com/mirand863/hitac/tree/main/benchmark](https://github.com/mirand863/hitac/tree/main/benchmark).
 
 ## Install
 
