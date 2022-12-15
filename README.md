@@ -20,7 +20,7 @@ HiTaC was thoroughly evaluated with the [TAXXI benchmark](https://peerj.com/arti
 
 ![Accuracy](benchmark/results/images/accuracy.svg)
 
-![True positive rate](https://gitlab.com/dacs-hpi/hitac/-/raw/master/benchmark/results/images/tpr.svg)
+![True positive rate](benchmark/results/images/tpr.svg)
 
 For reproducibility, a Snakemake pipeline was created. Instructions on how to run it and source code are available at [https://gitlab.com/dacs-hpi/hitac/-/tree/master/benchmark](https://gitlab.com/dacs-hpi/hitac/-/tree/master/benchmark).
 
