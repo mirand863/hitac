@@ -7,7 +7,7 @@
    viewBox="0 0 117.39918 181.86258"
    version="1.1"
    id="svg16057"
-   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14, custom)"
    sodipodi:docname="tpr.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -25,14 +25,14 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="1.1893044"
-     inkscape:cx="129.90787"
-     inkscape:cy="366.18043"
+     inkscape:cx="125.70373"
+     inkscape:cy="299.75505"
      inkscape:window-width="1920"
      inkscape:window-height="1131"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1">
+     inkscape:current-layer="layer3">
     <inkscape:grid
        type="xygrid"
        id="grid26677"
@@ -2773,6 +2773,18 @@
          y="49.130695" />
     </clipPath>
   </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 2">
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke-width:0.988649;stroke-linejoin:round"
+       id="rect15813"
+       width="117.34196"
+       height="181.53816"
+       x="0.15642352"
+       y="0.42581955" />
+  </g>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"

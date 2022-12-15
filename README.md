@@ -18,11 +18,11 @@ HiTaC is an open-source hierarchical taxonomic classifier for fungal ITS sequenc
 
 HiTaC was thoroughly evaluated with the [TAXXI benchmark](https://peerj.com/articles/4652/), consistently achieving higher accuracy and sensitivity as evidenced in the figures below.
 
-![Accuracy](https://gitlab.com/dacs-hpi/hitac/-/raw/master/benchmark/results/images/accuracy.svg)
+![Accuracy](benchmark/results/images/accuracy.svg)
 
-![True positive rate](https://gitlab.com/dacs-hpi/hitac/-/raw/master/benchmark/results/images/tpr.svg)
+![True positive rate](benchmark/results/images/tpr.svg)
 
-For reproducibility, a Snakemake pipeline was created. Instructions on how to run it and source code are available at [https://gitlab.com/dacs-hpi/hitac/-/tree/master/benchmark](https://gitlab.com/dacs-hpi/hitac/-/tree/master/benchmark).
+For reproducibility, a Snakemake pipeline was created. Instructions on how to run it and source code are available at [https://github.com/mirand863/hitac/tree/main/benchmark](https://github.com/mirand863/hitac/tree/main/benchmark).
 
 ## Install
 
@@ -185,7 +185,7 @@ JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae
 
 ## Support
 
-If you run into any problems or issues, please create a [GitLab issue](https://gitlab.com/dacs-hpi/hitac/-/issues) and we will try our best to help.
+If you run into any problems or issues, please create a [GitHub issue](https://github.com/mirand863/hitac/issues) and we will try our best to help.
 
 We strive to provide good support through our issue tracker on GitLab. However, if you'd like to receive private support with:
 
@@ -196,7 +196,7 @@ Please reach out to fabio.malchermiranda@hpi.de.
 
 ## Contributing
 
-We are a small team on a mission to improve ITS taxonomic classification, and we will take all the help we can get! If you would like to get involved, here is information on [contribution guidelines and how to test the code locally](https://gitlab.com/dacs-hpi/hitac/-/blob/master/CONTRIBUTING.md).
+We are a small team on a mission to improve ITS taxonomic classification, and we will take all the help we can get! If you would like to get involved, here is information on [contribution guidelines and how to test the code locally](CONTRIBUTING.md).
 
 You can contribute in multiple ways, e.g., reporting bugs, writing or translating documentation, reviewing or refactoring code, requesting or implementing new features, etc.
 
