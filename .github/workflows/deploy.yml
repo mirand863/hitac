@@ -33,7 +33,6 @@ jobs:
         pytest -v --flake8 --pydocstyle --cov=hitac --cov-fail-under=75 --cov-report html
         coverage xml
     - name: Upload Coverage to Codecov
-      if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v2
 
   bump:
