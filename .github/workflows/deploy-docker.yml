@@ -25,6 +25,7 @@ jobs:
       - name: Retrieve version
         id: version
         run: |
+          git fetch --tags
           echo "TAG_NAME=$(git tag --sort=taggerdate | tail -1)" >> $GITHUB_OUTPUT
           git tag --sort=taggerdate | tail -1
 
