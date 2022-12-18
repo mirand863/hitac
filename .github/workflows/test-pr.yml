@@ -1,5 +1,5 @@
 name: Test PR
-#
+
 on: [pull_request]
 
 jobs:
@@ -10,6 +10,8 @@ jobs:
       - uses: psf/black@stable
   test:
     runs-on: ${{ matrix.os }}
+    container:
+      image: quay.io/qiime2/core:2022.2
     strategy:
       fail-fast: false
       matrix:
