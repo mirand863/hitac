@@ -1,9 +1,11 @@
 name: Mirror to GitLab
 
-on:
-  push:
-    branches:
-      - main
+on: [pull_request]
+
+#on:
+#  push:
+#    branches:
+#      - main
 
 jobs:
   mirror:
@@ -15,6 +17,6 @@ jobs:
       - uses: pixta-dev/repository-mirroring-action@v1
         with:
           target_repo_url:
-            git@gitlab.com:dacs-hpi/hiclass.git
+            git@gitlab.com:dacs-hpi/hitac.git
           ssh_private_key:                              # <-- use 'secrets' to pass credential information.
             ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
