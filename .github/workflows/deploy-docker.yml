@@ -26,7 +26,7 @@ jobs:
         id: version
         run: |
           echo "TAG_NAME=$(git tag --sort=taggerdate | tail -1)" >> $GITHUB_OUTPUT
-          echo "$(git tag --sort=taggerdate | tail -1)"
+          git tag --sort=taggerdate | tail -1
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
