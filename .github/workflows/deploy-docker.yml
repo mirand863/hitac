@@ -22,11 +22,18 @@ jobs:
         with:
           images: mirand863/hitac
 
+      - name: Retrieve version
+        run: |
+          echo "TAG_NAME=$(git tag --sort=taggerdate | tail -1)" >> $GITHUB_OUTPUT
+        id: version
+
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        env:
+          GITHUB_TOKEN: ${{ secrets.token }}
         with:
           file: deploy/Dockerfile
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: mirand863/hitac:${{ steps.version.outputs.TAG_NAME }},mirand863/hitac:latest
           labels: ${{ steps.meta.outputs.labels }}
