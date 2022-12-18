@@ -35,5 +35,5 @@ jobs:
           file: deploy/Dockerfile
           context: .
           push: true
-          tags: mirand863/hitac:${{ steps.version.outputs.TAG_NAME }},mirand863/hitac:latest
+          tags: ${{ steps.version.outputs.TAG_NAME }}
           labels: ${{ steps.meta.outputs.labels }}
