@@ -117,11 +117,8 @@ setup(
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['mypackage'],
     # 'mycli=mymodule:cli'
-    entry_points={
-        'qiime2.plugins':
-        ['hitac=hitac.plugin_setup:plugin']
-    },
-    package_data={'hitac': ['citations.bib']},
+    entry_points={"qiime2.plugins": ["hitac=hitac.plugin_setup:plugin"]},
+    package_data={"hitac": ["citations.bib"]},
     install_requires=REQUIRED,
     extras_require=EXTRAS,
     include_package_data=True,
