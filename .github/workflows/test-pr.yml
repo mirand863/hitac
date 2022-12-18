@@ -9,14 +9,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: psf/black@stable
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     container:
-      image: mirand863/hitac:test
+      image: quay.io/qiime2/core:2022.2
     strategy:
       fail-fast: false
-      matrix:
-        python-version: ["3.8"]
-        os: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
