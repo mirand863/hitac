@@ -23,15 +23,15 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="pt"
      showgrid="false"
-     inkscape:zoom="0.40457143"
-     inkscape:cx="166.84322"
-     inkscape:cy="354.69633"
+     inkscape:zoom="1.6182857"
+     inkscape:cx="298.77295"
+     inkscape:cy="982.21222"
      inkscape:window-width="1920"
      inkscape:window-height="1131"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg1368" />
+     inkscape:current-layer="layer1" />
   <defs
      id="defs80">
     <rect
@@ -781,11 +781,11 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-2-4-4);display:inline;fill:#001219;fill-opacity:1;stroke:none"
        x="0"
        y="0"><tspan
-         x="276.68837"
+         x="259.93105"
          y="92.574702"
-         id="tspan1627"><tspan
+         id="tspan930"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold';text-align:center;text-anchor:middle"
-           id="tspan1625">https://gitlab.com/dacs-hpi/hitac</tspan></tspan></text>
+           id="tspan928">https://github.com/mirand863/hitac</tspan></tspan></text>
     <g
        clip-path="url(#clip-1-7-9)"
        id="g90-9-28"
@@ -819,9 +819,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-59);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1631"><tspan
+         id="tspan934"><tspan
            style="font-weight:bold"
-           id="tspan1629">Eurotiomycetes</tspan></tspan></text>
+           id="tspan932">Eurotiomycetes</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.75,0,0,0.75,351.48873,315.30883)"
@@ -829,9 +829,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-59-4);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1635"><tspan
+         id="tspan938"><tspan
            style="font-weight:bold"
-           id="tspan1633">Classifier</tspan></tspan></text>
+           id="tspan936">Classifier</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.75,0,0,0.75,486.22092,315.30883)"
@@ -839,9 +839,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-59-4-5);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1639"><tspan
+         id="tspan942"><tspan
            style="font-weight:bold"
-           id="tspan1637">Label</tspan></tspan></text>
+           id="tspan940">Label</tspan></tspan></text>
     <ellipse
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#001219;stroke-width:3.58582;stroke-opacity:1"
        id="path1041-31"
@@ -877,9 +877,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-1-2);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1643"><tspan
+         id="tspan946"><tspan
            style="font-weight:bold"
-           id="tspan1641">Lecanoromycetes</tspan></tspan></text>
+           id="tspan944">Lecanoromycetes</tspan></tspan></text>
     <g
        clip-path="url(#clip-1-7-3)"
        id="g90-9-2"
@@ -913,9 +913,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-3);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1647"><tspan
+         id="tspan950"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan1645">Fungi</tspan></tspan></text>
+           id="tspan948">Fungi</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.75,0,0,0.75,66.08359,151.23742)"
@@ -923,9 +923,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-5);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1651"><tspan
+         id="tspan954"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan1649">Ascomycota</tspan></tspan></text>
+           id="tspan952">Ascomycota</tspan></tspan></text>
     <ellipse
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#001219;stroke-width:3.58582;stroke-opacity:1"
        id="path1041-3"
@@ -947,9 +947,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-1-6);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1655"><tspan
+         id="tspan958"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan1653">Basidiomycota</tspan></tspan></text>
+           id="tspan956">Basidiomycota</tspan></tspan></text>
     <rect
        style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ae2012;stroke-width:3.84;stroke-dasharray:15.36, 3.84;stroke-dashoffset:0;stroke-opacity:1"
        id="rect3159"
@@ -1011,9 +1011,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-59-3);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1659"><tspan
+         id="tspan962"><tspan
            style="font-weight:bold"
-           id="tspan1657">Eurotiomycetes</tspan></tspan></text>
+           id="tspan960">Eurotiomycetes</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.75,0,0,0.75,352.97459,742.30378)"
@@ -1021,9 +1021,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-59-4-9);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1663"><tspan
+         id="tspan966"><tspan
            style="font-weight:bold"
-           id="tspan1661">Classifier</tspan></tspan></text>
+           id="tspan964">Classifier</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.75,0,0,0.75,487.70678,742.30378)"
@@ -1031,9 +1031,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-59-4-5-0);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1667"><tspan
+         id="tspan970"><tspan
            style="font-weight:bold"
-           id="tspan1665">Label</tspan></tspan></text>
+           id="tspan968">Label</tspan></tspan></text>
     <ellipse
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#001219;stroke-width:3.58582;stroke-opacity:1"
        id="path1041-31-4"
@@ -1069,9 +1069,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-1-2-8);display:inline;opacity:0.862504;fill:#001219;fill-opacity:1;stroke:none;filter:url(#filter5911)"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1671"><tspan
+         id="tspan974"><tspan
            style="font-weight:bold"
-           id="tspan1669">Lecanoromycetes</tspan></tspan></text>
+           id="tspan972">Lecanoromycetes</tspan></tspan></text>
     <g
        clip-path="url(#clip-1-7-3-8)"
        id="g90-9-2-0"
@@ -1105,9 +1105,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-3-6);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1675"><tspan
+         id="tspan978"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan1673">Fungi</tspan></tspan></text>
+           id="tspan976">Fungi</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.75,0,0,0.75,67.56945,578.23237)"
@@ -1115,9 +1115,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-5-3);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1679"><tspan
+         id="tspan982"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan1677">Ascomycota</tspan></tspan></text>
+           id="tspan980">Ascomycota</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.75,0,0,0.75,125.94535,658.91268)"
@@ -1125,9 +1125,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-5-3-1);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1683"><tspan
+         id="tspan986"><tspan
            style="font-weight:bold"
-           id="tspan1681">0.2</tspan></tspan></text>
+           id="tspan984">0.2</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.75,0,0,0.75,193.90647,580.10992)"
@@ -1135,9 +1135,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-5-3-1-8);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1687"><tspan
+         id="tspan990"><tspan
            style="font-weight:bold"
-           id="tspan1685">0.7</tspan></tspan></text>
+           id="tspan988">0.7</tspan></tspan></text>
     <ellipse
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#001219;stroke-width:3.58582;stroke-opacity:1"
        id="path1041-3-6"
@@ -1159,9 +1159,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-1-6-8);display:inline;opacity:0.862504;fill:#001219;fill-opacity:1;stroke:none;filter:url(#filter5907)"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1691"><tspan
+         id="tspan994"><tspan
            style="font-weight:bold;-inkscape-font-specification:'sans-serif Bold'"
-           id="tspan1689">Basidiomycota</tspan></tspan></text>
+           id="tspan992">Basidiomycota</tspan></tspan></text>
     <rect
        style="display:inline;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ae2012;stroke-width:3.84;stroke-dasharray:15.36, 3.84;stroke-dashoffset:0;stroke-opacity:1"
        id="rect3159-75"
@@ -1197,9 +1197,9 @@
        style="font-style:normal;font-weight:normal;font-size:21.3333px;line-height:1.25;font-family:sans-serif;text-align:justify;white-space:pre;shape-inside:url(#rect6273-7-3-2-5-3-1-8-1);display:inline;fill:#001219;fill-opacity:1;stroke:none"><tspan
          x="62.224609"
          y="92.574702"
-         id="tspan1695"><tspan
+         id="tspan998"><tspan
            style="font-weight:bold"
-           id="tspan1693">1.0</tspan></tspan></text>
+           id="tspan996">1.0</tspan></tspan></text>
   </g>
   <g
      clip-path="url(#clip-2-7)"
