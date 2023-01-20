@@ -17,18 +17,18 @@ rule sintax:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         {input.usearch} \
             -sintax \
             {input.test} \
             -db {input.train} \
             -strand plus \
             -tabbedout {output.tmpdir}/raw
-        
+
         python scripts/bbc_cutoff.py \
             {output.tmpdir}/raw 0.5 \
             > {output.sintax50}
-        
+
         python scripts/bbc_cutoff.py \
             {output.tmpdir}/raw 0.8 \
             > {output.sintax80}

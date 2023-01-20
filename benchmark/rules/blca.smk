@@ -16,7 +16,7 @@ rule blca:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         python scripts/fasta_utax2_to_blca.py \
             {input.train} \
             {output.tmpdir}/db.fa \

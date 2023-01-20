@@ -1,25 +1,21 @@
-rule q2sk:
+rule hitac_filter:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta",
-        scripts = expand("scripts/{script}",script=config["scripts"])
+        reference_sequences = "results/temp/{dataset}/dbq.fa",
+        reference_taxonomy = "results/temp/{dataset}/db-tax.txt",
     output:
-        predictions = "results/predictions/{dataset}/q2sk.tsv",
-        tmpdir = temp(directory("results/temp/{dataset}/q2sk"))
+        predictions = "results/predictions/{dataset}/hitac_filter.tsv",
+        tmpdir = temp(directory("results/temp/{dataset}/hitac_filter"))
     benchmark:
-        repeat("results/benchmark/{dataset}/q2sk.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/hitac_filter.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     conda:
-        "../envs/qiime2.yml"
+        "../envs/hitac.yml"
     shell:
         """
         mkdir -p {output.tmpdir}
-
-        python2 scripts/fasta_utax2qiime.py \
-            {input.train} \
-            {output.tmpdir}/dbq.fa \
-            {output.tmpdir}/db-tax.txt
 
         export LC_ALL=C.UTF-8
         export LANG=C.UTF-8
@@ -40,19 +36,38 @@ rule q2sk:
             --input-path {output.tmpdir}/db-tax.txt \
             --output-path {output.tmpdir}/db-tax.qza
 
-        qiime feature-classifier fit-classifier-naive-bayes \
+        qiime hitac fit \
             --i-reference-reads {output.tmpdir}/db-seqs.qza \
             --i-reference-taxonomy {output.tmpdir}/db-tax.qza \
+            --p-kmer 6 \
+            --p-threads {threads} \
             --o-classifier {output.tmpdir}/classifier.qza
 
-        qiime feature-classifier classify-sklearn \
+        qiime hitac classify \
             --i-classifier {output.tmpdir}/classifier.qza \
             --i-reads {output.tmpdir}/q-seqs.qza \
-            --p-n-jobs {threads} \
+            --p-kmer 6 \
+            --p-threads {threads} \
             --o-classification {output.tmpdir}/classifier_output.qza
 
+        qiime hitac fit-filter \
+            --i-reference-reads {output.tmpdir}/db-seqs.qza \
+            --i-reference-taxonomy {output.tmpdir}/db-tax.qza \
+            --p-kmer 6 \
+            --p-threads {threads} \
+            --o-filter {output.tmpdir}/filter.qza
+
+        qiime hitac filter \
+            --i-reads {output.tmpdir}/q-seqs.qza \
+            --i-filter {output.tmpdir}/filter.qza \
+            --i-classification {output.tmpdir}/classifier_output.qza \
+            --p-threshold 0.7 \
+            --p-kmer 6 \
+            --p-threads {threads} \
+            --o-filtered-classification {output.tmpdir}/filter_output.qza
+
         qiime tools export \
-            --input-path {output.tmpdir}/classifier_output.qza \
+            --input-path {output.tmpdir}/filter_output.qza \
             --output-path {output.tmpdir}/output_dir
 
         python2 scripts/qiime2tax2tab.py \

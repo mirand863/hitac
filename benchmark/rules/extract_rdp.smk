@@ -1,8 +1,8 @@
-rule extract_spingo:
+rule extract_rdp:
     input:
-        "bin/spingo-1.3.zip"
+        "bin/rdp_classifier_2.13.zip"
     output:
-        "bin/SPINGO-1.3/dist/64bit/spingo"
+        "bin/rdp_classifier_2.13/dist/classifier.jar"
     params:
         output_dir = "bin"
     shell:

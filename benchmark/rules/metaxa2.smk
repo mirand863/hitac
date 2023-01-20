@@ -15,7 +15,7 @@ rule metaxa2:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         python scripts/fasta_utax2_to_metaxa2.py \
             {input.train} \
             {output.tmpdir}/db.fa \
@@ -28,14 +28,14 @@ rule metaxa2:
             --auto_rep T \
             --cpu {threads} \
             --mode divergent
-        
+
         metaxa2 \
             -i {input.test} \
             -d {output.tmpdir}/outdb/blast \
             -p {output.tmpdir}/outdb/HMMs \
             -o {output.tmpdir}/results \
             -cpu {threads}
-        
+
         python scripts/metaxa2tab.py \
             {output.tmpdir}/results.taxonomy.txt \
             {input.test} \

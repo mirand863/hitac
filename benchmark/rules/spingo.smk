@@ -16,17 +16,17 @@ rule spingo:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         python scripts/fasta_utax2spingo.py \
             {input.train} \
             > {output.tmpdir}/db.fa
-        
+
         {input.spingo} \
             -i {input.test} \
             -d {output.tmpdir}/db.fa \
             -p {threads} \
             > {output.tmpdir}/raw
-        
+
         python scripts/spingo2tab.py \
             {output.tmpdir}/raw \
             > {output.predictions}

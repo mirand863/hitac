@@ -14,7 +14,7 @@ snakemake:  ## install snakemake
 .PHONY: laptop
 laptop:  ## Run methods pipeline on laptop
 	-sed -i "s?workdir.*?workdir: `pwd`?" config.yml
-	-snakemake --keep-going --printshellcmds --reason --use-conda --cores 12 --conda-frontend mamba -s workflows/methods
+	-snakemake --keep-going --printshellcmds --reason --use-conda --cores 12 --conda-frontend mamba -s workflows/methods.smk
 
 .PHONY: delab
 delab:  ## Run methods pipeline on delab

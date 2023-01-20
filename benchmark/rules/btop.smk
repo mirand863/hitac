@@ -15,18 +15,18 @@ rule btop:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         sed \
             "-es/;.*//" \
             < {input.train} \
             > {output.tmpdir}/db.fa
-        
+
         makeblastdb \
             -in {output.tmpdir}/db.fa \
             -dbtype nucl \
             -parse_seqids \
             -out {output.tmpdir}/db
-        
+
         blastn \
             -task megablast \
             -db {output.tmpdir}/db \
@@ -36,7 +36,7 @@ rule btop:
             -outfmt "6 qseqid sseqid" \
             -evalue 0.01 \
             > {output.tmpdir}/raw
-        
+
         python scripts/btop2tab.py \
             {output.tmpdir}/raw \
             {input.train} \

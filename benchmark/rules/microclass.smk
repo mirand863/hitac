@@ -15,12 +15,12 @@ rule microclass:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         Rscript scripts/microclass.R \
             {input.train} \
             {input.test} \
             {output.tmpdir}/microclass.tsv
-        
+
         python scripts/microclass2tab.py \
             {output.tmpdir}/microclass.tsv \
             {output.predictions}

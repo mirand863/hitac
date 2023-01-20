@@ -2,7 +2,8 @@ rule q2blast:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta",
-        scripts = expand("scripts/{script}",script=config["scripts"])
+        reference_sequences = "results/temp/{dataset}/dbq.fa",
+        reference_taxonomy = "results/temp/{dataset}/db-tax.txt",
     output:
         predictions = "results/predictions/{dataset}/q2blast.tsv",
         tmpdir = temp(directory("results/temp/{dataset}/q2blast"))
@@ -15,11 +16,6 @@ rule q2blast:
     shell:
         """
         mkdir -p {output.tmpdir}
-
-        python2 scripts/fasta_utax2qiime.py \
-            {input.train} \
-            {output.tmpdir}/dbq.fa \
-            {output.tmpdir}/db-tax.txt
 
         export LC_ALL=C.UTF-8
         export LANG=C.UTF-8

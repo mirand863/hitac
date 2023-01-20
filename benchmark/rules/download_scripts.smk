@@ -2,11 +2,11 @@ from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 
 HTTP = HTTPRemoteProvider()
 
-rule download_spingo:
+rule download_scripts:
     input:
-        HTTP.remote(config["urls"]["spingo"], keep_local=True)
+        HTTP.remote(config["urls"]["scripts"], keep_local=True)
     output:
-        temp("bin/spingo-1.3.zip")
+        "scripts/{script}"
     shell:
         """
         mv {input} {output}

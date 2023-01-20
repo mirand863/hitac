@@ -8,7 +8,8 @@ rule hitac:
         predictions = "results/predictions/{dataset}/hitac.tsv",
         tmpdir = temp(directory("results/temp/{dataset}/hitac"))
     benchmark:
-        repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
+        # repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
+        "results/benchmark/{dataset}/hitac.tsv"
     threads:
         config["threads"]
     conda:

@@ -17,19 +17,19 @@ rule nbc:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         {input.usearch} \
             -nbc_tax \
             {input.test} \
             -db {input.train} \
             -strand plus \
             -tabbedout {output.tmpdir}/raw
-        
+
         python scripts/bbc_cutoff.py \
             {output.tmpdir}/raw \
             0.5 \
             > {output.nbc50}
-        
+
         python scripts/bbc_cutoff.py \
             {output.tmpdir}/raw \
             0.8 \

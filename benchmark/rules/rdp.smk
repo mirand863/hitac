@@ -17,7 +17,7 @@ rule rdp:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         python scripts/fasta_utax2rdp.py \
             {input.train} \
             {output.tmpdir}/rdp_tree.txt \
@@ -30,7 +30,7 @@ rule rdp:
         props=$(find $rd | grep rRNAClassifier.properties | head -1)
 
         cp $props {output.tmpdir}
-        
+
         java \
             -Xmx8g \
             -cp {input.rdp} \
@@ -39,7 +39,7 @@ rule rdp:
             -t {output.tmpdir}/rdp_tree.txt \
             -s {output.tmpdir}/rdp_db.fa \
             -o {output.tmpdir}
-        
+
         java \
             -Xmx1g \
             -jar {input.rdp} \
@@ -50,7 +50,7 @@ rule rdp:
         python scripts/rdpc2tab3.py \
             {output.tmpdir}/raw 50 \
             > {output.rdp50}
-        
+
         python scripts/rdpc2tab3.py \
             {output.tmpdir}/raw 80 \
             > {output.rdp80}

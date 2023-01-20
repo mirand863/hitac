@@ -15,7 +15,7 @@ rule q1:
     shell:
         """
         mkdir -p {output.tmpdir}
-        
+
         python scripts/fasta_utax2qiime.py \
             {input.train} \
             {output.tmpdir}/db.fa \
@@ -27,7 +27,7 @@ rule q1:
             -r {output.tmpdir}/db.fa \
             -t {output.tmpdir}/tax.txt \
             -o {output.tmpdir}
-        
+
         python scripts/qiimetax2tab.py \
             {output.tmpdir}/*assignments.txt \
             > {output.predictions}
