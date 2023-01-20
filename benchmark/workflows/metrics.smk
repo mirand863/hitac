@@ -2,10 +2,10 @@ configfile: "config.yml"
 
 workdir: config["workdir"]
 
-include: "../rules/download_datasets"
-include: "../rules/download_scripts"
-include: "../rules/download_namecounts"
-include: "../rules/compute_metrics"
+include: "../rules/download_datasets.smk"
+include: "../rules/download_scripts.smk"
+include: "../rules/download_namecounts.smk"
+include: "../rules/compute_metrics.smk"
 
 rule all:
     input:

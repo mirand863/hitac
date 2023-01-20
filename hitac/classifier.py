@@ -65,7 +65,9 @@ def fit(
         n_jobs=1,
     )
     hierarchical_classifier = LocalClassifierPerNode(
-        local_classifier=logistic_regression, n_jobs=threads
+        local_classifier=logistic_regression,
+        n_jobs=threads,
+        binary_policy="exclusive",
     )
     hierarchical_classifier.fit(X_train, Y_train)
     return hierarchical_classifier
