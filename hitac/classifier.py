@@ -3,7 +3,7 @@ from multiprocessing import cpu_count
 
 import pandas as pd
 import skbio
-from hiclass import LocalClassifierPerParentNode
+from hiclass import LocalClassifierPerNode
 from q2_types.feature_data import (
     DNAFASTAFormat,
     DNAIterator,
@@ -32,7 +32,7 @@ def fit(
     reference_taxonomy: pd.Series,
     kmer: int = 6,
     threads: int = cpu_count(),
-) -> LocalClassifierPerParentNode:
+) -> LocalClassifierPerNode:
     """
     Fit HiTaC's classifier.
 
@@ -49,7 +49,7 @@ def fit(
 
     Returns
     -------
-    hierarchical_classifier : LocalClassifierPerParentNode
+    hierarchical_classifier : LocalClassifierPerNode
         Local hierarchical classifier based on the taxonomic hierarchy.
     """
     kmers = compute_possible_kmers(kmer)
@@ -64,8 +64,10 @@ def fit(
         verbose=0,
         n_jobs=1,
     )
-    hierarchical_classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=threads
+    hierarchical_classifier = LocalClassifierPerNode(
+        local_classifier=logistic_regression,
+        n_jobs=threads,
+        binary_policy="less_inclusive",
     )
     hierarchical_classifier.fit(X_train, Y_train)
     return hierarchical_classifier
@@ -91,7 +93,7 @@ plugin.methods.register_function(
 
 def classify(
     reads: DNAFASTAFormat,
-    classifier: LocalClassifierPerParentNode,
+    classifier: LocalClassifierPerNode,
     kmer: int = 6,
     threads: int = cpu_count(),
 ) -> pd.DataFrame:
@@ -102,7 +104,7 @@ def classify(
     ----------
     reads : DNAFASTAFormat
         Reads to classify.
-    classifier : LocalClassifierPerParentNode
+    classifier : LocalClassifierPerNode
         Pre-fitted hierarchical classifier.
     kmer : int, default=6
         K-mer size.

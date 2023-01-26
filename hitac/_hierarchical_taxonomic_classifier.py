@@ -7,7 +7,7 @@ import joblib
 import qiime2.plugin
 import qiime2.plugin.model as model
 import sklearn
-from hiclass import LocalClassifierPerParentNode
+from hiclass import LocalClassifierPerNode
 
 from .filter import Filter
 from .plugin_setup import plugin
@@ -74,7 +74,7 @@ class HierarchicalTaxonomicClassiferTemporaryPickleDirFmt(model.DirectoryFormat)
 @plugin.register_transformer
 def _1(
     dirfmt: HierarchicalTaxonomicClassiferTemporaryPickleDirFmt,
-) -> LocalClassifierPerParentNode:
+) -> LocalClassifierPerNode:
     sklearn_version = dirfmt.version_info.view(dict)["sklearn-version"]
     if sklearn_version != sklearn.__version__:
         raise ValueError(
@@ -100,7 +100,7 @@ def _1(
 
 @plugin.register_transformer
 def _2(
-    data: LocalClassifierPerParentNode,
+    data: LocalClassifierPerNode,
 ) -> HierarchicalTaxonomicClassiferTemporaryPickleDirFmt:
     sklearn_pipeline = PickleFormat()
     with tarfile.open(str(sklearn_pipeline), "w") as tar:
@@ -118,7 +118,7 @@ def _2(
 
 
 @plugin.register_transformer
-def _3(dirfmt: HierarchicalTaxonomicClassifierDirFmt) -> LocalClassifierPerParentNode:
+def _3(dirfmt: HierarchicalTaxonomicClassifierDirFmt) -> LocalClassifierPerNode:
     raise ValueError(
         "The scikit-learn version could not be determined for"
         " this artifact, please retrain your classifier for your"

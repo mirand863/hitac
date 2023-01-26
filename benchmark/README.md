@@ -32,7 +32,7 @@ After a successful installation, you can activate the newly created environment 
 ```shell
 conda activate snakemake
 snakemake --keep-going --printshellcmds --reason --use-conda \
-    --cores 12 --conda-frontend mamba -s workflows/methods
+    --cores 12 --conda-frontend mamba -s workflows/methods.smk
 snakemake --keep-going --printshellcmds --reason --use-conda \
     --cores 12 --conda-frontend mamba -s workflows/metrics
 ```

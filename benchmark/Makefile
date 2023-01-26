@@ -14,7 +14,7 @@ snakemake:  ## install snakemake
 .PHONY: laptop
 laptop:  ## Run methods pipeline on laptop
 	-sed -i "s?workdir.*?workdir: `pwd`?" config.yml
-	-snakemake --keep-going --printshellcmds --reason --use-conda --cores 12 --conda-frontend mamba -s workflows/methods
+	-snakemake --keep-going --printshellcmds --reason --use-conda --cores 12 --conda-frontend mamba -s workflows/methods.smk
 
 .PHONY: delab
 delab:  ## Run methods pipeline on delab
@@ -24,7 +24,7 @@ delab:  ## Run methods pipeline on delab
 .PHONY: metrics
 metrics:  ## Compute metrics
 	-sed -i "s?workdir.*?workdir: `pwd`?" config.yml
-	-snakemake --keep-going --printshellcmds --reason --use-conda --cores 12 --conda-frontend mamba -s workflows/metrics
+	-snakemake --keep-going --printshellcmds --reason --use-conda --cores 12 --conda-frontend mamba -s workflows/metrics.smk
 
 .PHONY: clean
 clean:  ## delete temporary files from pipeline

@@ -1,0 +1,57 @@
+rule q2sk:
+    input:
+        train = "data/train/{dataset}.fasta",
+        test = "data/test/{dataset}.fasta",
+        reference_sequences = "results/temp/{dataset}/dbq.fa",
+        reference_taxonomy = "results/temp/{dataset}/db-tax.txt",
+    output:
+        predictions = "results/predictions/{dataset}/q2sk.tsv",
+        tmpdir = temp(directory("results/temp/{dataset}/q2sk"))
+    benchmark:
+        repeat("results/benchmark/{dataset}/q2sk.tsv", config["benchmark"]["repeat"])
+    threads:
+        config["threads"]
+    conda:
+        "../envs/qiime2.yml"
+    shell:
+        """
+        mkdir -p {output.tmpdir}
+
+        export LC_ALL=C.UTF-8
+        export LANG=C.UTF-8
+
+        qiime tools import \
+            --input-path {input.test} \
+            --output-path {output.tmpdir}/q-seqs.qza \
+            --type 'FeatureData[Sequence]'
+
+        qiime tools import \
+            --input-path {output.tmpdir}/dbq.fa \
+            --output-path {output.tmpdir}/db-seqs.qza \
+            --type 'FeatureData[Sequence]'
+
+        qiime tools import \
+            --type 'FeatureData[Taxonomy]' \
+            --input-format HeaderlessTSVTaxonomyFormat \
+            --input-path {output.tmpdir}/db-tax.txt \
+            --output-path {output.tmpdir}/db-tax.qza
+
+        qiime feature-classifier fit-classifier-naive-bayes \
+            --i-reference-reads {output.tmpdir}/db-seqs.qza \
+            --i-reference-taxonomy {output.tmpdir}/db-tax.qza \
+            --o-classifier {output.tmpdir}/classifier.qza
+
+        qiime feature-classifier classify-sklearn \
+            --i-classifier {output.tmpdir}/classifier.qza \
+            --i-reads {output.tmpdir}/q-seqs.qza \
+            --p-n-jobs {threads} \
+            --o-classification {output.tmpdir}/classifier_output.qza
+
+        qiime tools export \
+            --input-path {output.tmpdir}/classifier_output.qza \
+            --output-path {output.tmpdir}/output_dir
+
+        python2 scripts/qiime2tax2tab.py \
+            {output.tmpdir}/output_dir/taxonomy.tsv \
+            > {output}
+        """
