@@ -90,7 +90,7 @@ jobs:
         with:
           images: |
             mirand863/hitac
-          tags: type=ref,event=tag
+          tags: type=raw,value=${{ github.head_ref }}
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
