@@ -1,5 +1,5 @@
 FROM quay.io/qiime2/core:2023.2
 
-COPY ./ ./
+COPY ./ src
 
-RUN python setup.py install
+RUN cd src && python setup.py install
