@@ -24,6 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8==3.9.2
         python -m pip install pytest==6.2.4
+        python -m pip install py==1.11.0
         python -m pip install pytest-flake8==1.0.7
         python -m pip install pydocstyle==6.1.1
         python -m pip install pytest-pydocstyle==2.2.0
