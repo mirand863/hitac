@@ -57,7 +57,9 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: mirand863/hitac
-        tags: type=raw,value=${{steps.tag.outputs.new_tag}}
+        tags: |
+        type=raw,value=${{steps.tag.outputs.new_tag}}
+        type=raw,value=latest,enable={{is_default_branch}}
     - name: Login to DockerHub
       uses: docker/login-action@v2
       with:
