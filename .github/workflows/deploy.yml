@@ -1,5 +1,7 @@
 name: pipeline
 
+#on: [pull_request]
+
 on:
   push:
     branches:
@@ -7,76 +9,76 @@ on:
 
 jobs:
 
-  test:
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/qiime2/core:2023.2
-    strategy:
-      fail-fast: false
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install pytest
-        python -m pip install flake8
-        python -m pip install pydocstyle
-        python -m pip install pytest-cov
-        python -m pip install .
-    - name: Test with pytest
-      run: |
-        flake8 hitac tests
-        pydocstyle hitac
-        pytest -v --cov=hitac --cov-fail-under=70 --cov-report html
-        coverage xml
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v2
-
-  bump:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: '0'
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.36.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: false
-        DEFAULT_BUMP: patch
-
-  build-n-publish:
-    needs: bump
-    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install pypa/build
-      run: |
-        git fetch --tags
-        git branch --create-reflog main origin/main
-        python -m pip install build --user .
-    - name: Build a binary wheel and a source tarball
-      run: |
-        python -m build --sdist --wheel --outdir dist/ .
-    - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        verbose: true
+#  test:
+#    runs-on: ubuntu-latest
+#    container:
+#      image: quay.io/qiime2/core:2023.2
+#    strategy:
+#      fail-fast: false
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: Set up Python ${{ matrix.python-version }}
+#      uses: actions/setup-python@v2
+#      with:
+#        python-version: ${{ matrix.python-version }}
+#    - name: Install dependencies
+#      run: |
+#        python -m pip install --upgrade pip
+#        python -m pip install pytest
+#        python -m pip install flake8
+#        python -m pip install pydocstyle
+#        python -m pip install pytest-cov
+#        python -m pip install .
+#    - name: Test with pytest
+#      run: |
+#        flake8 hitac tests
+#        pydocstyle hitac
+#        pytest -v --cov=hitac --cov-fail-under=70 --cov-report html
+#        coverage xml
+#    - name: Upload Coverage to Codecov
+#      uses: codecov/codecov-action@v2
+#
+#  bump:
+#    needs: test
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v2
+#      with:
+#        fetch-depth: '0'
+#    - name: Bump version and push tag
+#      uses: anothrNick/github-tag-action@1.36.0
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        WITH_V: false
+#        DEFAULT_BUMP: patch
+#
+#  build-n-publish:
+#    needs: bump
+#    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v1
+#    - name: Set up Python 3.8
+#      uses: actions/setup-python@v2
+#      with:
+#        python-version: 3.8
+#    - name: Install pypa/build
+#      run: |
+#        git fetch --tags
+#        git branch --create-reflog main origin/main
+#        python -m pip install build --user .
+#    - name: Build a binary wheel and a source tarball
+#      run: |
+#        python -m build --sdist --wheel --outdir dist/ .
+#    - name: Publish distribution 📦 to PyPI
+#      uses: pypa/gh-action-pypi-publish@release/v1
+#      with:
+#        user: __token__
+#        password: ${{ secrets.PYPI_API_TOKEN }}
+#        verbose: true
 
   docker:
-    needs: bump
+#    needs: bump
     name: Push image to Docker Hub
     runs-on: ubuntu-latest
     steps:
@@ -88,11 +90,7 @@ jobs:
         with:
           images: |
             mirand863/hitac
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+          tags: type=ref,event=tag
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
