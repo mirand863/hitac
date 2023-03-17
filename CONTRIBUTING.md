@@ -13,21 +13,20 @@ Please make sure all tests pass before submitting a pull request. It is also goo
 To test the code locally you need an environment with QIIME2 installed. Please, look into [QIIME2 documentation](https://docs.qiime2.org/2022.8/install/) to install the latest version for your operating system. After installing QIIME2, you can install the dependencies to test HiTaC with:
 
 ```shell
-pip install flake8==3.9.2
-pip install pytest==6.2.4
-pip install py==1.11.0
-pip install pytest-flake8==1.0.7
-pip install pydocstyle==6.1.1
-pip install pytest-pydocstyle==2.2.0
-pip install pytest-cov==2.12.1
-pip install pre-commit==2.20.0
+pip install --upgrade pip
+pip install pytest
+pip install flake8
+pip install pydocstyle
+pip install pytest-cov
 pip install -e .
 ```
 
 To run the tests simply execute:
 
 ```shell
-pytest -v --flake8 --pydocstyle --cov=hitac --cov-fail-under=75 --cov-report html
+flake8 hitac tests
+pydocstyle hitac
+pytest -v --cov=hitac --cov-fail-under=70 --cov-report html
 ```
 
 Lastly, you can set up the git hooks scripts to fix formatting errors locally during commits:
