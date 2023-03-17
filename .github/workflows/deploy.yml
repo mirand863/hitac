@@ -51,14 +51,20 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: false
         DEFAULT_BUMP: patch
+
+  docker:
+    needs: bump
+    runs-on: ubuntu-latest
+    steps:
+    - env:
+        tag: ${{needs.bump.outputs.tag}}
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v4
       with:
         images: mirand863/hitac
         tags: |
-          type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
+          type=raw,value=$tag
 
 #  build-n-publish:
 #    needs: bump
@@ -84,10 +90,3 @@ jobs:
 #        user: __token__
 #        password: ${{ secrets.PYPI_API_TOKEN }}
 #        verbose: true
-
-  docker:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
