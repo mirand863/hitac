@@ -46,25 +46,18 @@ jobs:
       with:
         fetch-depth: '0'
     - name: Bump version and push tag
+      id: tag
       uses: anothrNick/github-tag-action@1.36.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: false
         DEFAULT_BUMP: patch
-
-  docker:
-    needs: bump
-    runs-on: ubuntu-latest
-    steps:
-    - env:
-        tag: ${{needs.bump.outputs.tag}}
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v4
       with:
         images: mirand863/hitac
-        tags: |
-          type=raw,value=$tag
+        tags: type=raw,value=${{steps.tag.outputs.new_tag}}
 
 #  build-n-publish:
 #    needs: bump
