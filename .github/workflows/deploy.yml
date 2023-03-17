@@ -49,7 +49,7 @@ jobs:
       uses: anothrNick/github-tag-action@1.36.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
+        WITH_V: false
         DEFAULT_BUMP: patch
 
   build-n-publish:
@@ -90,7 +90,7 @@ jobs:
         with:
           images: |
             mirand863/hitac
-          tags: type=semver,pattern={{major}}.{{minor}}
+          tags: type=raw,enable=true,value=latest
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
