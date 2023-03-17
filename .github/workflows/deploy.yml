@@ -52,13 +52,13 @@ jobs:
         WITH_V: false
         DEFAULT_BUMP: patch
     - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: mirand863/hitac
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: mirand863/hitac
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
 
 #  build-n-publish:
 #    needs: bump
