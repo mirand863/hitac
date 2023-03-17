@@ -16,6 +16,7 @@ To test the code locally you need an environment with QIIME2 installed. Please, 
 pip install flake8==3.9.2
 pip install pytest==6.2.4
 pip install pytest-flake8==1.0.7
+pip install pydocstyle==6.1.1
 pip install pytest-pydocstyle==2.2.0
 pip install pytest-cov==2.12.1
 pip install pre-commit==2.20.0

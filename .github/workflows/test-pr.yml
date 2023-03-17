@@ -11,7 +11,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/qiime2/core:2022.2
+      image: quay.io/qiime2/core:2023.2
     strategy:
       fail-fast: false
     steps:
@@ -26,6 +26,7 @@ jobs:
         python -m pip install flake8==3.9.2
         python -m pip install pytest==6.2.4
         python -m pip install pytest-flake8==1.0.7
+        python -m pip install pydocstyle==6.1.1
         python -m pip install pytest-pydocstyle==2.2.0
         python -m pip install pytest-cov==2.12.1
         python -m pip install .
