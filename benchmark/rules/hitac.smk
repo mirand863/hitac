@@ -12,8 +12,10 @@ rule hitac:
         repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
-    container:
+    containerized:
         "docker://quay.io/qiime2/core:2023.2"
+    conda:
+        "../envs/hitac.yml"
     shell:
         """
         mkdir -p {output.tmpdir}

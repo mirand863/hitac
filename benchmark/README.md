@@ -4,7 +4,7 @@ This is a reproducible Snakemake pipeline to compare HiTaC using the [TAXXI benc
 
 ## Installation
 
-The main requirement to run this pipeline is Anaconda 3 and Singularity. Please, install the latest version of [Anaconda 3](https://www.anaconda.com/products/distribution) and [Singularity](https://docs.sylabs.io/guides/2.6/user-guide/installation.html) on your machine beforehand.
+The main requirements to run this pipeline are Anaconda 3 and Singularity. Please, install the latest version of [Anaconda 3](https://www.anaconda.com/products/distribution) and [Singularity](https://docs.sylabs.io/guides/2.6/user-guide/installation.html) on your machine beforehand.
 
 With Anaconda installed, install mamba to manage dependencies:
 
@@ -32,11 +32,11 @@ After a successful installation, you can activate the newly created environment 
 ```shell
 conda activate snakemake
 snakemake --keep-going --printshellcmds --reason --use-singularity \
-    --cores 12 --conda-frontend mamba -s workflows/methods.smk
+    --use-conda --cores 12 --conda-frontend mamba -s workflows/methods.smk
 snakemake --keep-going --printshellcmds --reason --use-singularity \
-    --cores 12 --conda-frontend mamba -s workflows/metrics
+    --use-conda --cores 12 --conda-frontend mamba -s workflows/metrics
 ```
 
-The parameter --keep-going forces Snakemake to keep executing independent tasks if an unrelated one fails, while the parameter --printshellcmds enables printing the commands that will be executed, the parameter --reason makes Snakemake print the reason for each executed rule, the parameter --use-singularity is necessary to indicate that Singularity will be used to manage the software dependencies of the pipeline, the parameter --cores tells Snakemake how many cpus can be used overall (the more cpus you can spare, the faster the pipeline will finish), the parameter --conda-frontend switches from conda to mamba for faster dependency management, and the parameter -s selects the workflow to be executed.
+The parameter --keep-going forces Snakemake to keep executing independent tasks if an unrelated one fails, while the parameter --printshellcmds enables printing the commands that will be executed, the parameter --reason makes Snakemake print the reason for each executed rule, the parameters --use-singularity and --use-conda are necessary to indicate that Singularity and conda will be used to manage the software dependencies of the pipeline, the parameter --cores tells Snakemake how many cpus can be used overall (the more cpus you can spare, the faster the pipeline will finish), the parameter --conda-frontend switches from conda to mamba for faster dependency management, and the parameter -s selects the workflow to be executed.
 
 The benchmarks, predictions and metrics for each model are saved in the results folder.

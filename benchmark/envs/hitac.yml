@@ -1,0 +1,9 @@
+channels:
+  - bioconda
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - hiclass==4.1.7
+    - hitac==2.0.23
+    - ray==1.13.0
