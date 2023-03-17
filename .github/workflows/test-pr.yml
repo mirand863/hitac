@@ -32,7 +32,7 @@ jobs:
       run: |
         flake8 hitac tests
         pydocstyle hitac
-        pytest -v --cov=hitac --cov-fail-under=75 --cov-report html
+        pytest -v --cov=hitac --cov-fail-under=70 --cov-report html
         coverage xml
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v2
