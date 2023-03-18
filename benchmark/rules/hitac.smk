@@ -12,7 +12,7 @@ rule hitac:
         # repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
-    containerized:
+    container:
         "docker://mirand863/hitac:2.0.29-beta.4"
     conda:
         "../envs/hitac.yml"
