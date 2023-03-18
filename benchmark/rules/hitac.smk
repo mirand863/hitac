@@ -8,12 +8,12 @@ rule hitac:
     output:
         predictions = "results/predictions/{dataset}/hitac.tsv",
         tmpdir = temp(directory("results/temp/{dataset}/hitac"))
-    benchmark:
-        repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
+    # benchmark:
+        # repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     containerized:
-        "docker://quay.io/qiime2/core:2023.2"
+        "docker://mirand863/hitac:2.0.29-beta.2"
     conda:
         "../envs/hitac.yml"
     shell:
@@ -46,18 +46,18 @@ rule hitac:
             --p-threads {threads} \
             --o-classifier {output.tmpdir}/classifier.qza
 
-        qiime hitac classify \
-            --i-reads {output.tmpdir}/q-seqs.qza \
-            --i-classifier {output.tmpdir}/classifier.qza \
-            --p-kmer 6 \
-            --p-threads {threads} \
-            --o-classification {output.tmpdir}/classifier_output.qza
-
-        qiime tools export \
-            --input-path {output.tmpdir}/classifier_output.qza \
-            --output-path {output.tmpdir}/output_dir
-
-        python2 scripts/qiime2tax2tab.py \
-            {output.tmpdir}/output_dir/taxonomy.tsv \
-            > {output.predictions}
+        # qiime hitac classify \
+        #     --i-reads {output.tmpdir}/q-seqs.qza \
+        #     --i-classifier {output.tmpdir}/classifier.qza \
+        #     --p-kmer 6 \
+        #     --p-threads {threads} \
+        #     --o-classification {output.tmpdir}/classifier_output.qza
+        # 
+        # qiime tools export \
+        #     --input-path {output.tmpdir}/classifier_output.qza \
+        #     --output-path {output.tmpdir}/output_dir
+        # 
+        # python2 scripts/qiime2tax2tab.py \
+        #     {output.tmpdir}/output_dir/taxonomy.tsv \
+        #     > {output.predictions}
         """
