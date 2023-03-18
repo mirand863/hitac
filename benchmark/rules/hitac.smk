@@ -13,7 +13,7 @@ rule hitac:
     threads:
         config["threads"]
     containerized:
-        "docker://mirand863/hitac:2.0.29-beta.2"
+        "docker://mirand863/hitac:test"
     conda:
         "../envs/hitac.yml"
     shell:
