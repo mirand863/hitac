@@ -4,8 +4,8 @@ rule compute_metrics:
         namecounts = expand("namecounts/{dataset}",dataset=config["datasets"])
     output:
         metrics = "results/metrics/{method}/{dataset}/{rank}.tsv"
-    conda:
-        "../envs/compute_metrics.yml"
+    container:
+        "docker://python:2.7-slim"
     shell:
         """
         python scripts/taxbenchx.py \

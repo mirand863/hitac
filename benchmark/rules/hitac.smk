@@ -1,63 +1,76 @@
-rule hitac:
+rule hitac_fit:
     input:
-        train = "data/train/{dataset}.fasta",
-        test = "data/test/{dataset}.fasta",
-        dbq = "results/temp/{dataset}/utax2qiime/dbq.fa",
-        dbtax = "results/temp/{dataset}/utax2qiime/db-tax.txt",
-        scripts = expand("scripts/{script}",script=config["scripts"])
+        reference_reads = "results/temp/{dataset}/qiime_import/reference_reads.qza",
+        reference_taxonomy = "results/temp/{dataset}/qiime_import/reference_taxonomy.qza"
     output:
-        predictions = "results/predictions/{dataset}/hitac.tsv",
-        tmpdir = temp(directory("results/temp/{dataset}/hitac"))
+        classifier = temp("results/temp/{dataset}/hitac/classifier.qza"),
     # benchmark:
-        # repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
+        # repeat("results/benchmark/{dataset}/hitac_fit.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
-        "docker://mirand863/hitac:2.0.29-beta.4"
-    conda:
-        "../envs/hitac.yml"
+        "docker://mirand863/hitac:2.0.29-beta.6"
     shell:
         """
-        mkdir -p {output.tmpdir}
-
-        export LC_ALL=C.UTF-8
-        export LANG=C.UTF-8
-
-        qiime tools import \
-            --input-path {input.test} \
-            --output-path {output.tmpdir}/q-seqs.qza \
-            --type 'FeatureData[Sequence]'
-
-        qiime tools import \
-            --input-path {input.dbq} \
-            --output-path {output.tmpdir}/db-seqs.qza \
-            --type 'FeatureData[Sequence]'
-
-        qiime tools import \
-            --type 'FeatureData[Taxonomy]' \
-            --input-format HeaderlessTSVTaxonomyFormat \
-            --input-path {input.dbtax} \
-            --output-path {output.tmpdir}/db-tax.qza
-
         qiime hitac fit \
-            --i-reference-reads {output.tmpdir}/db-seqs.qza \
-            --i-reference-taxonomy {output.tmpdir}/db-tax.qza \
+            --i-reference-reads {input.reference_reads} \
+            --i-reference-taxonomy {input.reference_taxonomy} \
             --p-kmer 6 \
             --p-threads {threads} \
-            --o-classifier {output.tmpdir}/classifier.qza
+            --o-classifier {output.classifier}
+        """
 
-        # qiime hitac classify \
-        #     --i-reads {output.tmpdir}/q-seqs.qza \
-        #     --i-classifier {output.tmpdir}/classifier.qza \
-        #     --p-kmer 6 \
-        #     --p-threads {threads} \
-        #     --o-classification {output.tmpdir}/classifier_output.qza
-        # 
-        # qiime tools export \
-        #     --input-path {output.tmpdir}/classifier_output.qza \
-        #     --output-path {output.tmpdir}/output_dir
-        # 
-        # python2 scripts/qiime2tax2tab.py \
-        #     {output.tmpdir}/output_dir/taxonomy.tsv \
-        #     > {output.predictions}
+
+rule hitac_predict:
+    input:
+        query_reads = "results/temp/{dataset}/qiime_import/query_reads.qza",
+        classifier = "results/temp/{dataset}/hitac/classifier.qza",
+    output:
+        predictions = temp("results/temp/{dataset}/hitac/predictions.qza"),
+    # benchmark:
+        # repeat("results/benchmark/{dataset}/hitac_predict.tsv", config["benchmark"]["repeat"])
+    threads:
+        config["threads"]
+    container:
+        "docker://mirand863/hitac:2.0.29-beta.6"
+    shell:
+        """
+        qiime hitac classify \
+            --i-reads {input.query_reads} \
+            --i-classifier {input.classifier} \
+            --p-kmer 6 \
+            --p-threads {threads} \
+            --o-classification {output.predictions}
+        """
+
+
+rule qiime_export:
+    input:
+        predictions = "results/temp/{dataset}/hitac/predictions.qza"
+    output:
+        taxonomy = temp("results/temp/{dataset}/hitac/taxonomy.tsv")
+    params:
+        output_dir = "results/temp/{dataset}/hitac"
+    container:
+        "docker://quay.io/qiime2/core:2023.2"
+    shell:
+        """
+        qiime tools export \
+            --input-path {input.predictions} \
+            --output-path {params.output_dir}
+        """
+
+
+rule qiime2tax2tab:
+    input:
+        taxonomy = "results/temp/{dataset}/hitac/taxonomy.tsv"
+    output:
+        predictions = "results/predictions/{dataset}/hitac.tsv"
+    container:
+        "docker://python:2.7-slim"
+    shell:
+        """
+        python scripts/qiime2tax2tab.py \
+            {input.taxonomy} \
+            > {output.predictions}
         """
