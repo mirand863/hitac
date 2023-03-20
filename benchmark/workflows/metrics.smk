@@ -4,7 +4,7 @@ workdir: config["workdir"]
 
 include: "../rules/download_datasets.smk"
 include: "../rules/download_scripts.smk"
-include: "../rules/download_namecounts"
+include: "../rules/download_namecounts.smk"
 include: "../rules/compute_metrics.smk"
 
 rule all:

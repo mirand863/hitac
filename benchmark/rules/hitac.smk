@@ -4,8 +4,8 @@ rule hitac_fit:
         reference_taxonomy = "results/temp/{dataset}/qiime_import/reference_taxonomy.qza"
     output:
         classifier = temp("results/temp/{dataset}/hitac/classifier.qza"),
-    # benchmark:
-        # repeat("results/benchmark/{dataset}/hitac_fit.tsv", config["benchmark"]["repeat"])
+    benchmark:
+        repeat("results/benchmark/{dataset}/hitac_fit.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
@@ -27,8 +27,8 @@ rule hitac_predict:
         classifier = "results/temp/{dataset}/hitac/classifier.qza",
     output:
         predictions = temp("results/temp/{dataset}/hitac/predictions.qza"),
-    # benchmark:
-        # repeat("results/benchmark/{dataset}/hitac_predict.tsv", config["benchmark"]["repeat"])
+    benchmark:
+        repeat("results/benchmark/{dataset}/hitac_predict.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
