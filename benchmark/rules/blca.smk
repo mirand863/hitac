@@ -24,9 +24,11 @@ rule utax2blca:
         """
 
 
-rule makeblastdb:
+rule blca:
     input:
         reference_reads = "results/temp/{dataset}/blca/reference_reads.fasta",
+        query_reads = "results/temp/{dataset}/blca/query_reads.fasta",
+        reference_taxonomy = "results/temp/{dataset}/blca/reference_taxonomy.txt",
     output:
         ndb = temp("results/temp/{dataset}/blca/database.ndb"),
         nhr = temp("results/temp/{dataset}/blca/database.nhr"),
@@ -36,27 +38,7 @@ rule makeblastdb:
         not_ = temp("results/temp/{dataset}/blca/database.not"),
         nsq = temp("results/temp/{dataset}/blca/database.nsq"),
         ntf = temp("results/temp/{dataset}/blca/database.ntf"),
-        nto = temp("results/temp/{dataset}/blca/database.nto")
-    params:
-        database = "results/temp/{dataset}/blca/database"
-    container:
-        "docker://ncbi/blast:2.10.1"
-    shell:
-        """
-        makeblastdb \
-            -in {input.reference_reads} \
-            -dbtype nucl \
-            -parse_seqids \
-            -out {params.database}
-        """
-
-
-rule blca:
-    input:
-        query_reads = "results/temp/{dataset}/blca/query_reads.fasta",
-        reference_taxonomy = "results/temp/{dataset}/blca/reference_taxonomy.txt",
-        ndb = "results/temp/{dataset}/blca/database.ndb"
-    output:
+        nto = temp("results/temp/{dataset}/blca/database.nto"),
         predictions = temp("results/temp/{dataset}/blca/query_reads.fasta.blca.out")
     params:
         database = "results/temp/{dataset}/blca/database"
@@ -68,6 +50,12 @@ rule blca:
         config["containers"]["blca"]
     shell:
         """
+        makeblastdb \
+            -in {input.reference_reads} \
+            -dbtype nucl \
+            -parse_seqids \
+            -out {params.database}
+            
         python /BLCA-2.3-alpha/2.blca_main.py \
             -i {input.query_reads} \
             -r {input.reference_taxonomy} \
