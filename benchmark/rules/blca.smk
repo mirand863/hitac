@@ -42,8 +42,8 @@ rule blca:
         predictions = temp("results/temp/{dataset}/blca/query_reads.fasta.blca.out")
     params:
         database = "results/temp/{dataset}/blca/database"
-    # benchmark:
-    #     repeat("results/benchmark/{dataset}/blca.tsv", config["benchmark"]["repeat"])
+    benchmark:
+        repeat("results/benchmark/{dataset}/blca.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
