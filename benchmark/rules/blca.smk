@@ -55,8 +55,8 @@ rule blca:
             -dbtype nucl \
             -parse_seqids \
             -out {params.database}
-            
-        python /BLCA-2.3-alpha/2.blca_main.py \
+
+        2.blca_main.py \
             -i {input.query_reads} \
             -r {input.reference_taxonomy} \
             -q {params.database} \
@@ -64,31 +64,18 @@ rule blca:
         """
 
 
-# rule blca2tab:
-#     input:
-#         query_reads = "results/temp/{dataset}/blca/query_reads.fasta",
-#         reference_taxonomy = "results/temp/{dataset}/blca/reference_taxonomy.txt"
-#     output:
-#         predictions = "results/predictions/{dataset}/blca.tsv",
-#         tmpdir= temp(directory("results/temp/{dataset}/blca"))
-#     params:
-#         database = "results/temp/{dataset}/blca/database"
-#     benchmark:
-#         repeat("results/benchmark/{dataset}/blca.tsv", config["benchmark"]["repeat"])
-#     threads:
-#         config["threads"]
-#     conda:
-#         "../envs/blca.yml"
-#     shell:
-#         """
-#         python blca \
-#             -i {input.query_reads} \
-#             -r {input.reference_taxonomy} \
-#             -q {params.database} \
-#             --proc {threads}
-#
-#         python scripts/blca2tab.py \
-#             {output.tmpdir}/q.fa.blca.out \
-#             {input.test} \
-#             > {output.predictions}
-#         """
+rule blca2tab:
+    input:
+        predictions = "results/temp/{dataset}/blca/query_reads.fasta.blca.out",
+        test = "data/test/{dataset}.fasta",
+    output:
+        predictions = "results/predictions/{dataset}/blca.tsv"
+    container:
+        "docker://python:2.7-slim"
+    shell:
+        """
+        python scripts/blca2tab.py \
+            {input.predictions} \
+            {input.test} \
+            > {output.predictions}
+        """
