@@ -55,32 +55,32 @@ jobs:
     outputs:
       new_tag: ${{steps.tag.outputs.new_tag}}
 
-  docker:
-    needs: bump
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Docker meta
-      id: meta
-      uses: docker/metadata-action@v4
-      with:
-        images: mirand863/hitac
-        tags: |
-          type=raw,value=${{needs.bump.outputs.new_tag}}
-          type=raw,value=latest,enable={{is_default_branch}}
-    - name: Login to DockerHub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build and push
-      uses: docker/build-push-action@v4
-      with:
-        file: deploy/Dockerfile
-        context: .
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+#  docker:
+#    needs: bump
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v3
+#    - name: Docker meta
+#      id: meta
+#      uses: docker/metadata-action@v4
+#      with:
+#        images: mirand863/hitac
+#        tags: |
+#          type=raw,value=${{needs.bump.outputs.new_tag}}
+#          type=raw,value=latest,enable={{is_default_branch}}
+#    - name: Login to DockerHub
+#      uses: docker/login-action@v2
+#      with:
+#        username: ${{ secrets.DOCKERHUB_USERNAME }}
+#        password: ${{ secrets.DOCKERHUB_TOKEN }}
+#    - name: Build and push
+#      uses: docker/build-push-action@v4
+#      with:
+#        file: deploy/Dockerfile
+#        context: .
+#        push: true
+#        tags: ${{ steps.meta.outputs.tags }}
+#        labels: ${{ steps.meta.outputs.labels }}
 
   blca:
     needs: bump

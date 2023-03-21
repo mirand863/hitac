@@ -65,10 +65,10 @@ rule blca:
     threads:
         config["threads"]
     container:
-        "docker://mirand863/hitac:blca"
+        config["containers"]["blca"]
     shell:
         """
-        python BLCA-2.3-alpha/2.blca_main.py \
+        python /BLCA-2.3-alpha/2.blca_main.py \
             -i {input.query_reads} \
             -r {input.reference_taxonomy} \
             -q {params.database} \
