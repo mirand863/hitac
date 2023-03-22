@@ -9,7 +9,7 @@ rule hitac_fit:
     threads:
         config["threads"]
     container:
-        "docker://mirand863/hitac:2.0.29-beta.6"
+        config["containers"]["hitac"]
     shell:
         """
         qiime hitac fit \
