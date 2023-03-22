@@ -73,9 +73,9 @@ containers:
     hitac: "docker://mirand863/hitac:2.0.29-beta.6"
     blca: "docker://mirand863/blca:2.0.29-beta.1"
     btop: "docker://mirand863/btop:2.0.29-beta.1"
+    usearch: "docker://mirand863/usearch:2.0.29-beta.1"
 
 urls:
-    usearch: "https://www.drive5.com/downloads/usearch11.0.667_i86linux32.gz"
     rdp: "https://zenodo.org/record/6950218/files/rdp_classifier_2.13.zip?download=1"
     spingo: "https://github.com/GuyAllard/SPINGO/archive/refs/tags/v1.3.zip"
     train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"
