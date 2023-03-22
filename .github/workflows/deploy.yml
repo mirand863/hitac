@@ -82,7 +82,8 @@ jobs:
 #        tags: ${{ steps.meta.outputs.tags }}
 #        labels: ${{ steps.meta.outputs.labels }}
 
-  docker-beta:
+  docker:
+#    needs: bump
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -95,6 +96,9 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: mirand863/${{ matrix.container }}
+#        tags: |
+#          type=raw,value=${{needs.bump.outputs.new_tag}}
+#          type=raw,value=latest,enable={{is_default_branch}}
           tags: |
             type=raw,value=2.0.29-beta.1
             type=raw,value=latest,enable={{is_default_branch}}
