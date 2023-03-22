@@ -72,6 +72,7 @@ ranks:
 containers:
     hitac: "docker://mirand863/hitac:2.0.29-beta.6"
     blca: "docker://mirand863/blca:2.0.29-beta.1"
+    btop: "docker://mirand863/btop:2.0.29-beta.1"
 
 urls:
     usearch: "https://www.drive5.com/downloads/usearch11.0.667_i86linux32.gz"
