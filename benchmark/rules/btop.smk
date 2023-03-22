@@ -63,7 +63,7 @@ rule btop2tab:
     output:
         predictions = "results/predictions/{dataset}/btop.tsv"
     container:
-        "docker://python:3.6-slim"
+        config["containers"]["btop"]
     shell:
         """
         python scripts/btop2tab.py \
