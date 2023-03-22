@@ -1,7 +1,7 @@
 rule hitac_fit:
     input:
-        reference_reads = "results/temp/{dataset}/qiime_import/reference_reads.qza",
-        reference_taxonomy = "results/temp/{dataset}/qiime_import/reference_taxonomy.qza"
+        reference_reads = "results/temp/{dataset}/import_qiime2/reference_reads.qza",
+        reference_taxonomy = "results/temp/{dataset}/import_qiime2/reference_taxonomy.qza"
     output:
         classifier = temp("results/temp/{dataset}/hitac/classifier.qza"),
     benchmark:
@@ -23,7 +23,7 @@ rule hitac_fit:
 
 rule hitac_predict:
     input:
-        query_reads = "results/temp/{dataset}/qiime_import/query_reads.qza",
+        query_reads = "results/temp/{dataset}/import_qiime2/query_reads.qza",
         classifier = "results/temp/{dataset}/hitac/classifier.qza",
     output:
         predictions = temp("results/temp/{dataset}/hitac/predictions.qza"),
@@ -44,7 +44,7 @@ rule hitac_predict:
         """
 
 
-rule qiime_export:
+rule export_qiime2:
     input:
         predictions = "results/temp/{dataset}/hitac/predictions.qza"
     output:
@@ -61,7 +61,7 @@ rule qiime_export:
         """
 
 
-rule qiime2tax2tab:
+rule qiime2_to_taxxi:
     input:
         taxonomy = "results/temp/{dataset}/hitac/taxonomy.tsv"
     output:
