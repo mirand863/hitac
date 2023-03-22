@@ -136,16 +136,20 @@ jobs:
 #          tags: ${{ steps.meta.outputs.tags }}
 #          labels: ${{ steps.meta.outputs.labels }}
 
-  usearch:
+  docker:
     needs: bump
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [blca, btop, usearch]
     steps:
       - uses: actions/checkout@v3
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: mirand863/usearch
+          images: mirand863/${{ matrix.container }}
           tags: |
             type=raw,value=${{needs.bump.outputs.new_tag}}
             type=raw,value=latest,enable={{is_default_branch}}
@@ -157,7 +161,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          file: benchmark/dockerfiles/usearch.dockerfile
+          file: benchmark/dockerfiles/${{ matrix.container }}.dockerfile
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
