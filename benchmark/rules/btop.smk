@@ -3,6 +3,8 @@ rule taxxi2btop:
         train = "data/train/{dataset}.fasta"
     output:
         reference = temp("results/temp/{dataset}/btop/reference.fasta")
+    container:
+        config["containers"]["btop"]
     shell:
         """
         sed \
@@ -29,8 +31,8 @@ rule btop:
         predictions = temp("results/temp/{dataset}/btop/predictions.tsv")
     params:
         database = "results/temp/{dataset}/btop/database"
-    # benchmark:
-    #     repeat("results/benchmark/{dataset}/btop.tsv", config["benchmark"]["repeat"])
+    benchmark:
+        repeat("results/benchmark/{dataset}/btop.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
@@ -55,7 +57,7 @@ rule btop:
         """
 
 
-rule btop2tab:
+rule btop2taxxi:
     input:
         predictions = "results/temp/{dataset}/btop/predictions.tsv",
         train = "data/train/{dataset}.fasta",

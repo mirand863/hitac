@@ -1,4 +1,4 @@
-rule utax2blca:
+rule taxxi2blca:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta",
@@ -9,7 +9,7 @@ rule utax2blca:
         query_reads = temp("results/temp/{dataset}/blca/query_reads.fasta"),
         query_taxonomy = temp("results/temp/{dataset}/blca/query_taxonomy.txt")
     container:
-        "docker://python:2.7-slim"
+        config["containers"]["blca"]
     shell:
         """
         python scripts/fasta_utax2_to_blca.py \
@@ -64,14 +64,14 @@ rule blca:
         """
 
 
-rule blca2tab:
+rule blca2taxxi:
     input:
         predictions = "results/temp/{dataset}/blca/query_reads.fasta.blca.out",
         test = "data/test/{dataset}.fasta",
     output:
         predictions = "results/predictions/{dataset}/blca.tsv"
     container:
-        "docker://python:2.7-slim"
+        config["containers"]["blca"]
     shell:
         """
         python scripts/blca2tab.py \
