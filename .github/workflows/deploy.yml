@@ -82,8 +82,7 @@ jobs:
 #        tags: ${{ steps.meta.outputs.tags }}
 #        labels: ${{ steps.meta.outputs.labels }}
 
-  docker:
-#    needs: bump
+  docker-test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -97,8 +96,7 @@ jobs:
         with:
           images: mirand863/${{ matrix.container }}
           tags: |
-            type=raw,value=2.0.29-beta.1
-#            type=raw,value=${{needs.bump.outputs.new_tag}}
+            type=raw,value=test
             type=raw,value=latest,enable={{is_default_branch}}
       - name: Login to DockerHub
         uses: docker/login-action@v2
