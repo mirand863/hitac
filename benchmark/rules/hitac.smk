@@ -67,7 +67,7 @@ rule qiime2_to_taxxi:
     output:
         predictions = "results/predictions/{dataset}/hitac.tsv"
     container:
-        "docker://python:2.7-slim"
+        config["containers"]["python2"]
     shell:
         """
         python scripts/qiime2tax2tab.py \

@@ -6,7 +6,7 @@ rule taxxi_to_qiime2:
         reference_reads = temp("results/temp/{dataset}/taxxi_to_qiime2/reference_reads.fasta"),
         reference_taxonomy = temp("results/temp/{dataset}/taxxi_to_qiime2/reference_taxonomy.txt")
     container:
-        "docker://python:2.7-slim"
+        config["containers"]["python2"]
     shell:
         """
         python scripts/fasta_utax2qiime.py \

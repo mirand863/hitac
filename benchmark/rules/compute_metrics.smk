@@ -5,7 +5,7 @@ rule compute_metrics:
     output:
         metrics = "results/metrics/{method}/{dataset}/{rank}.tsv"
     container:
-        "docker://python:2.7-slim"
+        config["containers"]["python2"]
     shell:
         """
         python scripts/taxbenchx.py \
