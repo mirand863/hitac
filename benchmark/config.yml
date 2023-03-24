@@ -74,7 +74,9 @@ containers:
     blca: "docker://mirand863/blca:2.0.29-beta.1"
     btop: "docker://mirand863/btop:2.0.29-beta.1"
     usearch: "docker://mirand863/usearch:2.0.29-beta.1"
+    knn: "docker://mirand863/knn:2.0.29-beta.1"
     qiime2: "docker://quay.io/qiime2/core:2023.2"
+    python2: "docker://python:2.7-slim"
 
 urls:
     rdp: "https://zenodo.org/record/6950218/files/rdp_classifier_2.13.zip?download=1"
