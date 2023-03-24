@@ -26,7 +26,7 @@ include: "../rules/q2blast"
 include: "../rules/q2sk"
 include: "../rules/q2vs"
 include: "../rules/rdp"
-include: "../rules/sintax"
+include: "../rules/sintax.smk"
 include: "../rules/spingo"
 include: "../rules/top.smk"
 
