@@ -28,7 +28,7 @@ include: "../rules/q2vs"
 include: "../rules/rdp"
 include: "../rules/sintax"
 include: "../rules/spingo"
-include: "../rules/top"
+include: "../rules/top.smk"
 
 rule all:
     input:

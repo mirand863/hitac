@@ -1,17 +1,18 @@
 rule top:
     input:
         train = "data/train/{dataset}.fasta",
-        test = "data/test/{dataset}.fasta",
-        usearch = "bin/usearch"
+        test = "data/test/{dataset}.fasta"
     output:
         predictions = "results/predictions/{dataset}/top.tsv"
     benchmark:
         repeat("results/benchmark/{dataset}/top.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
+    container:
+        config["containers"]["usearch"]
     shell:
         """
-        {input.usearch} \
+        usearch \
             -db {input.train} \
             -cons_tax {input.test} \
             -strand plus \
