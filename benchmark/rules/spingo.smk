@@ -38,28 +38,14 @@ rule spingo:
 
 rule spingo2taxxi:
     input:
-        train = "data/train/{dataset}.fasta",
-        test = "data/test/{dataset}.fasta",
-        spingo = "bin/SPINGO-1.3/dist/64bit/spingo",
-        scripts = expand("scripts/{script}",script=config["scripts"])
+        predictions = "results/temp/{dataset}/spingo/predictions.tsv"
     output:
-        predictions = "results/predictions/{dataset}/spingo.tsv",
-        tmpdir = temp(directory("results/temp/{dataset}/spingo"))
-    benchmark:
-        repeat("results/benchmark/{dataset}/spingo.tsv", config["benchmark"]["repeat"])
-    threads:
-        config["threads"]
-    conda:
-        "../envs/spingo.yml"
+        predictions = "results/predictions/{dataset}/spingo.tsv"
+    container:
+        config["containers"]["python2"]
     shell:
         """
-        {input.spingo} \
-            -i {input.test} \
-            -d {output.tmpdir}/db.fa \
-            -p {threads} \
-            > {output.tmpdir}/raw
-        
         python scripts/spingo2tab.py \
-            {output.tmpdir}/raw \
+            {input.predictions} \
             > {output.predictions}
         """
