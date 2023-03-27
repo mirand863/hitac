@@ -76,11 +76,11 @@ containers:
     usearch: "docker://mirand863/usearch:2.0.29-beta.1"
     knn: "docker://mirand863/knn:2.0.29-beta.1"
     spingo: "docker://mirand863/spingo:2.0.29-beta.1"
+    rdp: "docker://mirand863/rdp:2.0.29-beta.1"
     qiime2: "docker://quay.io/qiime2/core:2023.2"
     python2: "docker://python:2.7-slim"
 
 urls:
-    rdp: "https://zenodo.org/record/6950218/files/rdp_classifier_2.13.zip?download=1"
     train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"
     test: "https://drive5.com/taxxi/benchmark/testfa/{dataset}"
     scripts: "https://raw.githubusercontent.com/mirand863/taxxi/master/benchmark/py/{script}"
