@@ -3,9 +3,7 @@ configfile: "config.yml"
 workdir: config["workdir"]
 
 include: "../rules/download_rdp"
-include: "../rules/download_spingo"
 include: "../rules/extract_rdp"
-include: "../rules/extract_spingo"
 include: "../rules/download_datasets.smk"
 include: "../rules/download_scripts.smk"
 include: "../rules/taxxi_to_qiime2.smk"
@@ -27,7 +25,7 @@ include: "../rules/q2sk"
 include: "../rules/q2vs"
 include: "../rules/rdp"
 include: "../rules/sintax.smk"
-include: "../rules/spingo"
+include: "../rules/spingo.smk"
 include: "../rules/top.smk"
 
 rule all:
