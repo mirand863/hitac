@@ -61,7 +61,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [blca, btop, usearch, hitac, knn, spingo, rdp]
+        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass]
     steps:
       - uses: actions/checkout@v3
       - name: Docker meta
