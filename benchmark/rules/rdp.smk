@@ -23,6 +23,10 @@ rule rdp:
         test = "data/test/{dataset}.fasta",
     output:
         properties = temp("results/temp/{dataset}/rdp/rRNAClassifier.properties"),
+        tree = temp("results/temp/{dataset}/rdp/bergeyTrainingTree.xml"),
+        probabilities = temp("results/temp/{dataset}/rdp/genus_wordConditionalProbList.txt"),
+        prior = temp("results/temp/{dataset}/rdp/logWordPrior.txt"),
+        array = temp("results/temp/{dataset}/rdp/wordConditionalProbIndexArr.txt"),
         predictions = temp("results/temp/{dataset}/rdp/predictions.tsv")
     params:
         tmpdir = temp(directory("results/temp/{dataset}/rdp"))
@@ -60,60 +64,35 @@ rule rdp:
         """
 
 
-# rule rdp:
-#     input:
-#         train="data/train/{dataset}.fasta",
-#         test="data/test/{dataset}.fasta",
-#         rdp = "bin/rdp_classifier_2.13/dist/classifier.jar",
-#         scripts = expand("scripts/{script}",script=config["scripts"])
-#     output:
-#         rdp50 = "results/predictions/{dataset}/rdp50.tsv",
-#         rdp80 = "results/predictions/{dataset}/rdp80.tsv",
-#         tmpdir = temp(directory("results/temp/{dataset}/rdp"))
-#     benchmark:
-#         repeat("results/benchmark/{dataset}/rdp.tsv",config["benchmark"]["repeat"])
-#     threads:
-#         config["threads"]
-#     conda:
-#         "../envs/rdp.yml"
-#     shell:
-#         """
-#         mkdir -p {output.tmpdir}
-#
-#         python scripts/fasta_utax2rdp.py \
-#             {input.train} \
-#             {output.tmpdir}/rdp_tree.txt \
-#             > {output.tmpdir}/rdp_db.fa
-#
-#         workdir=`echo {input.rdp} | sed "-es/e:/\/e/"`
-#
-#         rd=`dirname $workdir | sed "-es/\/dist//"`
-#
-#         props=$(find $rd | grep rRNAClassifier.properties | head -1)
-#
-#         cp $props {output.tmpdir}
-#
-#         java \
-#             -Xmx8g \
-#             -cp {input.rdp} \
-#             edu/msu/cme/rdp/classifier/train/ClassifierTraineeMaker \
-#             train \
-#             -t {output.tmpdir}/rdp_tree.txt \
-#             -s {output.tmpdir}/rdp_db.fa \
-#             -o {output.tmpdir}
-#
-#         java \
-#             -Xmx1g \
-#             -jar {input.rdp} \
-#             -t {output.tmpdir}/rRNAClassifier.properties \
-#             -q {input.test} \
-#             -o {output.tmpdir}/raw
-#
-#         python scripts/rdpc2tab3.py \
-#             {output.tmpdir}/raw 50 \
-#             > {output.rdp50}
-#
-#         python scripts/rdpc2tab3.py \
-#             {output.tmpdir}/raw 80 \
-#             > {output.rdp80}
-#         """
+rule rdp50:
+    input:
+        predictions = "results/temp/{dataset}/rdp/predictions.tsv",
+        scripts = expand("scripts/{script}",script=config["scripts"])
+    output:
+        predictions = "results/predictions/{dataset}/rdp50.tsv"
+    container:
+        config["containers"]["python2"]
+    shell:
+        """
+        python scripts/rdpc2tab3.py \
+            {input.predictions} \
+            50 \
+            > {output.predictions}
+        """
+
+
+rule rdp80:
+    input:
+        predictions = "results/temp/{dataset}/rdp/predictions.tsv",
+        scripts = expand("scripts/{script}",script=config["scripts"])
+    output:
+        predictions = "results/predictions/{dataset}/rdp80.tsv"
+    container:
+        config["containers"]["python2"]
+    shell:
+        """
+        python scripts/rdpc2tab3.py \
+            {input.predictions} \
+            80 \
+            > {output.predictions}
+        """
