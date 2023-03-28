@@ -1,7 +1,8 @@
 rule microclass:
     input:
         train = "data/train/{dataset}.fasta",
-        test = "data/test/{dataset}.fasta"
+        test = "data/test/{dataset}.fasta",
+        scripts = expand("scripts/{script}",script=config["scripts"])
     output:
         predictions = temp("results/temp/{dataset}/microclass/predictions.tsv")
     benchmark:
@@ -21,11 +22,12 @@ rule microclass:
 
 rule microclass2taxxi:
     input:
-        predictions = "results/temp/{dataset}/microclass/predictions.tsv"
+        predictions = "results/temp/{dataset}/microclass/predictions.tsv",
+        scripts = expand("scripts/{script}",script=config["scripts"])
     output:
         predictions = "results/predictions/{dataset}/microclass.tsv"
     container:
-        config["containers"]["python2"]
+        config["containers"]["pandas"]
     shell:
         """
         python scripts/microclass2tab.py \
