@@ -1,7 +1,7 @@
 rule hitac_fit:
     input:
-        reference_reads = "results/temp/{dataset}/import_qiime2/reference_reads.qza",
-        reference_taxonomy = "results/temp/{dataset}/import_qiime2/reference_taxonomy.qza"
+        reference_reads = "results/temp/{dataset}/qiime2/reference_reads.qza",
+        reference_taxonomy = "results/temp/{dataset}/qiime2/reference_taxonomy.qza"
     output:
         classifier = temp("results/temp/{dataset}/hitac/classifier.qza"),
     benchmark:
@@ -23,7 +23,7 @@ rule hitac_fit:
 
 rule hitac_predict:
     input:
-        query_reads = "results/temp/{dataset}/import_qiime2/query_reads.qza",
+        query_reads = "results/temp/{dataset}/qiime2/query_reads.qza",
         classifier = "results/temp/{dataset}/hitac/classifier.qza",
     output:
         predictions = temp("results/temp/{dataset}/hitac/predictions.qza"),
@@ -41,36 +41,4 @@ rule hitac_predict:
             --p-kmer 6 \
             --p-threads {threads} \
             --o-classification {output.predictions}
-        """
-
-
-rule export_qiime2:
-    input:
-        predictions = "results/temp/{dataset}/hitac/predictions.qza"
-    output:
-        taxonomy = temp("results/temp/{dataset}/hitac/taxonomy.tsv")
-    params:
-        output_dir = "results/temp/{dataset}/hitac"
-    container:
-        "docker://quay.io/qiime2/core:2023.2"
-    shell:
-        """
-        qiime tools export \
-            --input-path {input.predictions} \
-            --output-path {params.output_dir}
-        """
-
-
-rule qiime2_to_taxxi:
-    input:
-        taxonomy = "results/temp/{dataset}/hitac/taxonomy.tsv"
-    output:
-        predictions = "results/predictions/{dataset}/hitac.tsv"
-    container:
-        config["containers"]["python2"]
-    shell:
-        """
-        python scripts/qiime2tax2tab.py \
-            {input.taxonomy} \
-            > {output.predictions}
         """
