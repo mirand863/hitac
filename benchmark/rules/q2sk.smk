@@ -1,30 +1,27 @@
-rule hitac:
+rule q2sk:
     input:
         reference_reads = "results/temp/{dataset}/qiime2/reference_reads.qza",
         reference_taxonomy = "results/temp/{dataset}/qiime2/reference_taxonomy.qza",
         query_reads = "results/temp/{dataset}/qiime2/query_reads.qza"
     output:
-        classifier = temp("results/temp/{dataset}/hitac/classifier.qza"),
-        predictions = temp("results/temp/{dataset}/hitac/predictions.qza")
+        classifier = temp("results/temp/{dataset}/q2sk/classifier.qza"),
+        predictions = temp("results/temp/{dataset}/q2sk/predictions.qza")
     benchmark:
-        repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/q2sk.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
-        config["containers"]["hitac"]
+        config["containers"]["qiime2"]
     shell:
         """
-        qiime hitac fit \
+        qiime feature-classifier fit-classifier-naive-bayes \
             --i-reference-reads {input.reference_reads} \
             --i-reference-taxonomy {input.reference_taxonomy} \
-            --p-kmer 6 \
-            --p-threads {threads} \
             --o-classifier {output.classifier}
-        
-        qiime hitac classify \
-            --i-reads {input.query_reads} \
+
+        qiime feature-classifier classify-sklearn \
             --i-classifier {output.classifier} \
-            --p-kmer 6 \
-            --p-threads {threads} \
+            --i-reads {input.query_reads} \
+            --p-n-jobs {threads} \
             --o-classification {output.predictions}
         """
