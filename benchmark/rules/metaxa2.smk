@@ -4,7 +4,7 @@ rule taxxi_to_metaxa2:
         scripts = expand("scripts/{script}",script=config["scripts"])
     output:
         reference_reads = temp("results/temp/{dataset}/metaxa2/reference_reads.fasta"),
-        reference_taxonomy = temp("results/temp/{dataset}/metaxa2/reference_taxonomy.txt"),
+        reference_taxonomy = temp("results/temp/{dataset}/metaxa2/reference_taxonomy.txt")
     container:
         config["containers"]["python2"]
     shell:
@@ -18,44 +18,54 @@ rule taxxi_to_metaxa2:
 
 rule metaxa2:
     input:
-        train = "data/train/{dataset}.fasta",
+        reference_reads = "results/temp/{dataset}/metaxa2/reference_reads.fasta",
+        reference_taxonomy = "results/temp/{dataset}/metaxa2/reference_taxonomy.txt",
         test = "data/test/{dataset}.fasta",
-        scripts = expand("scripts/{script}",script=config["scripts"])
     output:
-        predictions="results/predictions/{dataset}/metaxa2.tsv",
-        tmpdir = temp(directory("results/temp/{dataset}/metaxa2"))
+        blast = temp("results/temp/{dataset}/metaxa2/database/blast"),
+        hhms = temp("results/temp/{dataset}/metaxa2/database/HMMs"),
+        predictions = temp("results/temp/{dataset}/metaxa2/results.taxonomy.txt")
+    params:
+        database = "results/temp/{dataset}/metaxa2/database",
+        predictions = "restuls/temp/{dataset}/metaxa2/results"
     benchmark:
         repeat("results/benchmark/{dataset}/metaxa2.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
-    conda:
-        '../envs/metaxa2.yml'
+    container:
+        config["containers"]["metaxa2"]
     shell:
         """
-        mkdir -p {output.tmpdir}
-        
-        python scripts/fasta_utax2_to_metaxa2.py \
-            {input.train} \
-            {output.tmpdir}/db.fa \
-            {output.tmpdir}/tax.txt
-
         metaxa2_dbb \
-            -b {output.tmpdir}/db.fa \
-            -o {output.tmpdir}/outdb \
-            -t {output.tmpdir}/tax.txt \
+            -b {input.reference_reads} \
+            -o {params.database} \
+            -t {input.reference_taxonomy} \
             --auto_rep T \
             --cpu {threads} \
             --mode divergent
         
         metaxa2 \
             -i {input.test} \
-            -d {output.tmpdir}/outdb/blast \
-            -p {output.tmpdir}/outdb/HMMs \
-            -o {output.tmpdir}/results \
+            -d {output.blast} \
+            -p {output.hhms} \
+            -o {params.predictions} \
             -cpu {threads}
-        
+        """
+
+
+rule metaxa2_to_taxxi:
+    input:
+        predictions = "results/temp/{dataset}/metaxa2/results.taxonomy.txt",
+        test = "data/test/{dataset}.fasta",
+        scripts = expand("scripts/{script}",script=config["scripts"])
+    output:
+        predictions = "results/predictions/{dataset}/metaxa2.tsv"
+    container:
+        config["containers"]["python2"]
+    shell:
+        """
         python scripts/metaxa2tab.py \
-            {output.tmpdir}/results.taxonomy.txt \
+            {input.predictions} \
             {input.test} \
             > {output.predictions}
         """
