@@ -20,14 +20,24 @@ rule metaxa2:
     input:
         reference_reads = "results/temp/{dataset}/metaxa2/reference_reads.fasta",
         reference_taxonomy = "results/temp/{dataset}/metaxa2/reference_taxonomy.txt",
-        test = "data/test/{dataset}.fasta",
+        test = "data/test/{dataset}.fasta"
     output:
-        blast = temp("results/temp/{dataset}/metaxa2/database/blast"),
-        hhms = temp("results/temp/{dataset}/metaxa2/database/HMMs"),
-        predictions = temp("results/temp/{dataset}/metaxa2/results.taxonomy.txt")
+        predictions = temp("results/temp/{dataset}/metaxa2/results.taxonomy.txt"),
+        archaea = temp("results/temp/{dataset}/metaxa2/results.archaea.fasta"),
+        bacteria = temp("results/temp/{dataset}/metaxa2/results.bacteria.fasta"),
+        chloroplast = temp("results/temp/{dataset}/metaxa2/results.chloroplast.fasta"),
+        eukaryota = temp("results/temp/{dataset}/metaxa2/results.eukaryota.fasta"),
+        extraction_fasta = temp("results/temp/{dataset}/metaxa2/results.extraction.fasta"),
+        extraction_results = temp("results/temp/{dataset}/metaxa2/results.extraction.results"),
+        graph = temp("results/temp/{dataset}/metaxa2/results.graph"),
+        mitochrondria = temp("results/temp/{dataset}/metaxa2/results.mitochondria.fasta"),
+        summary = temp("results/temp/{dataset}/metaxa2/results.summary.txt"),
+        uncertain = temp("results/temp/{dataset}/metaxa2/results.uncertain.fasta")
     params:
         database = "results/temp/{dataset}/metaxa2/database",
-        predictions = "restuls/temp/{dataset}/metaxa2/results"
+        blast = "results/temp/{dataset}/metaxa2/database/blast",
+        hhms = "results/temp/{dataset}/metaxa2/database/HMMs",
+        predictions = "results/temp/{dataset}/metaxa2/results"
     benchmark:
         repeat("results/benchmark/{dataset}/metaxa2.tsv", config["benchmark"]["repeat"])
     threads:
@@ -46,10 +56,13 @@ rule metaxa2:
         
         metaxa2 \
             -i {input.test} \
-            -d {output.blast} \
-            -p {output.hhms} \
+            -d {params.blast} \
+            -p {params.hhms} \
             -o {params.predictions} \
             -cpu {threads}
+        
+        rm -rf \
+        {params.database}
         """
 
 
