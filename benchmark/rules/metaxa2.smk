@@ -62,7 +62,7 @@ rule metaxa2:
             -cpu {threads}
         
         rm -rf \
-        {params.database}
+            {params.database}
         """
 
 
