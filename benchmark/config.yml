@@ -3,7 +3,7 @@ workdir: /home/fabio/Desktop/hitac/benchmark
 threads: 12
 
 benchmark:
-    repeat: 1
+    repeat: 5
 
 datasets:
     - sp_rdp_its.90
