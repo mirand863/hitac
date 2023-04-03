@@ -1,7 +1,8 @@
 rule compute_metrics:
     input:
         scripts = expand("scripts/{script}",script=config["scripts"]),
-        namecounts = expand("namecounts/{dataset}",dataset=config["datasets"])
+        namecounts = expand("namecounts/{dataset}",dataset=config["datasets"]),
+        predictions = "results/predictions/{dataset}/{method}.tsv"
     output:
         metrics = "results/metrics/{method}/{dataset}/{rank}.tsv"
     container:
