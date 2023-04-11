@@ -1,5 +1,5 @@
 sp_rdp_its	fl	90	TPR	sintax80	s	.
 sp_rdp_its	fl	90	UCR	sintax80	s	.
 sp_rdp_its	fl	90	MCR	sintax80	s	.
-sp_rdp_its	fl	90	OCR	sintax80	s	6.4
+sp_rdp_its	fl	90	OCR	sintax80	s	6.3
 sp_rdp_its	fl	90	Acc	sintax80	s	0.0

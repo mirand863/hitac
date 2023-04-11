@@ -1,5 +1,5 @@
 sp_rdp_its	fl	90	TPR	nbc80	s	.
 sp_rdp_its	fl	90	UCR	nbc80	s	.
 sp_rdp_its	fl	90	MCR	nbc80	s	.
-sp_rdp_its	fl	90	OCR	nbc80	s	18.7
+sp_rdp_its	fl	90	OCR	nbc80	s	18.3
 sp_rdp_its	fl	90	Acc	nbc80	s	0.0

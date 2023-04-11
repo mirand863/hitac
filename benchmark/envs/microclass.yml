@@ -1,6 +1,0 @@
-channels:
-  - conda-forge
-dependencies:
-  - r-base=4.1
-  - r-essentials=4.1
-  - pandas=1.4
