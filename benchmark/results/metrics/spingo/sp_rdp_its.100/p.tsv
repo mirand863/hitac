@@ -1,0 +1,5 @@
+sp_rdp_its	fl	100	TPR	spingo	p	0.0
+sp_rdp_its	fl	100	UCR	spingo	p	100.0
+sp_rdp_its	fl	100	MCR	spingo	p	0.0
+sp_rdp_its	fl	100	OCR	spingo	p	.
+sp_rdp_its	fl	100	Acc	spingo	p	0.0

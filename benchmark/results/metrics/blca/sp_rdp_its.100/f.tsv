@@ -1,0 +1,5 @@
+sp_rdp_its	fl	100	TPR	blca	f	0.0
+sp_rdp_its	fl	100	UCR	blca	f	100.0
+sp_rdp_its	fl	100	MCR	blca	f	0.0
+sp_rdp_its	fl	100	OCR	blca	f	.
+sp_rdp_its	fl	100	Acc	blca	f	0.0
