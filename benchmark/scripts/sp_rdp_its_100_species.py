@@ -7,95 +7,95 @@ results = pd.DataFrame(data={
         'HiTaC',
         'HiTaC',
         'HiTaC',
-        'HiTaC_Filter',
-        'HiTaC_Filter',
-        'HiTaC_Filter',
-        'RDP50',
-        'RDP50',
-        'RDP50',
         'BTOP',
         'BTOP',
         'BTOP',
-        'Microclass',
-        'Microclass',
-        'Microclass',
-        'Q2_SK',
-        'Q2_SK',
-        'Q2_SK',
-        'KTOP',
-        'KTOP',
-        'KTOP',
         'TOP',
         'TOP',
         'TOP',
+        'Microclass',
+        'Microclass',
+        'Microclass',
+        'KTOP',
+        'KTOP',
+        'KTOP',
+        'HiTaC_Filter',
+        'HiTaC_Filter',
+        'HiTaC_Filter',
+        'SINTAX50',
+        'SINTAX50',
+        'SINTAX50',
+        'SPINGO',
+        'SPINGO',
+        'SPINGO',
     ],
     'metric': [
         # HiTaC
         'Accuracy',
         'Sensitivity',
-        'MCR',
-        # HiTaC_Filter
-        'Accuracy',
-        'Sensitivity',
-        'MCR',
-        # RDP50
-        'Accuracy',
-        'Sensitivity',
-        'MCR',
+        'Misclassification rate',
         # BTOP
         'Accuracy',
         'Sensitivity',
-        'MCR',
-        # Microclass
-        'Accuracy',
-        'Sensitivity',
-        'MCR',
-        # Q2_SK
-        'Accuracy',
-        'Sensitivity',
-        'MCR',
-        # KTOP
-        'Accuracy',
-        'Sensitivity',
-        'MCR',
+        'Misclassification rate',
         # TOP
         'Accuracy',
         'Sensitivity',
-        'MCR',
+        'Misclassification rate',
+        # Microclass
+        'Accuracy',
+        'Sensitivity',
+        'Misclassification rate',
+        # KTOP
+        'Accuracy',
+        'Sensitivity',
+        'Misclassification rate',
+        # HiTaC_Filter
+        'Accuracy',
+        'Sensitivity',
+        'Misclassification rate',
+        # SINTAX50
+        'Accuracy',
+        'Sensitivity',
+        'Misclassification rate',
+        # SPINGO
+        'Accuracy',
+        'Sensitivity',
+        'Misclassification rate',
     ],
     'result': [
         # HiTaC
         100.0,
         100.0,
         0.0,
-        # HiTaC_Filter
-        97.8,
-        97.8,
-        0.0,
-        # RDP50
-        96.2,
-        96.2,
-        2.9,
         # BTOP
         100.0,
         100.0,
         0.0,
-        # Microclass
-        99.4,
-        99.4,
-        0.6,
-        # Q2_SK
-        95.3,
-        95.3,
-        0.8,
-        # KTOP
-        99.4,
-        99.4,
-        0.6,
         # TOP
         99.6,
         99.6,
         0.4,
+        # Microclass
+        99.4,
+        99.4,
+        0.6,
+        # KTOP
+        99.4,
+        99.4,
+        0.6,
+        # HiTaC_Filter
+        97.8,
+        97.8,
+        0.0,
+        # SINTAX50
+        97.4,
+        97.4,
+        0.4,
+        # SPINGO
+        96.8,
+        96.8,
+        0.0,
     ]
 })
 
