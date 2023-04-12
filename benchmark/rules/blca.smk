@@ -30,6 +30,7 @@ rule blca:
         query_reads = "results/temp/{dataset}/blca/query_reads.fasta",
         reference_taxonomy = "results/temp/{dataset}/blca/reference_taxonomy.txt",
     output:
+        blastn = temp("results/temp/{dataset}/blca/query_reads.fasta.blastn"),
         ndb = temp("results/temp/{dataset}/blca/database.ndb"),
         nhr = temp("results/temp/{dataset}/blca/database.nhr"),
         nin = temp("results/temp/{dataset}/blca/database.nin"),
