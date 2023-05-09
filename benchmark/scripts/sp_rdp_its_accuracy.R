@@ -43,8 +43,8 @@ data$group <- factor(data$group, c("HiTaC", "BTOP", "TOP", "Microclass", "KTOP",
 theme_set(theme_void(base_family = "Roboto"))
 
 theme_update(
-  axis.text.x = element_text(color = "black", face = "bold", size = 26,
-                             margin = margin(t = 6), angle = 60, vjust = 1, hjust = 1),
+  axis.text.x = element_text(color = "black", size = 26,
+                             margin = margin(t = 6), angle = 50, vjust = 1, hjust = 1),
   axis.text.y = element_text(color = "black", size = 22, hjust = 1,
                              margin = margin(r = 6), family = "Roboto Mono"),
   axis.line.x = element_line(color = "black", size = 1),

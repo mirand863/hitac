@@ -43,8 +43,8 @@ data$group <- factor(data$group, c("HiTaC", "BTOP", "TOP", "Microclass", "KTOP",
 theme_set(theme_void(base_family = "Roboto"))
 
 theme_update(
-  axis.text.x = element_text(color = "black", face = "bold", size = 26,
-                             margin = margin(t = 6), angle = 60, vjust = 1, hjust = 1),
+  axis.text.x = element_text(color = "black", size = 26,
+                             margin = margin(t = 6), angle = 50, vjust = 1, hjust = 1),
   axis.text.y = element_text(color = "black", size = 22, hjust = 1,
                              margin = margin(r = 6), family = "Roboto Mono"),
   axis.line.x = element_line(color = "black", size = 1),
@@ -96,7 +96,7 @@ my_pal <- rcartocolor::carto_pal(n = 8, name = "Bold")[c(1, 2, 3, 4, 5, 6, 7, 8)
 
 # boxplot
 g <- ggplot(data, aes(x = group, y = value, color = group, fill = group)) +
-  scale_y_continuous(breaks = seq(50,100,25)) +
+  scale_y_continuous(breaks = seq(0,100,25)) +
   scale_color_manual(values = my_pal, guide = "none") +
   scale_fill_manual(values = my_pal, guide = "none")
 
@@ -105,4 +105,5 @@ g +
     aes(fill = group, fill = after_scale(colorspace::lighten(fill, .7))),
     size = 1.5, outlier.shape = NA
   ) +
-  geom_jitter(width = .1, size = 7, alpha = .5)
+  geom_jitter(width = .1, size = 7, alpha = .5) #+
+#   coord_cartesian(ylim=c(0,100))
