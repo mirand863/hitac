@@ -1,10 +1,14 @@
 """Helper functions for data manipulation."""
 import concurrent.futures
 import itertools
+import logging
 from itertools import product
 from multiprocessing import cpu_count
 
 import numpy as np
+import torch
+from tqdm import tqdm
+from transformers import BertTokenizer, BertModel
 
 
 def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
@@ -25,6 +29,123 @@ def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.arr
     """
     kmers = ["".join(c) for c in product(alphabet, repeat=kmer_size)]
     return np.array(kmers)
+
+
+logger = logging.getLogger()
+
+
+def configure_device():
+    """
+    Configure device to run computation.
+
+    Returns
+    -------
+    device: torch.device
+        Device to compute, i.e., CPU or GPU.
+    """
+    if torch.cuda.is_available():
+        device = torch.device("cuda:0")
+    else:
+        device = torch.device("cpu")
+        logger.warning("ProtBERT: CPU mode enabled (slower)")
+    return device
+
+
+def load_bert(device: torch.device):
+    """
+    Load BERT model.
+
+    Parameters
+    ----------
+    device: torch.device
+        Device to compute, i.e., CPU or GPU.
+
+
+    Returns
+    -------
+    tokenizer: BertTokenizer
+        BERT tokenizer.
+    model: BertModel
+        BERT encoder model.
+    """
+    tokenizer = BertTokenizer.from_pretrained(
+        "zhihan1996/DNABERT-2-117M", trust_remote_code=True, do_lower_case=False
+    )
+    model = BertModel.from_pretrained(
+        "zhihan1996/DNABERT-2-117M", trust_remote_code=True
+    ).to(device)
+    return tokenizer, model
+
+
+def get_bert_embedding(
+    sequence: str,
+    len_seq_limit: int,
+    tokenizer: BertTokenizer,
+    device: torch.device,
+    model: BertModel,
+):
+    """
+    Collect last hidden state embedding vector from pre-trained ProtBERT Model.
+
+    Parameters
+    ----------
+    sequence: str
+        Protein sequence, e.g., AAABBB from FASTA file.
+    len_seq_limit: int
+        Maximum sequence length, i.e., number of letters for truncation.
+    tokenizer: BertTokenizer
+        BERT tokenizer.
+    device: torch.device
+        Device to compute, i.e., CPU or GPU.
+    model: BertModel
+        BERT encoder model.
+
+    Returns
+    -------
+    output_hidden: np.ndarray
+        Last hidden state embedding vector for input sequence.
+    """
+    sequence_w_spaces = " ".join(list(sequence))
+    encoded_input = tokenizer(
+        sequence_w_spaces,
+        truncation=True,
+        max_length=len_seq_limit,
+        padding="max_length",
+        return_tensors="pt",
+    ).to(device)
+    output = model(**encoded_input)
+    output_hidden = output["last_hidden_state"][:, 0][0].detach().cpu().numpy()
+    return output_hidden
+
+
+def compute_features(sequences: list) -> np.array:
+    """
+    Compute features using DNA BERT.
+
+    Parameters
+    ----------
+    sequences : list
+        List containing all sequences.
+
+    Returns
+    -------
+    features : np.array
+        Numpy array containing features for all sequences.
+    """
+    device = configure_device()
+    tokenizer, model = load_bert(device)
+    embeddings = []
+    for seq in tqdm(sequences):
+        embeddings.append(
+            get_bert_embedding(
+                sequence=seq,
+                len_seq_limit=1200,  # TODO: make this a user parameter
+                tokenizer=tokenizer,
+                device=device,
+                model=model,
+            )
+        )
+    return np.array(embeddings)
 
 
 def compute_kmer_frequency(sequence: str, kmers: list) -> np.array:
