@@ -89,27 +89,27 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  pypi:
-    needs: bump
-    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install pypa/build
-      run: |
-        git fetch --tags
-        git branch --create-reflog main origin/main
-        python -m pip install build --user .
-    - name: Build a binary wheel and a source tarball
-      run: |
-        python -m build --sdist --wheel --outdir dist/ .
-    - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        verbose: true
+#  pypi:
+#    needs: bump
+#    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v1
+#    - name: Set up Python 3.8
+#      uses: actions/setup-python@v2
+#      with:
+#        python-version: 3.8
+#    - name: Install pypa/build
+#      run: |
+#        git fetch --tags
+#        git branch --create-reflog main origin/main
+#        python -m pip install build --user .
+#    - name: Build a binary wheel and a source tarball
+#      run: |
+#        python -m build --sdist --wheel --outdir dist/ .
+#    - name: Publish distribution 📦 to PyPI
+#      uses: pypa/gh-action-pypi-publish@release/v1
+#      with:
+#        user: __token__
+#        password: ${{ secrets.PYPI_API_TOKEN }}
+#        verbose: true

@@ -8,7 +8,7 @@ from multiprocessing import cpu_count
 import numpy as np
 import torch
 from tqdm import tqdm
-from transformers import BertTokenizer, BertModel
+from transformers import AutoTokenizer, AutoModel
 
 
 def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
@@ -68,11 +68,11 @@ def load_bert(device: torch.device):
     model: BertModel
         BERT encoder model.
     """
-    tokenizer = BertTokenizer.from_pretrained(
-        "zhihan1996/DNABERT-2-117M", trust_remote_code=True, do_lower_case=False
+    tokenizer = AutoTokenizer.from_pretrained(
+        "Rostlab/prot_bert", do_lower_case=False
     )
-    model = BertModel.from_pretrained(
-        "zhihan1996/DNABERT-2-117M", trust_remote_code=True
+    model = AutoModel.from_pretrained(
+        "Rostlab/prot_bert"
     ).to(device)
     return tokenizer, model
 
@@ -80,9 +80,9 @@ def load_bert(device: torch.device):
 def get_bert_embedding(
     sequence: str,
     len_seq_limit: int,
-    tokenizer: BertTokenizer,
+    tokenizer: AutoTokenizer,
     device: torch.device,
-    model: BertModel,
+    model: AutoModel,
 ):
     """
     Collect last hidden state embedding vector from pre-trained ProtBERT Model.
@@ -105,7 +105,7 @@ def get_bert_embedding(
     output_hidden: np.ndarray
         Last hidden state embedding vector for input sequence.
     """
-    sequence_w_spaces = " ".join(list(sequence))
+    sequence_w_spaces = " ".join(list(sequence.decode('UTF-8')))
     encoded_input = tokenizer(
         sequence_w_spaces,
         truncation=True,
