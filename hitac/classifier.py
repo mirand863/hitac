@@ -22,6 +22,7 @@ from ._utils import (
     compute_possible_kmers,
     convert_taxonomy_to_qiime2,
     extract_qiime2_taxonomy,
+    compute_features,
 )
 from .filter import Filter
 from .plugin_setup import citations, plugin
@@ -52,9 +53,10 @@ def fit(
     hierarchical_classifier : LocalClassifierPerParentNode
         Local hierarchical classifier based on the taxonomic hierarchy.
     """
-    kmers = compute_possible_kmers(kmer)
     _, training_sequences = _extract_reads(reference_reads)
-    X_train = compute_frequencies(training_sequences, kmers, threads)
+    X_train = compute_features(
+        training_sequences
+    )  # TODO: add threads and gpus parameters
     Y_train = extract_qiime2_taxonomy(reference_taxonomy)
     logistic_regression = LogisticRegression(
         solver="liblinear",
@@ -114,11 +116,10 @@ def classify(
     classification : pd.DataFrame
         DataFrame containing the taxonomies assigned to each sequence.
     """
-    kmers = compute_possible_kmers(kmer)
     # transform reads to DNAIterator
     reads = DNAIterator(skbio.read(str(reads), format="fasta", constructor=skbio.DNA))
     seq_ids, test_sequences = _extract_reads(reads)
-    X_test = compute_frequencies(test_sequences, kmers, threads)
+    X_test = compute_features(test_sequences)  # TODO: add threads and gpu parameters
     predictions = classifier.predict(X_test)
     taxonomy = convert_taxonomy_to_qiime2(predictions)
     confidence = [-1] * len(seq_ids)
