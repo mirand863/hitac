@@ -1,16 +1,16 @@
 workdir: /home/fabio/Desktop/hitac/benchmark
 
-threads: 12
+threads: 8
 
 benchmark:
-    repeat: 5
+    repeat: 1
 
 datasets:
     - sp_rdp_its.90
-    - sp_rdp_its.95
-    - sp_rdp_its.97
-    - sp_rdp_its.99
-    - sp_rdp_its.100
+#    - sp_rdp_its.95
+#    - sp_rdp_its.97
+#    - sp_rdp_its.99
+#    - sp_rdp_its.100
 
 scripts:
     - fasta_utax2_to_blca.py
