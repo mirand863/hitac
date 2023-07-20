@@ -55,39 +55,39 @@ jobs:
     outputs:
       new_tag: ${{steps.tag.outputs.new_tag}}
 
-#  docker:
-##    needs: bump
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-##        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass, pandas, metaxa2]
-#        container: [hitac]
-#    steps:
-#      - uses: actions/checkout@v3
-#      - name: Docker meta
-#        id: meta
-#        uses: docker/metadata-action@v4
-#        with:
-#          images: mirand863/${{ matrix.container }}
-##        tags: |
-##          type=raw,value=${{needs.bump.outputs.new_tag}}
-##          type=raw,value=latest,enable={{is_default_branch}}
+  docker:
+    needs: bump
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+#        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass, pandas, metaxa2]
+        container: [hitac]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: mirand863/${{ matrix.container }}
+        tags: |
+          type=raw,value=${{needs.bump.outputs.new_tag}}
+          type=raw,value=latest,enable={{is_default_branch}}
 #          tags: |
 #            type=raw,value=2.0.29
-#      - name: Login to DockerHub
-#        uses: docker/login-action@v2
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_TOKEN }}
-#      - name: Build and push
-#        uses: docker/build-push-action@v4
-#        with:
-#          file: benchmark/dockerfiles/${{ matrix.container }}.dockerfile
-#          context: .
-#          push: true
-#          tags: ${{ steps.meta.outputs.tags }}
-#          labels: ${{ steps.meta.outputs.labels }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          file: benchmark/dockerfiles/${{ matrix.container }}.dockerfile
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   pypi:
     needs: bump
