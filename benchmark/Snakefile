@@ -26,12 +26,19 @@ include: "rules/sintax.smk"
 include: "rules/spingo.smk"
 include: "rules/top.smk"
 include: "rules/compute_metrics.smk"
+include: "rules/install_bioautoml.smk"
+include: "rules/bioautoml.smk"
 
 rule all:
     input:
-        metrics = expand(
-            "results/metrics/{method}/{dataset}/{rank}.tsv",
-            method=config["methods"],
-            dataset=config["datasets"],
-            rank=config["ranks"],
+        bioautoml = expand(
+            "results/hitac/features/{train_or_test}/{dataset}/feat_extraction/DNC.csv",
+            train_or_test=["train", "test"],
+            dataset=config["datasets"]
         )
+        # metrics = expand(
+        #     "results/metrics/{method}/{dataset}/{rank}.tsv",
+        #     method=config["methods"],
+        #     dataset=config["datasets"],
+        #     rank=config["ranks"],
+        # )
