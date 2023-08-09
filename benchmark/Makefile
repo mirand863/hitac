@@ -12,8 +12,8 @@ local:  ## Run pipeline without slurm
 delab:  ## Run pipeline on delab with slurm
 	-sed -i "s?workdir.*?workdir: `pwd`?" config/config.yml
 	-sed -i "s?threads.*?threads: 12?" config/config.yml
-	-srun -A renard --mem=10G --cpus-per-task=12 --time=5-00:00:00 -p magic snakemake --restart-times 5 --keep-going --printshellcmds --reason --use-conda --cores 12 --resources mem_gb=2700 --jobs 6 --cluster "sbatch -A renard -p magic --mem=16G --cpus-per-task=12 --time=5-00:00:00 -C 'ARCH:X86'"
-	-rm -f slurm-*
+	-rm -rf slurm-*.out
+	-sbatch -J hitac allocate_job.slurm
 
 .PHONY: git
 git:  ## Update local repository
