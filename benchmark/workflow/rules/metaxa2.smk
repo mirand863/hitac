@@ -53,14 +53,14 @@ rule metaxa2:
             --auto_rep T \
             --cpu {threads} \
             --mode divergent
-        
+
         metaxa2 \
             -i {input.test} \
             -d {params.blast} \
             -p {params.hhms} \
             -o {params.predictions} \
             -cpu {threads}
-        
+
         rm -rf \
             {params.database}
         """

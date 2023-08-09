@@ -44,7 +44,7 @@ rule btop:
             -dbtype nucl \
             -parse_seqids \
             -out {params.database}
-        
+
         blastn \
             -task megablast \
             -db {params.database} \

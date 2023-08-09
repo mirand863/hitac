@@ -14,7 +14,7 @@ rule taxxi2knn:
     shell:
         """
         cp {input.test} {output.query_reads}
-        
+
         python2 scripts/mothur_make_taxtrainfiles.py \
             {input.train} \
             {output.reference_reads} \

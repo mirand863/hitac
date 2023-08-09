@@ -21,7 +21,7 @@ rule hitac_filter:
             --p-kmer 6 \
             --p-threads {threads} \
             --o-filter {output.filter}
-        
+
         qiime hitac filter \
             --i-filter {output.filter} \
             --i-reads {input.query_reads} \
