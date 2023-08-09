@@ -1,45 +1,45 @@
 name: pipeline
 
-#on: [pull_request]
+on: [pull_request]
 
-on:
-  push:
-    branches:
-      - main
+#on:
+#  push:
+#    branches:
+#      - main
 
 jobs:
 
-  test:
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/qiime2/core:2023.2
-    strategy:
-      fail-fast: false
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install pytest
-        python -m pip install flake8
-        python -m pip install pydocstyle
-        python -m pip install pytest-cov
-        python -m pip install .
-    - name: Test with pytest
-      run: |
-        flake8 hitac tests
-        pydocstyle hitac
-        pytest -v --cov=hitac --cov-fail-under=70 --cov-report html
-        coverage xml
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v2
+#  test:
+#    runs-on: ubuntu-latest
+#    container:
+#      image: quay.io/qiime2/core:2023.2
+#    strategy:
+#      fail-fast: false
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: Set up Python ${{ matrix.python-version }}
+#      uses: actions/setup-python@v2
+#      with:
+#        python-version: ${{ matrix.python-version }}
+#    - name: Install dependencies
+#      run: |
+#        python -m pip install --upgrade pip
+#        python -m pip install pytest
+#        python -m pip install flake8
+#        python -m pip install pydocstyle
+#        python -m pip install pytest-cov
+#        python -m pip install .
+#    - name: Test with pytest
+#      run: |
+#        flake8 hitac tests
+#        pydocstyle hitac
+#        pytest -v --cov=hitac --cov-fail-under=70 --cov-report html
+#        coverage xml
+#    - name: Upload Coverage to Codecov
+#      uses: codecov/codecov-action@v2
 
   bump:
-    needs: test
+#    needs: test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -55,61 +55,61 @@ jobs:
     outputs:
       new_tag: ${{steps.tag.outputs.new_tag}}
 
-#  docker:
-##    needs: bump
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-##        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass, pandas, metaxa2]
-#        container: [hitac]
-#    steps:
-#      - uses: actions/checkout@v3
-#      - name: Docker meta
-#        id: meta
-#        uses: docker/metadata-action@v4
-#        with:
-#          images: mirand863/${{ matrix.container }}
-##        tags: |
-##          type=raw,value=${{needs.bump.outputs.new_tag}}
-##          type=raw,value=latest,enable={{is_default_branch}}
-#          tags: |
-#            type=raw,value=2.0.29
-#      - name: Login to DockerHub
-#        uses: docker/login-action@v2
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_TOKEN }}
-#      - name: Build and push
-#        uses: docker/build-push-action@v4
-#        with:
-#          file: benchmark/dockerfiles/${{ matrix.container }}.dockerfile
-#          context: .
-#          push: true
-#          tags: ${{ steps.meta.outputs.tags }}
-#          labels: ${{ steps.meta.outputs.labels }}
-
-  pypi:
+  docker:
     needs: bump
-    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+#        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass, pandas, metaxa2]
+        container: [hitac]
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install pypa/build
-      run: |
-        git fetch --tags
-        git branch --create-reflog main origin/main
-        python -m pip install build --user .
-    - name: Build a binary wheel and a source tarball
-      run: |
-        python -m build --sdist --wheel --outdir dist/ .
-    - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        verbose: true
+      - uses: actions/checkout@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: mirand863/${{ matrix.container }}
+#        tags: |
+#          type=raw,value=${{needs.bump.outputs.new_tag}}
+#          type=raw,value=latest,enable={{is_default_branch}}
+          tags: |
+            type=raw,value=2.0.31
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          file: benchmark/dockerfiles/${{ matrix.container }}.dockerfile
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+#  pypi:
+#    needs: bump
+#    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v1
+#    - name: Set up Python 3.8
+#      uses: actions/setup-python@v2
+#      with:
+#        python-version: 3.8
+#    - name: Install pypa/build
+#      run: |
+#        git fetch --tags
+#        git branch --create-reflog main origin/main
+#        python -m pip install build --user .
+#    - name: Build a binary wheel and a source tarball
+#      run: |
+#        python -m build --sdist --wheel --outdir dist/ .
+#    - name: Publish distribution 📦 to PyPI
+#      uses: pypa/gh-action-pypi-publish@release/v1
+#      with:
+#        user: __token__
+#        password: ${{ secrets.PYPI_API_TOKEN }}
+#        verbose: true
