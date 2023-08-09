@@ -6,4 +6,4 @@
 #SBATCH --constraint="ARCH:X86"
 
 snakemake --unlock
-snakemake --profile slurm/config.yml
+snakemake --profile slurm
