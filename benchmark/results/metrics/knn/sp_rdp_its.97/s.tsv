@@ -1,5 +1,0 @@
-sp_rdp_its	fl	97	TPR	knn	s	0.0
-sp_rdp_its	fl	97	UCR	knn	s	100.0
-sp_rdp_its	fl	97	MCR	knn	s	0.0
-sp_rdp_its	fl	97	OCR	knn	s	0.2
-sp_rdp_its	fl	97	Acc	knn	s	0.0
