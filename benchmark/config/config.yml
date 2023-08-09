@@ -7,10 +7,10 @@ benchmark:
 
 datasets:
     - sp_rdp_its.90
-#    - sp_rdp_its.95
-#    - sp_rdp_its.97
-#    - sp_rdp_its.99
-#    - sp_rdp_its.100
+    - sp_rdp_its.95
+    - sp_rdp_its.97
+    - sp_rdp_its.99
+    - sp_rdp_its.100
 
 scripts:
     - fasta_utax2_to_blca.py

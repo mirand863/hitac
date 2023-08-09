@@ -10,6 +10,8 @@ rule bioautoml:
         output = "results/hitac/features/{train_or_test}/{dataset}"
     threads:
         config["threads"]
+    resources:
+        cpus = config["threads"]
     conda:
         "../environments/bioautoml.yml"
     shell:
