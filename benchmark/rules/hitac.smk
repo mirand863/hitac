@@ -20,11 +20,13 @@ rule hitac:
             --p-kmer 6 \
             --p-threads {threads} \
             --o-classifier {output.classifier}
-        
+            --verbose
+
         qiime hitac classify \
             --i-reads {input.query_reads} \
             --i-classifier {output.classifier} \
             --p-kmer 6 \
             --p-threads {threads} \
             --o-classification {output.predictions}
+            --verbose
         """

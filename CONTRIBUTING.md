@@ -18,6 +18,8 @@ pip install pytest
 pip install flake8
 pip install pydocstyle
 pip install pytest-cov
+pip install pre-commit
+pip install torch
 pip install -e .
 ```
 

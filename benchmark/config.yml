@@ -3,14 +3,14 @@ workdir: /home/fabio/Desktop/hitac/benchmark
 threads: 12
 
 benchmark:
-    repeat: 5
+    repeat: 1
 
 datasets:
     - sp_rdp_its.90
-    - sp_rdp_its.95
-    - sp_rdp_its.97
-    - sp_rdp_its.99
-    - sp_rdp_its.100
+#    - sp_rdp_its.95
+#    - sp_rdp_its.97
+#    - sp_rdp_its.99
+#    - sp_rdp_its.100
 
 scripts:
     - fasta_utax2_to_blca.py
@@ -70,7 +70,7 @@ ranks:
     - s  # species
 
 containers:
-    hitac: "docker://mirand863/hitac:2.0.29"
+    hitac: "docker://mirand863/hitac:2.0.31"
     blca: "docker://mirand863/blca:2.3"
     btop: "docker://mirand863/btop:2.10.1"
     usearch: "docker://mirand863/usearch:11.0.667"
