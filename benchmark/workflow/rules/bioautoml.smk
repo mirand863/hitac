@@ -1,3 +1,7 @@
+def get_mem_gb(wildcards, attempt):
+    return attempt * 1
+
+
 rule bioautoml:
     input:
         bioautoml = "results/BioAutoML/BioAutoML-feature.py",
@@ -11,7 +15,8 @@ rule bioautoml:
     threads:
         config["threads"]
     resources:
-        cpus = config["threads"]
+        cpus = config["threads"],
+        mem_gb = get_mem_gb
     conda:
         "../environments/bioautoml.yml"
     shell:
