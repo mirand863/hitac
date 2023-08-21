@@ -1,5 +1,0 @@
-sp_rdp_its	fl	99	TPR	hitac_filter	o	99.9
-sp_rdp_its	fl	99	UCR	hitac_filter	o	0.0
-sp_rdp_its	fl	99	MCR	hitac_filter	o	0.1
-sp_rdp_its	fl	99	OCR	hitac_filter	o	.
-sp_rdp_its	fl	99	Acc	hitac_filter	o	99.9
