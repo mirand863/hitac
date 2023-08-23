@@ -6,7 +6,7 @@ help: ## display this help
 local:  ## Run pipeline without slurm
 	-sed -i "s?workdir.*?workdir: `pwd`?" config/config.yml
 	-sed -i "s?threads.*?threads: 8?" config/config.yml
-	-snakemake --printshellcmds --reason --use-conda --cores 8 --conda-frontend mamba
+	-snakemake --printshellcmds --reason --use-conda --cores 8 --use-singularity
 
 .PHONY: delab
 delab:  ## Run pipeline on delab with slurm

@@ -83,6 +83,7 @@ containers:
     qiime1: "docker://mirand863/qiime:1.9.1"
     qiime2: "docker://quay.io/qiime2/core:2023.2"
     python2: "docker://python:2.7-slim"
+    bioautoml: "docker://mirand863/bioautoml"
 
 urls:
     train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"

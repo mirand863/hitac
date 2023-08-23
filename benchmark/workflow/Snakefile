@@ -26,7 +26,6 @@ include: "rules/sintax.smk"
 include: "rules/spingo.smk"
 include: "rules/top.smk"
 include: "rules/compute_metrics.smk"
-include: "rules/install_bioautoml.smk"
 include: "rules/bioautoml.smk"
 
 rule all:
