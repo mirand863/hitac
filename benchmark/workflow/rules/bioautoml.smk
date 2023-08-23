@@ -1,5 +1,5 @@
 def get_mem_gb(wildcards, attempt):
-    return attempt * 1
+    return attempt * 5
 
 
 rule bioautoml:
