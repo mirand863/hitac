@@ -49,8 +49,7 @@ def fit(
     hierarchical_classifier : LocalClassifierPerParentNode
         Local hierarchical classifier based on the taxonomic hierarchy.
     """
-    X_train = load_features(features_dir)
-    Y_train = extract_qiime2_taxonomy(reference_taxonomy)
+    X_train, Y_train = load_features(features_dir)
     logistic_regression = LogisticRegression(
         solver="liblinear",
         multi_class="auto",

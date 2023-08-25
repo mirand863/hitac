@@ -41,18 +41,24 @@ def load_features(features_dir: str) -> np.array:
         Numpy array with extracted features.
     """
     os.chdir(features_dir)
-    csv_files = [f for f in os.listdir() if f.endswith(".csv")]
-    dfs = []
-    for csv in csv_files:
-        df = pd.read_csv(csv)
-        print(df.shape)
-        if "nameseq" in df.columns:
-            df = pd.read_csv(csv).to_numpy()[:, 1:-1]
-            dfs.append(df)
-    features = np.concatenate(dfs, axis=1)
-    print(features)
-    print(features.shape)
-    return features
+    X_train = pd.read_csv("ftrain.csv").to_numpy()
+    Y_train = []
+    with open("DNC.csv") as fin:
+        fin.readline()  # skip header
+        line = fin.readline()
+        while line:
+            line = line.strip().split(",")
+            domain = line[0][line[0].find("=") + 1 :].replace(":", "__")
+            phylum = line[1].replace(":", "__")
+            class_ = line[2].replace(":", "__")
+            order = line[3].replace(":", "__")
+            family = line[4].replace(":", "__")
+            genus = line[5].replace(":", "__")
+            species = line[6].replace(":", "__")[:-1]
+            Y_train.append([domain, phylum, class_, order, family, genus, species])
+            line = fin.readline()
+        Y_train = np.array(Y_train)
+        return X_train, Y_train
 
 
 def extract_qiime2_taxonomy(taxonomy: list) -> np.array:
