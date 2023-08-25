@@ -11,6 +11,7 @@ from q2_types.feature_data import (
     Sequence,
     Taxonomy,
 )
+from qiime2.core.type import Str
 from qiime2.plugin import Float, Int
 from sklearn.linear_model import LogisticRegression
 
@@ -18,8 +19,7 @@ from ._hierarchical_taxonomic_classifier import HierarchicalTaxonomicClassifier
 from ._utils import (
     _extract_reads,
     compute_confidence,
-    compute_frequencies,
-    compute_possible_kmers,
+    load_features,
     convert_taxonomy_to_qiime2,
     extract_qiime2_taxonomy,
 )
@@ -28,9 +28,8 @@ from .plugin_setup import citations, plugin
 
 
 def fit(
-    reference_reads: DNAIterator,
+    features_dir: str,
     reference_taxonomy: pd.Series,
-    kmer: int = 6,
     threads: int = cpu_count(),
 ) -> LocalClassifierPerParentNode:
     """
@@ -38,12 +37,10 @@ def fit(
 
     Parameters
     ----------
-    reference_reads : DNAIterator
-        Reference reads.
+    features_dir : str
+        Folder containing extracted features.
     reference_taxonomy : pd.Series
         Reference taxonomy.
-    kmer : int, default=6
-        K-mer size.
     threads : int, default='All CPUs'
         Number of threads for parallel training.
 
@@ -52,10 +49,7 @@ def fit(
     hierarchical_classifier : LocalClassifierPerParentNode
         Local hierarchical classifier based on the taxonomic hierarchy.
     """
-    kmers = compute_possible_kmers(kmer)
-    _, training_sequences = _extract_reads(reference_reads)
-    X_train = compute_frequencies(training_sequences, kmers, threads)
-    Y_train = extract_qiime2_taxonomy(reference_taxonomy)
+    X_train, Y_train = load_features(features_dir)
     logistic_regression = LogisticRegression(
         solver="liblinear",
         multi_class="auto",
@@ -74,12 +68,11 @@ def fit(
 plugin.methods.register_function(
     function=fit,
     inputs={
-        "reference_reads": FeatureData[Sequence],
         "reference_taxonomy": FeatureData[Taxonomy],
     },
-    parameters={"kmer": Int, "threads": Int},
+    parameters={"features_dir": Str, "threads": Int},
     parameter_descriptions={
-        "kmer": "K-mer size.",
+        "features_dir": "Folder with extracted features",
         "threads": "Number of threads for parallel training",
     },
     outputs=[("classifier", HierarchicalTaxonomicClassifier)],
@@ -91,8 +84,8 @@ plugin.methods.register_function(
 
 def classify(
     reads: DNAFASTAFormat,
+    features_dir: str,
     classifier: LocalClassifierPerParentNode,
-    kmer: int = 6,
     threads: int = cpu_count(),
 ) -> pd.DataFrame:
     """
@@ -102,10 +95,10 @@ def classify(
     ----------
     reads : DNAFASTAFormat
         Reads to classify.
+    features_dir : str
+        Folder containing extracted features.
     classifier : LocalClassifierPerParentNode
         Pre-fitted hierarchical classifier.
-    kmer : int, default=6
-        K-mer size.
     threads : int, default='All CPUs'
         Number of threads for parallel classification.
 
@@ -114,11 +107,10 @@ def classify(
     classification : pd.DataFrame
         DataFrame containing the taxonomies assigned to each sequence.
     """
-    kmers = compute_possible_kmers(kmer)
     # transform reads to DNAIterator
     reads = DNAIterator(skbio.read(str(reads), format="fasta", constructor=skbio.DNA))
-    seq_ids, test_sequences = _extract_reads(reads)
-    X_test = compute_frequencies(test_sequences, kmers, threads)
+    seq_ids, _ = _extract_reads(reads)
+    X_test = load_features(features_dir)
     predictions = classifier.predict(X_test)
     taxonomy = convert_taxonomy_to_qiime2(predictions)
     confidence = [-1] * len(seq_ids)
@@ -141,9 +133,9 @@ plugin.methods.register_function(
         "reads": "The feature data to be classified.",
         "classifier": "The hierarchical taxonomic classifier for classifying the reads.",
     },
-    parameters={"kmer": Int, "threads": Int},
+    parameters={"features_dir": Str, "threads": Int},
     parameter_descriptions={
-        "kmer": "K-mer size.",
+        "features_dir": "Folder containing extracted features",
         "threads": "Number of threads for parallel classification",
     },
     outputs=[("classification", FeatureData[Taxonomy])],
@@ -153,140 +145,137 @@ plugin.methods.register_function(
 )
 
 
-def fit_filter(
-    reference_reads: DNAIterator,
-    reference_taxonomy: pd.Series,
-    kmer: int = 6,
-    threads: int = cpu_count(),
-) -> Filter:
-    """
-    Fit HiTaC's filter.
-
-    Parameters
-    ----------
-    reference_reads : DNAIterator
-        Reference reads.
-    reference_taxonomy : pd.Series
-        Reference taxonomy.
-    kmer : int, default=6
-        K-mer size.
-    threads : int, default='All CPUs'
-        Number of threads for parallel training.
-
-    Returns
-    -------
-    hierarchical_classifier : Filter
-        Local hierarchical filter based on the taxonomic hierarchy.
-    """
-    kmers = compute_possible_kmers(kmer)
-    _, training_sequences = _extract_reads(reference_reads)
-    X_train = compute_frequencies(training_sequences, kmers, threads)
-    Y_train = extract_qiime2_taxonomy(reference_taxonomy)
-    logistic_regression = LogisticRegression(
-        solver="liblinear",
-        multi_class="auto",
-        class_weight="balanced",
-        max_iter=10000,
-        verbose=0,
-        n_jobs=1,
-    )
-    hierarchical_classifier = Filter(
-        local_classifier=logistic_regression, n_jobs=threads
-    )
-    hierarchical_classifier.fit(X_train, Y_train)
-    return hierarchical_classifier
-
-
-plugin.methods.register_function(
-    function=fit_filter,
-    inputs={
-        "reference_reads": FeatureData[Sequence],
-        "reference_taxonomy": FeatureData[Taxonomy],
-    },
-    parameters={"kmer": Int, "threads": Int},
-    parameter_descriptions={
-        "kmer": "K-mer size.",
-        "threads": "Number of threads for parallel training",
-    },
-    outputs=[("filter", HierarchicalTaxonomicClassifier)],
-    name="Train HiTaC's hierarchical filter",
-    description="Train HiTaC's hierarchical filter",
-    citations=[citations["miranda2020hitac"]],
-)
-
-
-def filter(
-    reads: DNAFASTAFormat,
-    filter: Filter,
-    classification: pd.DataFrame,
-    threshold: float = 0.7,
-    kmer: int = 6,
-    threads: int = cpu_count(),
-) -> pd.DataFrame:
-    """
-    Filter sequences with HiTaC.
-
-    Parameters
-    ----------
-    reads : DNAFASTAFormat
-        Reads to filter.
-    filter : Filter
-        Pre-fitted hierarchical filter.
-    classification : pd.DataFrame
-        Predictions made by HiTaC's classifier.
-    threshold : float, default=0.7
-        Confidence threshold for limiting taxonomic depth. Set to 0 to compute confidence score but not apply it to limit the taxonomic depth of the assignments.
-    kmer : int, default=6
-        K-mer size.
-    threads : int, default='All CPUs'
-        Number of threads for parallel filtering.
-
-    Returns
-    -------
-    filtered_classification : pd.DataFrame
-        DataFrame containing the taxonomies assigned to each sequence and the prediction probability for the lowest taxonomic rank.
-    """
-    kmers = compute_possible_kmers(kmer)
-    # transform reads to DNAIterator
-    reads = DNAIterator(skbio.read(str(reads), format="fasta", constructor=skbio.DNA))
-    seq_ids, test_sequences = _extract_reads(reads)
-    X_test = compute_frequencies(test_sequences, kmers, threads)
-    predict_proba = filter.predict_proba(X_test)
-    classes = filter.classes_
-    classification = extract_qiime2_taxonomy(classification["Taxon"])
-    predictions, confidence = compute_confidence(
-        classification, classes, predict_proba, threshold
-    )
-    taxonomy = convert_taxonomy_to_qiime2(predictions)
-    result = pd.DataFrame(
-        {"Taxon": taxonomy, "Confidence": confidence},
-        index=seq_ids,
-        columns=["Taxon", "Confidence"],
-    )
-    result.index.name = "Feature ID"
-    return result
-
-
-plugin.methods.register_function(
-    function=filter,
-    inputs={
-        "reads": FeatureData[Sequence],
-        "filter": HierarchicalTaxonomicClassifier,
-        "classification": FeatureData[Taxonomy],
-    },
-    input_descriptions={
-        "reads": "The feature data to be filtered.",
-        "filter": "The hierarchical taxonomic filter for filtering the reads.",
-        "classification": "The predictions made by HiTaC",
-    },
-    parameters={"threshold": Float, "kmer": Int, "threads": Int},
-    parameter_descriptions={
-        "threshold": "Confidence threshold for limiting taxonomic depth. Set to 0 to compute confidence score but not apply it to limit the taxonomic depth of the assignments.",
-        "kmer": "K-mer size.",
-        "threads": "Number of threads for parallel filtering",
-    },
-    outputs=[("filtered_classification", FeatureData[Taxonomy])],
-    name="Hierarchical classification filtering with HiTaC's pre-fitted model",
-    description="Filter reads using a fitted hierarchical filter.",
-    citations=[citations["miranda2020hitac"]],
-)
+# def fit_filter(
+#     features_dir: str,
+#     reference_taxonomy: pd.Series,
+#     threads: int = cpu_count(),
+# ) -> Filter:
+#     """
+#     Fit HiTaC's filter.
+#
+#     Parameters
+#     ----------
+#     features_dir : str
+#         Folder containing extracted features.
+#     reference_taxonomy : pd.Series
+#         Reference taxonomy.
+#     kmer : int, default=6
+#         K-mer size.
+#     threads : int, default='All CPUs'
+#         Number of threads for parallel training.
+#
+#     Returns
+#     -------
+#     hierarchical_classifier : Filter
+#         Local hierarchical filter based on the taxonomic hierarchy.
+#     """
+#     X_train = load_features(features_dir)
+#     Y_train = extract_qiime2_taxonomy(reference_taxonomy)
+#     logistic_regression = LogisticRegression(
+#         solver="liblinear",
+#         multi_class="auto",
+#         class_weight="balanced",
+#         max_iter=10000,
+#         verbose=0,
+#         n_jobs=1,
+#     )
+#     hierarchical_classifier = Filter(
+#         local_classifier=logistic_regression, n_jobs=threads
+#     )
+#     hierarchical_classifier.fit(X_train, Y_train)
+#     return hierarchical_classifier
+#
+#
+# plugin.methods.register_function(
+#     function=fit_filter,
+#     inputs={
+#         "reference_reads": FeatureData[Sequence],
+#         "reference_taxonomy": FeatureData[Taxonomy],
+#     },
+#     parameters={"kmer": Int, "threads": Int},
+#     parameter_descriptions={
+#         "kmer": "K-mer size.",
+#         "threads": "Number of threads for parallel training",
+#     },
+#     outputs=[("filter", HierarchicalTaxonomicClassifier)],
+#     name="Train HiTaC's hierarchical filter",
+#     description="Train HiTaC's hierarchical filter",
+#     citations=[citations["miranda2020hitac"]],
+# )
+#
+#
+# def filter(
+#     reads: DNAFASTAFormat,
+#     filter: Filter,
+#     classification: pd.DataFrame,
+#     threshold: float = 0.7,
+#     kmer: int = 6,
+#     threads: int = cpu_count(),
+# ) -> pd.DataFrame:
+#     """
+#     Filter sequences with HiTaC.
+#
+#     Parameters
+#     ----------
+#     reads : DNAFASTAFormat
+#         Reads to filter.
+#     filter : Filter
+#         Pre-fitted hierarchical filter.
+#     classification : pd.DataFrame
+#         Predictions made by HiTaC's classifier.
+#     threshold : float, default=0.7
+#         Confidence threshold for limiting taxonomic depth. Set to 0 to compute confidence score but not apply it to limit the taxonomic depth of the assignments.
+#     kmer : int, default=6
+#         K-mer size.
+#     threads : int, default='All CPUs'
+#         Number of threads for parallel filtering.
+#
+#     Returns
+#     -------
+#     filtered_classification : pd.DataFrame
+#         DataFrame containing the taxonomies assigned to each sequence and the prediction probability for the lowest taxonomic rank.
+#     """
+#     kmers = compute_possible_kmers(kmer)
+#     # transform reads to DNAIterator
+#     reads = DNAIterator(skbio.read(str(reads), format="fasta", constructor=skbio.DNA))
+#     seq_ids, test_sequences = _extract_reads(reads)
+#     X_test = compute_frequencies(test_sequences, kmers, threads)
+#     predict_proba = filter.predict_proba(X_test)
+#     classes = filter.classes_
+#     classification = extract_qiime2_taxonomy(classification["Taxon"])
+#     predictions, confidence = compute_confidence(
+#         classification, classes, predict_proba, threshold
+#     )
+#     taxonomy = convert_taxonomy_to_qiime2(predictions)
+#     result = pd.DataFrame(
+#         {"Taxon": taxonomy, "Confidence": confidence},
+#         index=seq_ids,
+#         columns=["Taxon", "Confidence"],
+#     )
+#     result.index.name = "Feature ID"
+#     return result
+#
+#
+# plugin.methods.register_function(
+#     function=filter,
+#     inputs={
+#         "reads": FeatureData[Sequence],
+#         "filter": HierarchicalTaxonomicClassifier,
+#         "classification": FeatureData[Taxonomy],
+#     },
+#     input_descriptions={
+#         "reads": "The feature data to be filtered.",
+#         "filter": "The hierarchical taxonomic filter for filtering the reads.",
+#         "classification": "The predictions made by HiTaC",
+#     },
+#     parameters={"threshold": Float, "kmer": Int, "threads": Int},
+#     parameter_descriptions={
+#         "threshold": "Confidence threshold for limiting taxonomic depth. Set to 0 to compute confidence score but not apply it to limit the taxonomic depth of the assignments.",
+#         "kmer": "K-mer size.",
+#         "threads": "Number of threads for parallel filtering",
+#     },
+#     outputs=[("filtered_classification", FeatureData[Taxonomy])],
+#     name="Hierarchical classification filtering with HiTaC's pre-fitted model",
+#     description="Filter reads using a fitted hierarchical filter.",
+#     citations=[citations["miranda2020hitac"]],
+# )
