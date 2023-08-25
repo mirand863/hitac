@@ -70,7 +70,7 @@ ranks:
     - s  # species
 
 containers:
-    hitac: "docker://mirand863/hitac:2.0.31"
+    hitac: "docker://mirand863/hitac:bioautoml"
     blca: "docker://mirand863/blca:2.3"
     btop: "docker://mirand863/btop:2.10.1"
     usearch: "docker://mirand863/usearch:11.0.667"

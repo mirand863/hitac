@@ -30,9 +30,13 @@ include: "rules/bioautoml.smk"
 
 rule all:
     input:
-        bioautoml = expand(
-            "results/hitac/features/{train_or_test}/{dataset}/feat_extraction/DNC.csv",
-            train_or_test=["train", "test"],
+        # bioautoml = expand(
+        #     "results/hitac/features/{train_or_test}/{dataset}/feat_extraction/DNC.csv",
+        #     train_or_test=["train", "test"],
+        #     dataset=config["datasets"]
+        # )
+        hitac = expand(
+            "results/temp/{dataset}/hitac/classifier.qza",
             dataset=config["datasets"]
         )
         # metrics = expand(

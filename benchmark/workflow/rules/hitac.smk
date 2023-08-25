@@ -1,6 +1,6 @@
 rule hitac:
     input:
-        reference_reads = "results/temp/{dataset}/qiime2/reference_reads.qza",
+        reference_features = "results/hitac/features/train/{dataset}/feat_extraction/DNC.csv",
         reference_taxonomy = "results/temp/{dataset}/qiime2/reference_taxonomy.qza",
         query_reads = "results/temp/{dataset}/qiime2/query_reads.qza"
     output:
@@ -8,6 +8,8 @@ rule hitac:
         predictions = temp("results/temp/{dataset}/hitac/predictions.qza")
     benchmark:
         repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
+    params:
+        reference_features_dir = "results/hitac/features/train/{dataset}/feat_extraction"
     threads:
         config["threads"]
     container:
@@ -15,18 +17,17 @@ rule hitac:
     shell:
         """
         qiime hitac fit \
-            --i-reference-reads {input.reference_reads} \
+            --p-features-dir {params.reference_features_dir} \
             --i-reference-taxonomy {input.reference_taxonomy} \
-            --p-kmer 6 \
             --p-threads {threads} \
             --o-classifier {output.classifier}
             --verbose
 
-        qiime hitac classify \
-            --i-reads {input.query_reads} \
-            --i-classifier {output.classifier} \
-            --p-kmer 6 \
-            --p-threads {threads} \
-            --o-classification {output.predictions}
-            --verbose
+        # qiime hitac classify \
+        #     --i-reads {input.query_reads} \
+        #     --i-classifier {output.classifier} \
+        #     --p-kmer 6 \
+        #     --p-threads {threads} \
+        #     --o-classification {output.predictions}
+        #     --verbose
         """

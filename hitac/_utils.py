@@ -1,264 +1,11 @@
 """Helper functions for data manipulation."""
-import concurrent.futures
-import itertools
 import logging
-from itertools import product
-from multiprocessing import cpu_count
+import os
 
 import numpy as np
-import torch
-from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModel
-
-
-def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
-    """
-    Compute all kmer possibilities based on given alphabet.
-
-    Parameters
-    ----------
-    kmer_size : int, default=6
-        K-mer size.
-    alphabet : str, default='ACGT'
-        The alphabet used to compute k-mers.
-
-    Returns
-    -------
-    kmers : np.array
-        Numpy array containing all possible k-mers.
-    """
-    kmers = ["".join(c) for c in product(alphabet, repeat=kmer_size)]
-    return np.array(kmers)
-
+import pandas as pd
 
 logger = logging.getLogger()
-
-
-def configure_device():
-    """
-    Configure device to run computation.
-
-    Returns
-    -------
-    device: torch.device
-        Device to compute, i.e., CPU or GPU.
-    """
-    if torch.cuda.is_available():
-        device = torch.device("cuda:0")
-    else:
-        device = torch.device("cpu")
-        logger.warning("ProtBERT: CPU mode enabled (slower)")
-    return device
-
-
-def load_bert(device: torch.device):
-    """
-    Load BERT model.
-
-    Parameters
-    ----------
-    device: torch.device
-        Device to compute, i.e., CPU or GPU.
-
-
-    Returns
-    -------
-    tokenizer: BertTokenizer
-        BERT tokenizer.
-    model: BertModel
-        BERT encoder model.
-    """
-    tokenizer = AutoTokenizer.from_pretrained(
-        "Rostlab/prot_bert", do_lower_case=False
-    )
-    model = AutoModel.from_pretrained(
-        "Rostlab/prot_bert"
-    ).to(device)
-    return tokenizer, model
-
-
-def get_bert_embedding(
-    sequence: str,
-    len_seq_limit: int,
-    tokenizer: AutoTokenizer,
-    device: torch.device,
-    model: AutoModel,
-):
-    """
-    Collect last hidden state embedding vector from pre-trained ProtBERT Model.
-
-    Parameters
-    ----------
-    sequence: str
-        Protein sequence, e.g., AAABBB from FASTA file.
-    len_seq_limit: int
-        Maximum sequence length, i.e., number of letters for truncation.
-    tokenizer: BertTokenizer
-        BERT tokenizer.
-    device: torch.device
-        Device to compute, i.e., CPU or GPU.
-    model: BertModel
-        BERT encoder model.
-
-    Returns
-    -------
-    output_hidden: np.ndarray
-        Last hidden state embedding vector for input sequence.
-    """
-    sequence_w_spaces = " ".join(list(sequence.decode('UTF-8')))
-    encoded_input = tokenizer(
-        sequence_w_spaces,
-        truncation=True,
-        max_length=len_seq_limit,
-        padding="max_length",
-        return_tensors="pt",
-    ).to(device)
-    output = model(**encoded_input)
-    output_hidden = output["last_hidden_state"][:, 0][0].detach().cpu().numpy()
-    return output_hidden
-
-
-def compute_features(sequences: list) -> np.array:
-    """
-    Compute features using DNA BERT.
-
-    Parameters
-    ----------
-    sequences : list
-        List containing all sequences.
-
-    Returns
-    -------
-    features : np.array
-        Numpy array containing features for all sequences.
-    """
-    device = configure_device()
-    tokenizer, model = load_bert(device)
-    embeddings = []
-    for seq in tqdm(sequences):
-        embeddings.append(
-            get_bert_embedding(
-                sequence=seq,
-                len_seq_limit=1200,  # TODO: make this a user parameter
-                tokenizer=tokenizer,
-                device=device,
-                model=model,
-            )
-        )
-    return np.array(embeddings)
-
-
-def compute_kmer_frequency(sequence: str, kmers: list) -> np.array:
-    """
-    Compute kmer frequencies for a given sequence.
-
-    Parameters
-    ----------
-    sequence : str
-        Sequence to compute k-mer frequency.
-    kmers : list
-        List containing possible k-mers to compute frequency (anything else is not counted).
-
-    Returns
-    -------
-    frequency : np.array
-        Numpy array containing frequency for all possible k-mers.
-    """
-    dictionary = {}
-    for kmer in kmers:
-        dictionary[kmer] = 0
-    for i in range(len(sequence) - (len(kmers[0]) - 1)):
-        key = sequence[i : i + len(kmers[0])]
-        if key in dictionary:
-            dictionary[key] = dictionary[key] + 1
-    frequency = []
-    for kmer in kmers:
-        frequency.append(dictionary[kmer])
-    return np.array(frequency)
-
-
-def grouper(maximum_elements: int, items: list) -> np.array:
-    """
-    Return groups with a maximum of n elements for a given list.
-
-    Parameters
-    ----------
-    maximum_elements : int
-        Maximum number of elements per group.
-    items : list
-        List containing items to divide in groups.
-
-    Returns
-    -------
-    groups : np.array
-        Numpy array containing groups of items.
-    """
-    groups = []
-    subgroup = []
-    for item in items:
-        if len(subgroup) < maximum_elements:
-            subgroup.append(item)
-        else:
-            groups.append(subgroup)
-            subgroup = [item]
-    if len(subgroup) > 0:
-        groups.append(subgroup)
-    return np.array(groups, dtype=object)
-
-
-def compute_group_frequency(sequences_and_kmers: tuple) -> np.array:
-    """
-    Compute k-mer frequency for a group of sequences.
-
-    Parameters
-    ----------
-    sequences_and_kmers : tuple
-        Tuple containing a list of sequences and k-mers.
-
-    Returns
-    -------
-    frequencies : np.array
-        Numpy array containing frequencies for a group of sequences.
-    """
-    frequencies = []
-    sequences, kmers = sequences_and_kmers
-    for sequence in sequences:
-        frequencies.append(compute_kmer_frequency(sequence, kmers))
-    return np.array(frequencies)
-
-
-def compute_frequencies(
-    sequences: list, kmers: list, threads: int = cpu_count(), batch_size: int = 100
-) -> np.array:
-    """
-    Compute k-mer frequency for all sequences.
-
-    Parameters
-    ----------
-    sequences : list
-        List containing all sequences.
-    kmers : list
-        List containing all possible k-mers.
-    threads : int, default='all CPUs'
-        Number of threads to compute in parallel.
-    batch_size : int, default=100
-        Size of each batch to run in parallel.
-
-    Returns
-    -------
-    frequencies : np.array
-        Numpy array containing frequencies for all sequences.
-    """
-    sequences = [s.decode("utf-8") for s in sequences]
-    executor = concurrent.futures.ProcessPoolExecutor(threads)
-    futures = [
-        executor.submit(compute_group_frequency, (group, kmers))
-        for group in grouper(batch_size, sequences)
-    ]
-    concurrent.futures.wait(futures)
-    frequencies = [f.result() for f in futures]
-    frequencies = list(itertools.chain(*frequencies))
-    return np.array(frequencies)
 
 
 def extract_qiime2_ranks(taxonomy: str) -> np.array:
@@ -277,6 +24,35 @@ def extract_qiime2_ranks(taxonomy: str) -> np.array:
     """
     ranks = taxonomy.split(";")
     return np.array(ranks)
+
+
+def load_features(features_dir: str) -> np.array:
+    """
+    Load pre-computed features from a folder.
+
+    Parameters
+    ----------
+    features_dir : str
+        Folder containing extracted features.
+
+    Returns
+    -------
+    features : np.array
+        Numpy array with extracted features.
+    """
+    os.chdir(features_dir)
+    csv_files = [f for f in os.listdir() if f.endswith(".csv")]
+    dfs = []
+    for csv in csv_files:
+        df = pd.read_csv(csv)
+        print(df.shape)
+        if "nameseq" in df.columns:
+            df = pd.read_csv(csv).to_numpy()[:, 1:-1]
+            dfs.append(df)
+    features = np.concatenate(dfs, axis=1)
+    print(features)
+    print(features.shape)
+    return features
 
 
 def extract_qiime2_taxonomy(taxonomy: list) -> np.array:
