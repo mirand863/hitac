@@ -43,6 +43,8 @@ class TestClassifier:
             "Taxon"
         ].values.tolist()
         predictions.sort()
+        print(ground_truth)
+        print(predictions)
         assert len(ground_truth) == len(predictions)
         assert all([a == b for a, b in zip(predictions, ground_truth)])
 
