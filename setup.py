@@ -30,7 +30,15 @@ REQUIRED = ["pandas", "numpy", "scikit-learn", "hiclass", "scikit-bio"]
 
 # What packages are optional?
 # 'fancy feature': ['django'],}
-EXTRAS = {"ray": ["ray>=1.11.0"]}
+# EXTRAS = {"ray": ["ray>=1.11.0"]}
+extras = dict()
+extras["dev"] = [
+    "pytest",
+    "flake8",
+    "pydocstyle",
+    "pytest-cov",
+    "pre-commit",
+]
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
@@ -120,7 +128,7 @@ setup(
     entry_points={"qiime2.plugins": ["hitac=hitac.plugin_setup:plugin"]},
     package_data={"hitac": ["citations.bib"]},
     install_requires=REQUIRED,
-    extras_require=EXTRAS,
+    extras_require=extras,
     include_package_data=True,
     license="BSD 3-Clause",
     keywords=KEYWORDS,

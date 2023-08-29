@@ -61,7 +61,7 @@ class TestUtils:
     def test_grouper_2(self):
         elements = 3
         items = [1, 2, 3, 4, 5]
-        ground_truth = np.array([[1, 2, 3], [4, 5]])
+        ground_truth = np.array([[1, 2, 3], [4, 5]], dtype="object")
         results = _utils.grouper(elements, items)
         assert ground_truth.shape == results.shape
         assert np.array_equal(ground_truth, results)
