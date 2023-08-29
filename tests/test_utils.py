@@ -1,7 +1,12 @@
 import unittest
 
 import numpy as np
+
+# from pyfakefs.fake_filesystem_unittest import TestCase
+from pyfakefs.fake_filesystem_unittest import Patcher
+
 from hitac import _utils
+from hitac._utils import load_reference, extract_taxxi_taxonomy
 
 try:
     from q2_types.feature_data import DNAIterator
@@ -12,7 +17,16 @@ else:
     _has_qiime = True
 
 
-class TestUtils:
+# class TestUtils(TestCase):
+#
+#     @classmethod
+#     def setUpClass(cls):
+#         reference_contents = ">seq1\nATCG\n>seq2\nAAAA\n>seq3\nTTTT"
+#         cls.setUpClassPyfakefs()
+#         cls.fake_fs().create_file("reference.fasta", contents=reference_contents)
+
+
+class TestUtils(unittest.TestCase):
     def test_compute_possible_kmers_1(self):
         ground_truth = np.array(["A", "C", "G", "T"])
         results = _utils.compute_possible_kmers(1)
@@ -398,3 +412,46 @@ class TestUtils:
         ground_truth = 3
         result = _utils.search(key, taxonomy)
         assert ground_truth == result
+
+    def test_load_reference_1(self):
+        ground_truth_sequences = (
+            b"CCGAG",
+            b"ACGAATACTCTC",
+            b"TTGAAATA",
+        )
+        with Patcher() as patcher:
+            ground_truth_taxonomy = np.array(
+                [
+                    [
+                        "d:Fungi",
+                        "p:Ascomycota",
+                    ],
+                    [
+                        "d:Fungi",
+                        "p:Basidiomycota",
+                    ],
+                    [
+                        "d:Fungi",
+                    ],
+                ],
+                dtype="object",
+            )
+            reference_contents = ">1;tax=d:Fungi,p:Ascomycota;\nCCGAG\n>2;tax=d:Fungi,p:Basidiomycota;\nACGAAT\nACTCTC\n>3;tax=d:Fungi;\nTTGAAATA"
+            patcher.fs.create_file("reference.fasta", contents=reference_contents)
+            sequences, taxonomy = load_reference("reference.fasta")
+            self.assertSequenceEqual(ground_truth_sequences, sequences)
+            assert np.array_equal(ground_truth_taxonomy, taxonomy)
+
+    def test_extract_taxxi_taxonomy_1(self):
+        ground_truth_taxonomy = [
+            "d:Fungi",
+            "p:Ascomycota",
+            "c:Eurotiomycetes",
+            "o:Eurotiales",
+            "f:Trichocomaceae",
+            "g:Paecilomyces",
+            "s:Paecilomyces_sinensis",
+        ]
+        taxxi_taxonomy = ">EU272527;tax=d:Fungi,p:Ascomycota,c:Eurotiomycetes,o:Eurotiales,f:Trichocomaceae,g:Paecilomyces,s:Paecilomyces_sinensis;"
+        taxonomy = extract_taxxi_taxonomy(taxxi_taxonomy)
+        self.assertSequenceEqual(ground_truth_taxonomy, taxonomy)

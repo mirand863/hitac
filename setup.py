@@ -38,6 +38,7 @@ extras["dev"] = [
     "pydocstyle",
     "pytest-cov",
     "pre-commit",
+    "pyfakefs",
 ]
 
 # The rest you shouldn't have to touch too much :)

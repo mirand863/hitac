@@ -3,6 +3,7 @@ import concurrent.futures
 import itertools
 from itertools import product
 from multiprocessing import cpu_count
+from typing import Union
 
 import numpy as np
 
@@ -282,3 +283,58 @@ def compute_confidence(
             else:
                 predictions[row].insert(0, "")
     return predictions, confidence
+
+
+def load_reference(reference_path: str) -> tuple:
+    """
+    Load reference FASTA file.
+
+    Parameters
+    ----------
+    reference_path : str
+        Path where the FASTA file is stored.
+
+    Returns
+    -------
+    sequences, taxonomy : tuple
+        Sequences and taxonomy loaded from FASTA file.
+    """
+    with open(reference_path) as fin:
+        header = None
+        sequence = None
+        sequences = []
+        headers = []
+        for line in fin:
+            if line.startswith(">"):
+                if header:
+                    sequences.append(str.encode(sequence))
+                else:
+                    header = line.strip()
+                sequence = ""
+                headers.append(extract_taxxi_taxonomy(line.strip()))
+            else:
+                sequence = sequence + line.strip()
+        sequences.append(str.encode(sequence))
+    return tuple(sequences), np.array(headers, dtype="object")
+
+
+def extract_taxxi_taxonomy(taxxi: str) -> str:
+    """
+    Convert taxonomy from TAXXI format to a format used by HiTaC.
+
+    Parameters
+    ----------
+    taxxi : str
+        Taxonomy in TAXXI format.
+
+    Returns
+    -------
+    taxonomy : str
+        Taxonomy in format used by HiTaC.
+    """
+    taxonomy = []
+    for rank in taxxi.split(","):
+        taxonomy.append(rank)
+    taxonomy[0] = taxonomy[0][taxonomy[0].find("=") + 1 :]
+    taxonomy[-1] = taxonomy[-1][:-1]
+    return taxonomy
