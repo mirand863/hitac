@@ -1,7 +1,15 @@
+import unittest
+
 import numpy as np
 from hitac import _utils
-from q2_types.feature_data import DNAIterator
-from skbio.sequence._dna import DNA
+
+try:
+    from q2_types.feature_data import DNAIterator
+    from skbio.sequence._dna import DNA
+except ImportError:
+    _has_qiime = False
+else:
+    _has_qiime = True
 
 
 class TestUtils:
@@ -315,6 +323,7 @@ class TestUtils:
         assert ground_truth.shape == results.shape
         assert np.array_equal(ground_truth, results)
 
+    @unittest.skipUnless(_has_qiime, "QIIME2 not installed")
     def test_extract_reads_1(self):
         s1 = DNA("ACGT", metadata={"id": "s1"})
         s2 = DNA("TGCA", metadata={"id": "s2"})
