@@ -3,9 +3,10 @@ import concurrent.futures
 import itertools
 from itertools import product
 from multiprocessing import cpu_count
-from typing import Union
 
 import numpy as np
+from hiclass import LocalClassifierPerParentNode
+from sklearn.linear_model import LogisticRegression
 
 
 def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
@@ -338,3 +339,37 @@ def extract_taxxi_taxonomy(taxxi: str) -> str:
     taxonomy[0] = taxonomy[0][taxonomy[0].find("=") + 1 :]
     taxonomy[-1] = taxonomy[-1][:-1]
     return taxonomy
+
+
+def fit(
+    training_sequences: tuple, y_train: np.ndarray, kmer: int, cpus: int
+) -> LocalClassifierPerParentNode:
+    """
+    Fit HiTaC's classifier.
+
+    Parameters
+    ----------
+    training_sequences : tuple
+        Training sequences as a tuple of bytes.
+    y_train : np.ndarray
+        Hierarchical labels.
+    kmer : int
+        K-mer size.
+    cpus : int
+        Number of CPUs for parallel training.
+    """
+    kmers = compute_possible_kmers(kmer)
+    x_train = compute_frequencies(training_sequences, kmers, cpus)
+    logistic_regression = LogisticRegression(
+        solver="liblinear",
+        multi_class="auto",
+        class_weight="balanced",
+        max_iter=10000,
+        verbose=0,
+        n_jobs=1,
+    )
+    classifier = LocalClassifierPerParentNode(
+        local_classifier=logistic_regression, n_jobs=cpus
+    )
+    classifier.fit(x_train, y_train)
+    return classifier

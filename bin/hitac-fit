@@ -5,7 +5,7 @@ import sys
 from argparse import Namespace
 from multiprocessing import cpu_count
 
-from hitac._utils import compute_possible_kmers
+from hitac._utils import load_reference
 
 
 def parse_args(args: list) -> Namespace:
@@ -54,27 +54,7 @@ def parse_args(args: list) -> Namespace:
     return parser.parse_args(args)
 
 
-def fit():  # pragma: no cover
-    args = parse_args(sys.argv[1:])
-    kmers = compute_possible_kmers(args.kmer)
-    sequences, taxonomy = load_reference(args.reference)
-    # _, training_sequences = _extract_reads(reference_reads)
-    # X_train = compute_frequencies(training_sequences, kmers, threads)
-    # Y_train = extract_qiime2_taxonomy(reference_taxonomy)
-    # logistic_regression = LogisticRegression(
-    #     solver="liblinear",
-    #     multi_class="auto",
-    #     class_weight="balanced",
-    #     max_iter=10000,
-    #     verbose=0,
-    #     n_jobs=1,
-    # )
-    # hierarchical_classifier = LocalClassifierPerParentNode(
-    #     local_classifier=logistic_regression, n_jobs=threads
-    # )
-    # hierarchical_classifier.fit(X_train, Y_train)
-    # return hierarchical_classifier
-
-
 if __name__ == "__main__":  # pragma: no cover
-    fit()
+    args = parse_args(sys.argv[1:])
+    training_sequences, y_train = load_reference(args.reference)
+    hierarchical_classifier = fit(training_sequences, y_train, args.kmer, args.cpus)
