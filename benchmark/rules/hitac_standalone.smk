@@ -14,6 +14,6 @@ rule hitac_standalone:
         hitac-fit \
             --reference {input.reference} \
             --kmer 6 \
-            --cpus {threads} \
+            --threads {threads} \
             --classifier {output.classifier}
         """
