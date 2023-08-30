@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Script to fit hierarchical classifier."""
 import argparse
+import pickle
 import sys
 from argparse import Namespace
 from multiprocessing import cpu_count
 
-from hitac._utils import load_reference
+from hitac._utils import load_reference, fit
 
 
 def parse_args(args: list) -> Namespace:
@@ -58,3 +59,4 @@ if __name__ == "__main__":  # pragma: no cover
     args = parse_args(sys.argv[1:])
     training_sequences, y_train = load_reference(args.reference)
     hierarchical_classifier = fit(training_sequences, y_train, args.kmer, args.cpus)
+    pickle.dump(hierarchical_classifier, open(args.classifier, "wb"))

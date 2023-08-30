@@ -1,9 +1,9 @@
-workdir: /home/fabio/Desktop/hitac/benchmark
+workdir: /run/media/fabio/9a846308-6659-4a3e-b18f-58210fc0f88a1/hitac/benchmark
 
 threads: 12
 
 benchmark:
-    repeat: 5
+    repeat: 1
 
 datasets:
     - sp_rdp_its.90
@@ -43,6 +43,7 @@ methods:
     - ct1
     - ct2
     - hitac
+    - hitac_standalone
     - hitac_filter
     - knn
     - ktop
@@ -71,6 +72,7 @@ ranks:
 
 containers:
     hitac: "docker://mirand863/hitac:2.0.29"
+    hitac_standalone: "docker://mirand863/hitac:standalone"
     blca: "docker://mirand863/blca:2.3"
     btop: "docker://mirand863/btop:2.10.1"
     usearch: "docker://mirand863/usearch:11.0.667"
