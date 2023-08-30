@@ -1,12 +1,21 @@
 import unittest
+from io import StringIO
 
 import numpy as np
+from hiclass import LocalClassifierPerParentNode
 
 # from pyfakefs.fake_filesystem_unittest import TestCase
 from pyfakefs.fake_filesystem_unittest import Patcher
+from sklearn.utils.validation import check_is_fitted
 
 from hitac import _utils
-from hitac._utils import load_reference, extract_taxxi_taxonomy
+from hitac._utils import (
+    extract_taxxi_taxonomy,
+    load_fasta,
+    fit,
+    convert_taxonomy_to_taxxi,
+    save_tsv,
+)
 
 try:
     from q2_types.feature_data import DNAIterator
@@ -438,7 +447,9 @@ class TestUtils(unittest.TestCase):
             )
             reference_contents = ">1;tax=d:Fungi,p:Ascomycota;\nCCGAG\n>2;tax=d:Fungi,p:Basidiomycota;\nACGAAT\nACTCTC\n>3;tax=d:Fungi;\nTTGAAATA"
             patcher.fs.create_file("reference.fasta", contents=reference_contents)
-            sequences, taxonomy = load_reference("reference.fasta")
+            sequences, taxonomy = load_fasta(
+                fasta_path="reference.fasta", reference=True
+            )
             self.assertSequenceEqual(ground_truth_sequences, sequences)
             assert np.array_equal(ground_truth_taxonomy, taxonomy)
 
@@ -455,3 +466,93 @@ class TestUtils(unittest.TestCase):
         taxxi_taxonomy = ">EU272527;tax=d:Fungi,p:Ascomycota,c:Eurotiomycetes,o:Eurotiales,f:Trichocomaceae,g:Paecilomyces,s:Paecilomyces_sinensis;"
         taxonomy = extract_taxxi_taxonomy(taxxi_taxonomy)
         self.assertSequenceEqual(ground_truth_taxonomy, taxonomy)
+
+    def test_load_query_1(self):
+        ground_truth_sequences = (
+            b"CCGAG",
+            b"ACGAATACTCTC",
+            b"TTGAAATA",
+        )
+        with Patcher() as patcher:
+            ground_truth_ids = [
+                "1;tax=d:Fungi,p:Ascomycota;",
+                "2;tax=d:Fungi,p:Basidiomycota;",
+                "3;tax=d:Fungi;",
+            ]
+            query_contents = ">1;tax=d:Fungi,p:Ascomycota;\nCCGAG\n>2;tax=d:Fungi,p:Basidiomycota;\nACGAAT\nACTCTC\n>3;tax=d:Fungi;\nTTGAAATA"
+            patcher.fs.create_file("reference.fasta", contents=query_contents)
+            sequences, ids = load_fasta(fasta_path="reference.fasta", reference=False)
+            self.assertSequenceEqual(ground_truth_sequences, sequences)
+            self.assertSequenceEqual(ground_truth_ids, ids)
+
+    def test_fit_1(self):
+        sequences = (
+            b"CCGAG",
+            b"ACGAATACTCTC",
+            b"TTGAAATA",
+        )
+        y_train = np.array(
+            [
+                [
+                    "d:Fungi",
+                    "p:Ascomycota",
+                ],
+                [
+                    "d:Fungi",
+                    "p:Basidiomycota",
+                ],
+                [
+                    "d:Fungi",
+                ],
+            ],
+            dtype="object",
+        )
+        kmer = 6
+        cpus = 1
+        model = fit(sequences, y_train, kmer, cpus)
+        self.assertIsInstance(model, LocalClassifierPerParentNode)
+        check_is_fitted(model)
+
+    def test_convert_taxonomy_to_taxxi(self):
+        ground_truth = [
+            "d:Fungi,p:Ascomycota,c:Sordariomycetes",
+            "d:Fungi,p:Basidiomycota",
+            "d:Fungi",
+        ]
+        predictions = np.array(
+            [
+                ["d:Fungi", "p:Ascomycota", "c:Sordariomycetes"],
+                ["d:Fungi", "p:Basidiomycota"],
+                ["d:Fungi"],
+            ],
+            dtype="object",
+        )
+        taxonomy = convert_taxonomy_to_taxxi(predictions)
+        self.assertSequenceEqual(ground_truth, taxonomy)
+
+    def test_save_tsv(self):
+        ground_truth = (
+            "EU272527;tax=d:Fungi,p:Ascomycota;\t"
+            + "d:Fungi,p:Ascomycota\n"
+            + "FJ711636;tax=d:Fungi,p:Basidiomycota;\t"
+            + "d:Fungi,p:Basidiomycota\n"
+            + "UDB016040;tax=d:Fungi;\t"
+            + "d:Fungi\n"
+        )
+        ids = [
+            "EU272527;tax=d:Fungi,p:Ascomycota;",
+            "FJ711636;tax=d:Fungi,p:Basidiomycota;",
+            "UDB016040;tax=d:Fungi;",
+        ]
+        taxonomy = [
+            "d:Fungi,p:Ascomycota",
+            "d:Fungi,p:Basidiomycota",
+            "d:Fungi",
+        ]
+        output = StringIO()
+        save_tsv(output, ids, taxonomy)
+        output.seek(0)
+        content = output.read()
+        print(ground_truth)
+        print(content)
+        self.assertEqual(ground_truth, content)

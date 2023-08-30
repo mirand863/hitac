@@ -123,7 +123,7 @@ setup(
         "Related Software": DACS_SOFTWARE,
     },
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
-    scripts=["bin/hitac-fit"],
+    scripts=["bin/hitac-fit", "bin/hitac-classify"],
     install_requires=REQUIRED,
     extras_require=extras,
     include_package_data=True,

@@ -6,7 +6,7 @@ import sys
 from argparse import Namespace
 from multiprocessing import cpu_count
 
-from hitac._utils import load_reference, fit
+from hitac._utils import fit, load_fasta
 
 
 def parse_args(args: list) -> Namespace:
@@ -57,6 +57,6 @@ def parse_args(args: list) -> Namespace:
 
 if __name__ == "__main__":  # pragma: no cover
     args = parse_args(sys.argv[1:])
-    training_sequences, y_train = load_reference(args.reference)
+    training_sequences, y_train = load_fasta(fasta_path=args.reference, reference=True)
     hierarchical_classifier = fit(training_sequences, y_train, args.kmer, args.threads)
     pickle.dump(hierarchical_classifier, open(args.classifier, "wb"))

@@ -7,6 +7,7 @@ from multiprocessing import cpu_count
 import numpy as np
 from hiclass import LocalClassifierPerParentNode
 from sklearn.linear_model import LogisticRegression
+from typing import List, TextIO
 
 
 def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
@@ -199,12 +200,12 @@ def _extract_reads(reads) -> zip:
 
 def convert_taxonomy_to_qiime2(predictions: np.array) -> list:
     """
-    Convert predictions made by HiClass to QIIME2 taxonomy format.
+    Convert predictions made by HiTaC to QIIME2 taxonomy format.
 
     Parameters
     ----------
     predictions : np.array
-        Predictions made by HiClass.
+        Predictions made by HiTaC.
 
     Returns
     -------
@@ -286,21 +287,23 @@ def compute_confidence(
     return predictions, confidence
 
 
-def load_reference(reference_path: str) -> tuple:
+def load_fasta(fasta_path: str, reference) -> tuple:
     """
     Load reference FASTA file.
 
     Parameters
     ----------
-    reference_path : str
+    fasta_path : str
         Path where the FASTA file is stored.
+    reference : Bool
+        Is this file the reference? True of False.
 
     Returns
     -------
     sequences, taxonomy : tuple
         Sequences and taxonomy loaded from FASTA file.
     """
-    with open(reference_path) as fin:
+    with open(fasta_path) as fin:
         header = None
         sequence = None
         sequences = []
@@ -312,11 +315,17 @@ def load_reference(reference_path: str) -> tuple:
                 else:
                     header = line.strip()
                 sequence = ""
-                headers.append(extract_taxxi_taxonomy(line.strip()))
+                if reference:
+                    headers.append(extract_taxxi_taxonomy(line.strip()))
+                else:
+                    headers.append(line.strip()[1:])
             else:
                 sequence = sequence + line.strip()
         sequences.append(str.encode(sequence))
-    return tuple(sequences), np.array(headers, dtype="object")
+    if reference:
+        return tuple(sequences), np.array(headers, dtype="object")
+    else:
+        return tuple(sequences), headers
 
 
 def extract_taxxi_taxonomy(taxxi: str) -> str:
@@ -342,7 +351,7 @@ def extract_taxxi_taxonomy(taxxi: str) -> str:
 
 
 def fit(
-    training_sequences: tuple, y_train: np.ndarray, kmer: int, cpus: int
+    training_sequences: tuple, y_train: np.ndarray, kmer: int, threads: int
 ) -> LocalClassifierPerParentNode:
     """
     Fit HiTaC's classifier.
@@ -355,11 +364,11 @@ def fit(
         Hierarchical labels.
     kmer : int
         K-mer size.
-    cpus : int
-        Number of CPUs for parallel training.
+    threads : int
+        Number of threads for parallel training.
     """
     kmers = compute_possible_kmers(kmer)
-    x_train = compute_frequencies(training_sequences, kmers, cpus)
+    x_train = compute_frequencies(training_sequences, kmers, threads)
     logistic_regression = LogisticRegression(
         solver="liblinear",
         multi_class="auto",
@@ -369,7 +378,51 @@ def fit(
         n_jobs=1,
     )
     classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=cpus
+        local_classifier=logistic_regression, n_jobs=threads
     )
     classifier.fit(x_train, y_train)
     return classifier
+
+
+def convert_taxonomy_to_taxxi(predictions: np.array) -> list:
+    """
+    Convert predictions made by HiTaC to TAXXI taxonomy format.
+
+    Parameters
+    ----------
+    predictions : np.array
+        Predictions made by HiTaC.
+
+    Returns
+    -------
+    taxonomy : list
+        List containing converted taxonomy.
+    """
+    taxonomy = []
+    for prediction in predictions:
+        tax = ""
+        for i in range(len(prediction) - 1):
+            tax = tax + prediction[i] + ","
+        tax = tax + prediction[-1]
+        taxonomy.append(tax)
+    return taxonomy
+
+
+def save_tsv(output: TextIO, ids: List[str], taxonomy: List[str]) -> None:
+    """
+    Store TSV containing predictions.
+
+    Parameters
+    ----------
+    output : TextIO
+        The output stream to write to.
+    ids : List[str]
+        The IDs for the query sequences.
+    taxonomy : List[str]
+        The predicted taxonomy.
+    """
+    for id, tax in zip(ids, taxonomy):
+        output.write(id)
+        output.write("\t")
+        output.write(tax)
+        output.write("\n")
