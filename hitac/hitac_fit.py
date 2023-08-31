@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Script to classify sequences with hierarchical classifier."""
+"""Script to fit hierarchical classifier."""
 import argparse
 import pickle
 import sys
 from argparse import Namespace
 from multiprocessing import cpu_count
 
-from hitac._utils import compute_possible_kmers, load_fasta, compute_frequencies, convert_taxonomy_to_taxxi, save_tsv
+from hitac._utils import (
+    load_fasta,
+    compute_frequencies,
+    compute_possible_kmers,
+    get_hierarchical_classifier,
+)
 
 
 def parse_args(args: list) -> Namespace:
@@ -24,19 +29,13 @@ def parse_args(args: list) -> Namespace:
         Parsed arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Predict with hierarchical classifier",
+        description="Fit hierarchical classifier",
     )
     parser.add_argument(
-        "--reads",
+        "--reference",
         type=str,
         required=True,
-        help="Input FASTA file with sequence(s) to classify",
-    )
-    parser.add_argument(
-        "--classifier",
-        type=str,
-        required=True,
-        help="Path to trained hierarchical classifier",
+        help="Input FASTA file with reference sequence(s) to train model",
     )
     parser.add_argument(
         "--kmer",
@@ -53,21 +52,23 @@ def parse_args(args: list) -> Namespace:
         help="Number of threads to train in parallel [default: all]",
     )
     parser.add_argument(
-        "--classification",
+        "--classifier",
         type=str,
         required=True,
-        help="Path to store predictions",
+        help="Path to store trained hierarchical classifier",
     )
     return parser.parse_args(args)
 
 
-if __name__ == "__main__":  # pragma: no cover
+def main():
     args = parse_args(sys.argv[1:])
     kmers = compute_possible_kmers(args.kmer)
-    test_sequences, seq_ids = load_fasta(fasta_path=args.reads, reference=False)
-    x_test = compute_frequencies(test_sequences, kmers, args.threads)
-    classifier = pickle.load(open(args.classifier, "rb"))
-    predictions = classifier.predict(x_test)
-    taxonomy = convert_taxonomy_to_taxxi(predictions)
-    with open(args.classification, "w") as output:
-        save_tsv(output, seq_ids, taxonomy)
+    training_sequences, y_train = load_fasta(fasta_path=args.reference, reference=True)
+    x_train = compute_frequencies(training_sequences, kmers, args.threads)
+    hierarchical_classifier = get_hierarchical_classifier(args.threads)
+    hierarchical_classifier.fit(x_train, y_train)
+    pickle.dump(hierarchical_classifier, open(args.classifier, "wb"))
+
+
+if __name__ == "__main__":
+    main()

@@ -123,7 +123,14 @@ setup(
         "Related Software": DACS_SOFTWARE,
     },
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
-    scripts=["bin/hitac-fit", "bin/hitac-classify"],
+    entry_points={
+        "qiime2.plugins": ["hitac=hitac.plugin_setup:plugin"],
+        "console_scripts": [
+            "hitac-fit=hitac.hitac_fit:main",
+            "hitac-classify=hitac.hitac_classify:main",
+        ],
+    },
+    package_data={"hitac": ["citations.bib"]},
     install_requires=REQUIRED,
     extras_require=extras,
     include_package_data=True,

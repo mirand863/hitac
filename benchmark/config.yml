@@ -71,7 +71,7 @@ ranks:
     - s  # species
 
 containers:
-    hitac: "docker://mirand863/hitac:2.0.29"
+    hitac: "docker://mirand863/hitac:qiime"
     hitac_standalone: "docker://mirand863/hitac:standalone"
     blca: "docker://mirand863/blca:2.3"
     btop: "docker://mirand863/btop:2.10.1"

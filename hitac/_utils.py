@@ -350,40 +350,6 @@ def extract_taxxi_taxonomy(taxxi: str) -> str:
     return taxonomy
 
 
-def fit(
-    training_sequences: tuple, y_train: np.ndarray, kmer: int, threads: int
-) -> LocalClassifierPerParentNode:
-    """
-    Fit HiTaC's classifier.
-
-    Parameters
-    ----------
-    training_sequences : tuple
-        Training sequences as a tuple of bytes.
-    y_train : np.ndarray
-        Hierarchical labels.
-    kmer : int
-        K-mer size.
-    threads : int
-        Number of threads for parallel training.
-    """
-    kmers = compute_possible_kmers(kmer)
-    x_train = compute_frequencies(training_sequences, kmers, threads)
-    logistic_regression = LogisticRegression(
-        solver="liblinear",
-        multi_class="auto",
-        class_weight="balanced",
-        max_iter=10000,
-        verbose=0,
-        n_jobs=1,
-    )
-    classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=threads
-    )
-    classifier.fit(x_train, y_train)
-    return classifier
-
-
 def convert_taxonomy_to_taxxi(predictions: np.array) -> list:
     """
     Convert predictions made by HiTaC to TAXXI taxonomy format.
@@ -426,3 +392,31 @@ def save_tsv(output: TextIO, ids: List[str], taxonomy: List[str]) -> None:
         output.write("\t")
         output.write(tax)
         output.write("\n")
+
+
+def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
+    """
+    Build the hirarchical classifier.
+
+    Parameters
+    ----------
+    threads : int
+        The number of threads for training in parallel.
+
+    Returns
+    -------
+    hierarchical_classifier : LocalClassifierPerParentNode
+        The hierarchical classifier
+    """
+    logistic_regression = LogisticRegression(
+        solver="liblinear",
+        multi_class="auto",
+        class_weight="balanced",
+        max_iter=10000,
+        verbose=0,
+        n_jobs=1,
+    )
+    hierarchical_classifier = LocalClassifierPerParentNode(
+        local_classifier=logistic_regression, n_jobs=threads
+    )
+    return hierarchical_classifier
