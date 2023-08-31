@@ -61,6 +61,7 @@ def parse_args(args: list) -> Namespace:
 
 
 def main():
+    """Fit HiTaC."""
     args = parse_args(sys.argv[1:])
     kmers = compute_possible_kmers(args.kmer)
     training_sequences, y_train = load_fasta(fasta_path=args.reference, reference=True)

@@ -68,6 +68,7 @@ def parse_args(args: list) -> Namespace:
 
 
 def main():
+    """Classify sequences using HiTaC."""
     args = parse_args(sys.argv[1:])
     kmers = compute_possible_kmers(args.kmer)
     test_sequences, seq_ids = load_fasta(fasta_path=args.reads, reference=False)

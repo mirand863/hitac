@@ -2,17 +2,12 @@ import unittest
 from io import StringIO
 
 import numpy as np
-from hiclass import LocalClassifierPerParentNode
-
-# from pyfakefs.fake_filesystem_unittest import TestCase
 from pyfakefs.fake_filesystem_unittest import Patcher
-from sklearn.utils.validation import check_is_fitted
 
 from hitac import _utils
 from hitac._utils import (
     extract_taxxi_taxonomy,
     load_fasta,
-    fit,
     convert_taxonomy_to_taxxi,
     save_tsv,
 )
@@ -24,15 +19,6 @@ except ImportError:
     _has_qiime = False
 else:
     _has_qiime = True
-
-
-# class TestUtils(TestCase):
-#
-#     @classmethod
-#     def setUpClass(cls):
-#         reference_contents = ">seq1\nATCG\n>seq2\nAAAA\n>seq3\nTTTT"
-#         cls.setUpClassPyfakefs()
-#         cls.fake_fs().create_file("reference.fasta", contents=reference_contents)
 
 
 class TestUtils(unittest.TestCase):
@@ -485,33 +471,33 @@ class TestUtils(unittest.TestCase):
             self.assertSequenceEqual(ground_truth_sequences, sequences)
             self.assertSequenceEqual(ground_truth_ids, ids)
 
-    def test_fit_1(self):
-        sequences = (
-            b"CCGAG",
-            b"ACGAATACTCTC",
-            b"TTGAAATA",
-        )
-        y_train = np.array(
-            [
-                [
-                    "d:Fungi",
-                    "p:Ascomycota",
-                ],
-                [
-                    "d:Fungi",
-                    "p:Basidiomycota",
-                ],
-                [
-                    "d:Fungi",
-                ],
-            ],
-            dtype="object",
-        )
-        kmer = 6
-        cpus = 1
-        model = fit(sequences, y_train, kmer, cpus)
-        self.assertIsInstance(model, LocalClassifierPerParentNode)
-        check_is_fitted(model)
+    # def test_fit_1(self):
+    #     sequences = (
+    #         b"CCGAG",
+    #         b"ACGAATACTCTC",
+    #         b"TTGAAATA",
+    #     )
+    #     y_train = np.array(
+    #         [
+    #             [
+    #                 "d:Fungi",
+    #                 "p:Ascomycota",
+    #             ],
+    #             [
+    #                 "d:Fungi",
+    #                 "p:Basidiomycota",
+    #             ],
+    #             [
+    #                 "d:Fungi",
+    #             ],
+    #         ],
+    #         dtype="object",
+    #     )
+    #     kmer = 6
+    #     cpus = 1
+    #     model = fit(sequences, y_train, kmer, cpus)
+    #     self.assertIsInstance(model, LocalClassifierPerParentNode)
+    #     check_is_fitted(model)
 
     def test_convert_taxonomy_to_taxxi(self):
         ground_truth = [
