@@ -2,6 +2,7 @@ import unittest
 from io import StringIO
 
 import numpy as np
+from hiclass import LocalClassifierPerParentNode
 from pyfakefs.fake_filesystem_unittest import Patcher
 
 from hitac import _utils
@@ -10,6 +11,7 @@ from hitac._utils import (
     load_fasta,
     convert_taxonomy_to_taxxi,
     save_tsv,
+    get_hierarchical_classifier,
 )
 
 try:
@@ -542,3 +544,8 @@ class TestUtils(unittest.TestCase):
         print(ground_truth)
         print(content)
         self.assertEqual(ground_truth, content)
+
+    def test_get_hierarchical_classifier(self):
+        threads = 1
+        hierarchical_classifier = get_hierarchical_classifier(threads)
+        self.assertIsInstance(hierarchical_classifier, LocalClassifierPerParentNode)

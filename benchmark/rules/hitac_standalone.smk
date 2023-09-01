@@ -4,7 +4,7 @@ rule hitac_standalone:
         query = "data/test/{dataset}.fasta"
     output:
         classifier = temp("results/temp/{dataset}/hitac_standalone/classifier.pkl"),
-        predictions = "results/predictions/{dataset}/hitac_standalone.tsv"
+        predictions = temp("results/predictions/{dataset}/hitac_standalone.tsv")
     benchmark:
         repeat("results/benchmark/{dataset}/hitac_standalone.tsv",config["benchmark"]["repeat"])
     threads:
