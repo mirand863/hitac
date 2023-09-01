@@ -8,6 +8,7 @@ from typing import TextIO
 
 import pandas as pd
 import skbio
+import sklearn
 from hiclass import LocalClassifierPerParentNode
 from pyfakefs.fake_filesystem_unittest import Patcher
 from q2_types.feature_data import DNAIterator
@@ -22,6 +23,7 @@ from hitac._qiime import (
     _3,
     _2,
     HierarchicalTaxonomicClassiferTemporaryPickleDirFmt,
+    _1,
 )
 
 fixtures_loc = os.path.join(os.path.dirname(__file__), "fixtures")
@@ -90,13 +92,20 @@ class TestUtils(unittest.TestCase):
         assert len(ground_truth) == len(predictions)
         assert all([a == b for a, b in zip(predictions, ground_truth)])
 
-    def test_2(self):
+    def test_1_and_2(self):
         lr = LogisticRegression()
         lcpn = LocalClassifierPerParentNode(local_classifier=lr)
         dirfmt = _2(lcpn)
         self.assertIsInstance(
             dirfmt, HierarchicalTaxonomicClassiferTemporaryPickleDirFmt
         )
+        model = _1(dirfmt)
+        self.assertIsInstance(model, LocalClassifierPerParentNode)
+        with self.assertRaises(ValueError):
+            version = sklearn.__version__
+            sklearn.__version__ = 0
+            _1(dirfmt)
+            sklearn.__version__ = version
 
     def test_3(self):
         dirfmt = HierarchicalTaxonomicClassifierDirFmt
