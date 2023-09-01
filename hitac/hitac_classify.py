@@ -67,7 +67,7 @@ def parse_args(args: list) -> Namespace:
     return parser.parse_args(args)
 
 
-def main():
+def main():  # pragma: no cover
     """Classify sequences using HiTaC."""
     args = parse_args(sys.argv[1:])
     kmers = compute_possible_kmers(args.kmer)
@@ -80,5 +80,5 @@ def main():
         save_tsv(output, seq_ids, taxonomy)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
