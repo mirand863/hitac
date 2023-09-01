@@ -60,7 +60,7 @@ def parse_args(args: list) -> Namespace:
     return parser.parse_args(args)
 
 
-def main():
+def main():  # pragma: no cover
     """Fit HiTaC."""
     args = parse_args(sys.argv[1:])
     kmers = compute_possible_kmers(args.kmer)
@@ -71,5 +71,5 @@ def main():
     pickle.dump(hierarchical_classifier, open(args.classifier, "wb"))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
