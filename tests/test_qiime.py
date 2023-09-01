@@ -8,12 +8,21 @@ from typing import TextIO
 
 import pandas as pd
 import skbio
+from hiclass import LocalClassifierPerParentNode
 from pyfakefs.fake_filesystem_unittest import Patcher
 from q2_types.feature_data import DNAIterator
+from sklearn.linear_model import LogisticRegression
 
 from hitac import qiime
-from hitac._qiime import PickleFormat, JSONFormat
-
+from hitac._qiime import (
+    PickleFormat,
+    JSONFormat,
+    HierarchicalTaxonomicClassifierDirFmt,
+    _8,
+    _3,
+    _2,
+    HierarchicalTaxonomicClassiferTemporaryPickleDirFmt,
+)
 
 fixtures_loc = os.path.join(os.path.dirname(__file__), "fixtures")
 
@@ -80,3 +89,21 @@ class TestUtils(unittest.TestCase):
         predictions.sort()
         assert len(ground_truth) == len(predictions)
         assert all([a == b for a, b in zip(predictions, ground_truth)])
+
+    def test_2(self):
+        lr = LogisticRegression()
+        lcpn = LocalClassifierPerParentNode(local_classifier=lr)
+        dirfmt = _2(lcpn)
+        self.assertIsInstance(
+            dirfmt, HierarchicalTaxonomicClassiferTemporaryPickleDirFmt
+        )
+
+    def test_3(self):
+        dirfmt = HierarchicalTaxonomicClassifierDirFmt
+        with self.assertRaises(ValueError):
+            _3(dirfmt)
+
+    def test_8(self):
+        dirfmt = HierarchicalTaxonomicClassifierDirFmt
+        with self.assertRaises(ValueError):
+            _8(dirfmt)

@@ -118,7 +118,7 @@ def _2(
 
 
 @plugin.register_transformer
-def _3(dirfmt: HierarchicalTaxonomicClassifierDirFmt) -> LocalClassifierPerParentNode:
+def _3(_: HierarchicalTaxonomicClassifierDirFmt) -> LocalClassifierPerParentNode:
     raise ValueError(
         "The scikit-learn version could not be determined for"
         " this artifact, please retrain your classifier for your"
@@ -188,7 +188,7 @@ def _7(
 
 
 @plugin.register_transformer
-def _8(dirfmt: HierarchicalTaxonomicClassifierDirFmt) -> Filter:
+def _8(_: HierarchicalTaxonomicClassifierDirFmt) -> Filter:
     raise ValueError(
         "The scikit-learn version could not be determined for"
         " this artifact, please retrain your classifier for your"

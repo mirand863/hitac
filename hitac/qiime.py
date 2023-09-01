@@ -12,7 +12,6 @@ from q2_types.feature_data import (
     DNAFASTAFormat,
 )
 from qiime2.plugin import Int
-from sklearn.linear_model import LogisticRegression
 
 from ._qiime import HierarchicalTaxonomicClassifier
 from ._utils import (
