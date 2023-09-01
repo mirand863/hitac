@@ -9,6 +9,8 @@ from hiclass import LocalClassifierPerParentNode
 from sklearn.linear_model import LogisticRegression
 from typing import List, TextIO
 
+from hitac.filter import Filter
+
 
 def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
     """
@@ -394,19 +396,14 @@ def save_tsv(output: TextIO, ids: List[str], taxonomy: List[str]) -> None:
         output.write("\n")
 
 
-def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
+def get_logistic_regression() -> LogisticRegression:
     """
-    Build the hirarchical classifier.
-
-    Parameters
-    ----------
-    threads : int
-        The number of threads for training in parallel.
+    Build a logistic regression classifier.
 
     Returns
     -------
-    hierarchical_classifier : LocalClassifierPerParentNode
-        The hierarchical classifier
+    logistic_regression : LogisticRegression
+        The logistic regression classifier
     """
     logistic_regression = LogisticRegression(
         solver="liblinear",
@@ -416,7 +413,44 @@ def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
         verbose=0,
         n_jobs=1,
     )
+    return logistic_regression
+
+
+def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
+    """
+    Build the hierarchical classifier.
+
+    Parameters
+    ----------
+    threads : int
+        The number of threads for training in parallel.
+
+    Returns
+    -------
+    hierarchical_classifier : LocalClassifierPerParentNode
+        The hierarchical classifier.
+    """
+    logistic_regression = get_logistic_regression()
     hierarchical_classifier = LocalClassifierPerParentNode(
         local_classifier=logistic_regression, n_jobs=threads
     )
     return hierarchical_classifier
+
+
+def get_hierarchical_filter(threads: int) -> Filter:
+    """
+    Build the hierarchical filter.
+
+    Parameters
+    ----------
+    threads : int
+        The number of threads for training in parallel.
+
+    Returns
+    -------
+    hierarchical_filter : Filter
+        The hierarchical filter.
+    """
+    logistic_regression = get_logistic_regression()
+    hierarchical_filter = Filter(local_classifier=logistic_regression, n_jobs=threads)
+    return hierarchical_filter

@@ -12,7 +12,9 @@ from hitac._utils import (
     convert_taxonomy_to_taxxi,
     save_tsv,
     get_hierarchical_classifier,
+    get_hierarchical_filter,
 )
+from hitac.filter import Filter
 
 try:
     from q2_types.feature_data import DNAIterator
@@ -549,3 +551,8 @@ class TestUtils(unittest.TestCase):
         threads = 1
         hierarchical_classifier = get_hierarchical_classifier(threads)
         self.assertIsInstance(hierarchical_classifier, LocalClassifierPerParentNode)
+
+    def test_get_hierarchical_filter(self):
+        threads = 1
+        hierarchical_classifier = get_hierarchical_filter(threads)
+        self.assertIsInstance(hierarchical_classifier, Filter)
