@@ -24,7 +24,10 @@ from hitac._qiime import (
     _2,
     HierarchicalTaxonomicClassiferTemporaryPickleDirFmt,
     _1,
+    _7,
+    _6,
 )
+from hitac.filter import Filter
 
 fixtures_loc = os.path.join(os.path.dirname(__file__), "fixtures")
 
@@ -103,7 +106,7 @@ class TestUtils(unittest.TestCase):
         self.assertIsInstance(model, LocalClassifierPerParentNode)
         with self.assertRaises(ValueError):
             version = sklearn.__version__
-            sklearn.__version__ = 0
+            sklearn.__version__ = -1
             _1(dirfmt)
             sklearn.__version__ = version
 
@@ -111,6 +114,21 @@ class TestUtils(unittest.TestCase):
         dirfmt = HierarchicalTaxonomicClassifierDirFmt
         with self.assertRaises(ValueError):
             _3(dirfmt)
+
+    def test_6_and_7(self):
+        lr = LogisticRegression()
+        filter = Filter(local_classifier=lr)
+        dirfmt = _7(filter)
+        self.assertIsInstance(
+            dirfmt, HierarchicalTaxonomicClassiferTemporaryPickleDirFmt
+        )
+        model = _6(dirfmt)
+        self.assertIsInstance(model, Filter)
+        with self.assertRaises(ValueError):
+            version = sklearn.__version__
+            sklearn.__version__ = -2
+            _6(dirfmt)
+            sklearn.__version__ = version
 
     def test_8(self):
         dirfmt = HierarchicalTaxonomicClassifierDirFmt
