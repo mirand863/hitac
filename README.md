@@ -24,22 +24,62 @@ HiTaC was thoroughly evaluated with the [TAXXI benchmark](https://peerj.com/arti
 
 For reproducibility, a Snakemake pipeline was created. Instructions on how to run it and source code are available at [https://github.com/mirand863/hitac/tree/main/benchmark](https://github.com/mirand863/hitac/tree/main/benchmark).
 
-## Install
+## Install standalone version
 
 ### Option 1: Conda
 
-HiTaC dependends on QIIME 2. We recommend using QIIME 2 version 2022.2. To install QIIME 2 in a GNU/Linux machine, run:
+HiTaC can be easily installed in a new conda environment by running the following command:
 
 ```shell
-wget https://data.qiime2.org/distro/core/qiime2-2022.2-py38-linux-conda.yml
-conda env create -n hitac --file qiime2-2022.2-py38-linux-conda.yml
-# OPTIONAL CLEANUP
-rm qiime2-2022.2-py38-linux-conda.yml
+conda create -n hitac -c bioconda hitac
 ```
 
-**Note:** Instructions on how to install on Windows and macOS are available at [QIIME 2 docs](https://docs.qiime2.org/2022.2/install/native/#install-qiime-2-within-a-conda-environment).
+Afterward, the new conda environment created can be activated with:
 
-Afterwards, the new conda environment created in the last step can be activated and HiTaC can be installed:
+```shell
+conda activate hitac
+```
+
+For conda installation instructions, we refer the reader to [Conda's user guide](https://conda.io/projects/conda/en/latest/user-guide/install/index.html).
+
+### Option 2: Pip
+
+Alternatively, HiTaC can be installed with pip by running:
+
+```shell
+pip install hitac
+```
+
+### Option 3: Docker
+
+Lastly, HiTaC can be downloaded as a docker image:
+
+```shell
+docker pull mirand863/hitac_standalone:latest
+```
+
+The downloaded image can then be started with:
+
+```shell
+docker run -it mirand863/hitac_standalone:latest /bin/bash
+```
+
+## Install as a QIIME2 plugin
+
+### Option 1: Conda
+
+HiTaC can also be installed as a QIIME 2 plugin. We recommend using QIIME 2 version 2023.2. To install QIIME 2 in a GNU/Linux machine, run:
+
+```shell
+wget https://data.qiime2.org/distro/core/qiime2-2023.2-py38-linux-conda.yml
+conda env create -n hitac --file qiime2-2023.2-py38-linux-conda.yml
+# OPTIONAL CLEANUP
+rm qiime2-2023.2-py38-linux-conda.yml
+```
+
+**Note:** Instructions on how to install on Windows and macOS are available at [QIIME 2 docs](https://docs.qiime2.org/2023.2/install/native/#install-qiime-2-within-a-conda-environment).
+
+Afterward, the new conda environment created in the last step can be activated and HiTaC can be installed:
 
 ```shell
 conda activate hitac
@@ -58,19 +98,19 @@ pip install hitac
 
 ### Option 3: Docker
 
-Lastly, HiTaC and all its dependencies can be download as a docker image:
+Lastly, HiTaC and all its dependencies can be downloaded as a docker image:
 
 ```shell
-docker pull mirand863/hitac:latest
+docker pull mirand863/hitac_qiime:latest
 ```
 
 The downloaded image can then be started with:
 
 ```shell
-docker run -it mirand863/hitac:latest /bin/bash
+docker run -it mirand863/hitac_qiime:latest /bin/bash
 ```
 
-## Quick start
+## Quick start for QIIME2 plugin
 
 For an interactive tutorial, we refer the reader to our [Google Colabs notebook](https://colab.research.google.com/drive/12XicbyNhUQB2eVaiJG2b-0HMsOqvQTNs).
 
@@ -185,7 +225,7 @@ JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae
 
 ## Support
 
-If you run into any problems or issues, please create a [GitHub issue](https://github.com/mirand863/hitac/issues) and we will try our best to help.
+If you run into any problems or issues, please create a [GitLab issue](https://gitlab.com/mirand863/hitac/-/issues) and we will try our best to help.
 
 We strive to provide good support through our issue tracker on GitLab. However, if you'd like to receive private support with:
 

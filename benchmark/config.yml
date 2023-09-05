@@ -1,4 +1,4 @@
-workdir: /run/media/fabio/9a846308-6659-4a3e-b18f-58210fc0f88a/hitac/benchmark
+workdir: /run/media/fabio/9a846308-6659-4a3e-b18f-58210fc0f88a1/hitac/benchmark
 
 threads: 12
 
@@ -45,6 +45,7 @@ methods:
     - hitac
     - hitac_standalone
     - hitac_filter
+    - hitac_filter_standalone
     - knn
     - ktop
     - metaxa2
@@ -71,8 +72,8 @@ ranks:
     - s  # species
 
 containers:
-    hitac: "docker://mirand863/hitac:qiime"
-    hitac_standalone: "docker://mirand863/hitac:standalone"
+    hitac_qiime: "docker://mirand863/hitac_qiime:2.1.0"
+    hitac_standalone: "docker://mirand863/hitac_standalone:2.1.0"
     blca: "docker://mirand863/blca:2.3"
     btop: "docker://mirand863/btop:2.10.1"
     usearch: "docker://mirand863/usearch:11.0.667"
