@@ -3,6 +3,7 @@ from io import StringIO
 
 import numpy as np
 from hiclass import LocalClassifierPerParentNode
+from numpy.testing import assert_array_equal
 from pyfakefs.fake_filesystem_unittest import Patcher
 
 from hitac import _utils
@@ -13,6 +14,7 @@ from hitac._utils import (
     save_tsv,
     get_hierarchical_classifier,
     get_hierarchical_filter,
+    load_classification,
 )
 from hitac.filter import Filter
 
@@ -475,34 +477,6 @@ class TestUtils(unittest.TestCase):
             self.assertSequenceEqual(ground_truth_sequences, sequences)
             self.assertSequenceEqual(ground_truth_ids, ids)
 
-    # def test_fit_1(self):
-    #     sequences = (
-    #         b"CCGAG",
-    #         b"ACGAATACTCTC",
-    #         b"TTGAAATA",
-    #     )
-    #     y_train = np.array(
-    #         [
-    #             [
-    #                 "d:Fungi",
-    #                 "p:Ascomycota",
-    #             ],
-    #             [
-    #                 "d:Fungi",
-    #                 "p:Basidiomycota",
-    #             ],
-    #             [
-    #                 "d:Fungi",
-    #             ],
-    #         ],
-    #         dtype="object",
-    #     )
-    #     kmer = 6
-    #     cpus = 1
-    #     model = fit(sequences, y_train, kmer, cpus)
-    #     self.assertIsInstance(model, LocalClassifierPerParentNode)
-    #     check_is_fitted(model)
-
     def test_convert_taxonomy_to_taxxi(self):
         ground_truth = [
             "d:Fungi,p:Ascomycota,c:Sordariomycetes",
@@ -556,3 +530,24 @@ class TestUtils(unittest.TestCase):
         threads = 1
         hierarchical_classifier = get_hierarchical_filter(threads)
         self.assertIsInstance(hierarchical_classifier, Filter)
+
+    def test_load_classification(self):
+        with Patcher() as patcher:
+            classification_contents = "1;tax=d:Fungi,p:Ascomycota,c:Sordariomycetes;\td:Fungi,p:Ascomycota,c:Sordariomycetes\n"
+            classification_contents += (
+                "2;tax=d:Fungi,p:Ascomycota;\td:Fungi,p:Ascomycota\n"
+            )
+            classification_contents += "3;tax=d:Fungi;\td:Fungi\n"
+            patcher.fs.create_file(
+                "classification.tsv", contents=classification_contents
+            )
+            ground_truth = np.array(
+                [
+                    ["d:Fungi", "p:Ascomycota", "c:Sordariomycetes"],
+                    ["d:Fungi", "p:Ascomycota"],
+                    ["d:Fungi"],
+                ],
+                dtype="object",
+            )
+            classification = load_classification("classification.tsv")
+            assert_array_equal(ground_truth, classification)

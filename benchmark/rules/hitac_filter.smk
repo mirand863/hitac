@@ -12,7 +12,7 @@ rule hitac_filter:
     threads:
         config["threads"]
     container:
-        config["containers"]["hitac"]
+        config["containers"]["hitac_qiime"]
     shell:
         """
         qiime hitac fit-filter \
@@ -21,7 +21,7 @@ rule hitac_filter:
             --p-kmer 6 \
             --p-threads {threads} \
             --o-filter {output.filter}
-        
+
         qiime hitac filter \
             --i-filter {output.filter} \
             --i-reads {input.query_reads} \

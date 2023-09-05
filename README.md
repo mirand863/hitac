@@ -7,8 +7,10 @@ HiTaC is an open-source hierarchical taxonomic classifier for fungal ITS sequenc
 ## Quick links
 
 - [Benchmark](#benchmark)
-- [Install](#install)
-- [Quick start](#quick-start)
+- [Install standalone version](#install-standalone-version)
+- [Quick start for standalone version](#quick-start-for-standalone-version)
+- [Install as a QIIME2 plugin](#install-as-a-qiime2-plugin)
+- [Quick start for QIIME2 plugin](#quick-start-for-qiime2-plugin)
 - [Support](#support)
 - [Contributing](#contributing)
 - [Getting the latest updates](#getting-the-latest-updates)
@@ -62,6 +64,111 @@ The downloaded image can then be started with:
 
 ```shell
 docker run -it mirand863/hitac_standalone:latest /bin/bash
+```
+
+## Quick start for QIIME2 plugin
+
+For an interactive tutorial, we refer the reader to our [Google Colabs notebook](TODO: add link).
+
+To see the usage run `[command] --help` if you want further help with a specific command.
+
+```shell
+usage: hitac-fit [-h] --reference REFERENCE [--kmer KMER] [--threads THREADS] --classifier CLASSIFIER
+
+Fit hierarchical classifier
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --reference REFERENCE
+                        Input FASTA file with reference sequence(s) to train model
+  --kmer KMER           K-mer size for feature extraction [default: 6]
+  --threads THREADS     Number of threads to train in parallel [default: all]
+  --classifier CLASSIFIER
+                        Path to store trained hierarchical classifier
+```
+
+### Input Files
+
+HiTaC accepts reference and query files in FASTA format. The reference file must have the taxonomies annotated as follows:
+
+```shell
+>EU272527;tax=d:Fungi,p:Ascomycota,c:Eurotiomycetes,o:Eurotiales,f:Trichocomaceae,g:Paecilomyces,s:Paecilomyces_sinensis;
+CCGAGTGAGGGTCCCACGAGGCCCAACCTCCCATCCGTGTTGAACTACACCTGTTGCTTCGGCGGGCCCGCCGTGGTTCA
+CGCCCGGCCGCCGGGGGGCCTTGTGCTCCCGGGCCCGCGCCCGCCGAAGACCCCTCGAACGCTGCCCTGAAGGTTGCCGT
+CTGAGTATAAAATCAATCATTAAAACTTTCAACAACGGATCTCTTGGTTCCGGCATCGATGAAGAACGCAGCGAAATGCG
+ATAAGTAATGTGAATTGCAGAATTCCGTGAATCATCGAATCTTTGAACGCACATTGCGCCCCCTGGCATTCCGGGGGGCA
+TGCCTGTCCGAGCGTCATTGCTAACCCTCCAGCCCGGCTGGTGTGTTGGGTCGACGTCCCCCCCGGGGGACGGGCCCGAA
+AGGCAGCGGCGGCGCCGCGTCCGATCCTCGAGCGTATGGGGCTTTGTCACGCGCTCTGGTAGGGTCGGCCGGCTGGCCAG
+CCAGCGACCTCACGGTCACCTATTTTTTCTCTTAGG
+>L54118;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Boletales,f:Suillaceae,g:Suillus,s:Suillus_placidus;
+ACGAATTCATAATTCGGCGAGGGGAAAGCGGAGGGTTGTAGCTGGCCTTTTTACCGAGGCACGTGCACGCTCTCTTCCGA
+ACTCTCGTCGTATGGGCGCGGGGCGACCCGCGTCTTTCATCCCACCTCTTCGTGTAGAAAGTCTTTGAATGTTTTTACCA
+TCATCGAGTCGCGACTTCTAGGAGACGCGATTCTTTGAGACAAAAGTTTATTACAACTTTCAGCAATGGATCTCTTGGCT
+CTCGCATCGATGAAGAACGCAGCGAATCGCGATATGTAATGTGAATTGCAGATCTACAGTGAATCATCGAATCTTTGAAC
+GCACCTTGCGCTCCTCGGTGTTCCGAGGAGCATGCCTGTTTGAGCGTCAGTAAATTCTCAACCCCTCTCGATTTGCTTCG
+AGAGGGCGCTTGGATGGTGGGGGCTGCCGGAGACCTGGATTTATCCCTGGACTCGGGCTCTCCTGAAATGCATCGGCTTG
+CGGTCGACTTTCGACTTTGCGCGACAAGGCCTTCGGCGTGATAATGATCGCCGTTCGCCGAAGCGCAGGAATGAACGGTC
+CCGCGCCTCTAATCCGTCGACGCTTTCGAGCGTCTTCCTCATTGACGTTTGACCTCAAAT
+```
+
+### Training and predicting taxonomies
+
+To train the model and classify, simply run:
+
+```shell
+hitac-fit \
+--reference reference.fasta \
+--classifier classifier.pkl
+
+hitac-classify \
+--classifier classifier.pkl \
+--reads reads.fasta \
+--classification classification.tsv
+```
+
+Additionally, a filter can be trained to remove ranks where the predictions might be inaccurate and to compute the confidence score:
+
+```shell
+TODO: add filter commands
+#qiime hitac fit-filter \
+#--i-reference-reads db-seqs.qza \
+#--i-reference-taxonomy db-tax.qza \
+#--o-filter filter.qza
+#
+#qiime hitac filter \
+#--i-filter filter.qza \
+#--i-reads q-seqs.qza \
+#--i-classification classifier_output.qza \
+#--o-filtered-classification filter_output.qza
+```
+
+### Output File
+
+The predictions can be exported from QIIME 2 to a TSV file:
+
+```shell
+qiime tools export \
+--input-path classifier_output.qza \
+--output-path output_dir
+```
+
+or alternativelly if the filter was used:
+
+```shell
+qiime tools export \
+--input-path filter_output.qza \
+--output-path output_dir
+```
+
+The first column in the TSV file contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
+
+```shell
+Feature ID	Taxon	Confidence
+EU254776;tax=d:Fungi,p:Ascomycota,c:Sordariomycetes,o:Diaporthales,f:Gnomoniaceae,g:Gnomonia;	d__Fungi; p__Ascomycota; c__Sordariomycetes; o__Diaporthales; f__Valsaceae; g__Cryptosporella	-1
+FJ711636;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Agaricales,f:Marasmiaceae,g:Armillaria;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Agaricales; f__Marasmiaceae; g__Armillaria	-1
+UDB016040;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Russulales; f__Russulaceae; g__Russula	-1
+GU827310;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
+JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
 ```
 
 ## Install as a QIIME2 plugin
@@ -242,7 +349,7 @@ You can contribute in multiple ways, e.g., reporting bugs, writing or translatin
 
 ## Getting the latest updates
 
-If you'd like to get updates when we release new versions, please click on the "Watch" button on the top and select "Releases only". GitLab will then send you notifications along with a changelog with each new release.
+If you'd like to get updates when we release new versions, please click on the notification button on the top and select "Watch". GitLab will then send you notifications along with a changelog with each new release.
 
 ## Citation
 

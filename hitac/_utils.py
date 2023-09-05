@@ -454,3 +454,25 @@ def get_hierarchical_filter(threads: int) -> Filter:
     logistic_regression = get_logistic_regression()
     hierarchical_filter = Filter(local_classifier=logistic_regression, n_jobs=threads)
     return hierarchical_filter
+
+
+def load_classification(classification_path: str) -> np.ndarray:
+    """
+    Load a classification TSV file and extract taxonomy.
+
+    Parameters
+    ----------
+    classification_path : str
+        The path to the TSV file containing the predictions.
+
+    Returns
+    -------
+    classification : np.ndarray
+        The classification matrix.
+    """
+    classification = []
+    with open(classification_path, "r") as fin:
+        for line in fin:
+            taxonomy = line.strip().split("\t")[-1].split(",")
+            classification.append(taxonomy)
+        return np.array(classification, dtype="object")

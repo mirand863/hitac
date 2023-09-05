@@ -11,7 +11,7 @@ rule hitac:
     threads:
         config["threads"]
     container:
-        config["containers"]["hitac"]
+        config["containers"]["hitac_qiime"]
     shell:
         """
         qiime hitac fit \

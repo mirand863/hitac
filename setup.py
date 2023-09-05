@@ -129,6 +129,7 @@ setup(
             "hitac-fit=hitac.hitac_fit:main",
             "hitac-classify=hitac.hitac_classify:main",
             "hitac-fit-filter=hitac.hitac_fit_filter:main",
+            "hitac-filter=hitac.hitac_filter:main",
         ],
     },
     package_data={"hitac": ["citations.bib"]},
