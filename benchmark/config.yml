@@ -42,9 +42,9 @@ methods:
     - btop
     - ct1
     - ct2
-    - hitac
+    - hitac_qiime
     - hitac_standalone
-    - hitac_filter
+    - hitac_filter_qiime
     - hitac_filter_standalone
     - knn
     - ktop

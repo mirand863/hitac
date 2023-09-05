@@ -1,13 +1,13 @@
-rule hitac:
+rule hitac_qiime:
     input:
         reference_reads = "results/temp/{dataset}/qiime2/reference_reads.qza",
         reference_taxonomy = "results/temp/{dataset}/qiime2/reference_taxonomy.qza",
         query_reads = "results/temp/{dataset}/qiime2/query_reads.qza"
     output:
-        classifier = temp("results/temp/{dataset}/hitac/classifier.qza"),
-        predictions = temp("results/temp/{dataset}/hitac/predictions.qza")
+        classifier = temp("results/temp/{dataset}/hitac_qiime/classifier.qza"),
+        predictions = temp("results/temp/{dataset}/hitac_qiime/predictions.qza")
     benchmark:
-        repeat("results/benchmark/{dataset}/hitac.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/hitac_qiime.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

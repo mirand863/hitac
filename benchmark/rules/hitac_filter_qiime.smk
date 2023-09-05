@@ -1,14 +1,14 @@
-rule hitac_filter:
+rule hitac_filter_qiime:
     input:
         reference_reads = "results/temp/{dataset}/qiime2/reference_reads.qza",
         reference_taxonomy = "results/temp/{dataset}/qiime2/reference_taxonomy.qza",
         query_reads = "results/temp/{dataset}/qiime2/query_reads.qza",
-        unfiltered_predictions = "results/temp/{dataset}/hitac/predictions.qza"
+        unfiltered_predictions = "results/temp/{dataset}/hitac_qiime/predictions.qza"
     output:
-        filter = temp("results/temp/{dataset}/hitac_filter/filter.qza"),
-        filtered_predictions = temp("results/temp/{dataset}/hitac_filter/predictions.qza")
+        filter = temp("results/temp/{dataset}/hitac_filter_qiime/filter.qza"),
+        filtered_predictions = temp("results/temp/{dataset}/hitac_filter_qiime/predictions.qza")
     benchmark:
-        repeat("results/benchmark/{dataset}/hitac_filter.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/hitac_filter_qiime.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
