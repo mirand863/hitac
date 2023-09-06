@@ -1,0 +1,5 @@
+sp_rdp_its	fl	97	TPR	knn	g	48.4
+sp_rdp_its	fl	97	UCR	knn	g	49.7
+sp_rdp_its	fl	97	MCR	knn	g	1.9
+sp_rdp_its	fl	97	OCR	knn	g	54.5
+sp_rdp_its	fl	97	Acc	knn	g	48.2

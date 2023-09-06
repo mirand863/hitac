@@ -1,0 +1,5 @@
+sp_rdp_its	fl	90	TPR	ktop	s	.
+sp_rdp_its	fl	90	UCR	ktop	s	.
+sp_rdp_its	fl	90	MCR	ktop	s	.
+sp_rdp_its	fl	90	OCR	ktop	s	100.0
+sp_rdp_its	fl	90	Acc	ktop	s	0.0

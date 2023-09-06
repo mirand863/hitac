@@ -1,0 +1,5 @@
+sp_rdp_its	fl	95	TPR	top	s	.
+sp_rdp_its	fl	95	UCR	top	s	.
+sp_rdp_its	fl	95	MCR	top	s	.
+sp_rdp_its	fl	95	OCR	top	s	100.0
+sp_rdp_its	fl	95	Acc	top	s	0.2

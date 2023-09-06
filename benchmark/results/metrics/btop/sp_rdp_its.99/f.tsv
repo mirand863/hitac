@@ -1,0 +1,5 @@
+sp_rdp_its	fl	99	TPR	btop	f	100.0
+sp_rdp_its	fl	99	UCR	btop	f	0.0
+sp_rdp_its	fl	99	MCR	btop	f	0.0
+sp_rdp_its	fl	99	OCR	btop	f	.
+sp_rdp_its	fl	99	Acc	btop	f	100.0
