@@ -1,0 +1,5 @@
+sp_rdp_its	fl	95	TPR	hitac_filter_standalone	p	100.0
+sp_rdp_its	fl	95	UCR	hitac_filter_standalone	p	0.0
+sp_rdp_its	fl	95	MCR	hitac_filter_standalone	p	0.0
+sp_rdp_its	fl	95	OCR	hitac_filter_standalone	p	.
+sp_rdp_its	fl	95	Acc	hitac_filter_standalone	p	100.0

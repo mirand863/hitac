@@ -1,0 +1,5 @@
+sp_rdp_its	fl	99	TPR	hitac_filter_qiime	s	77.8
+sp_rdp_its	fl	99	UCR	hitac_filter_qiime	s	19.5
+sp_rdp_its	fl	99	MCR	hitac_filter_qiime	s	2.7
+sp_rdp_its	fl	99	OCR	hitac_filter_qiime	s	49.0
+sp_rdp_its	fl	99	Acc	hitac_filter_qiime	s	70.0

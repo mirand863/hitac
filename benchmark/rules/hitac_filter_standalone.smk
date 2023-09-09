@@ -7,7 +7,7 @@ rule hitac_filter_standalone:
         filter = temp("results/temp/{dataset}/hitac_filter_standalone/classifier.pkl"),
         filtered_predictions = temp("results/predictions/{dataset}/hitac_filter_standalone.tsv")
     benchmark:
-        repeat("results/benchmark/{dataset}/hitac_standalone.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/hitac_filter_standalone.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
