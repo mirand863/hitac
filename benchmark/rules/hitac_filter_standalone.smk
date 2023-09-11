@@ -5,7 +5,7 @@ rule hitac_filter_standalone:
         unfiltered_predictions = "results/predictions/{dataset}/hitac_standalone.tsv"
     output:
         filter = temp("results/temp/{dataset}/hitac_filter_standalone/classifier.pkl"),
-        filtered_predictions = temp("results/predictions/{dataset}/hitac_filter_standalone.tsv")
+        filtered_predictions = "results/predictions/{dataset}/hitac_filter_standalone.tsv"
     benchmark:
         repeat("results/benchmark/{dataset}/hitac_filter_standalone.tsv",config["benchmark"]["repeat"])
     threads:

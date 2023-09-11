@@ -66,9 +66,9 @@ The downloaded image can then be started with:
 docker run -it mirand863/hitac_standalone:latest /bin/bash
 ```
 
-## Quick start for QIIME2 plugin
+## Quick start for standalone version
 
-For an interactive tutorial, we refer the reader to our [Google Colabs notebook](TODO: add link).
+For an interactive tutorial, we refer the reader to our [Google Colabs notebook](https://colab.research.google.com/drive/1tqTvB1Xz5agqFhu4gkB8KlZVHycS3X9w?usp=sharing).
 
 To see the usage run `[command] --help` if you want further help with a specific command.
 
@@ -129,53 +129,34 @@ hitac-classify \
 Additionally, a filter can be trained to remove ranks where the predictions might be inaccurate and to compute the confidence score:
 
 ```shell
-TODO: add filter commands
-#qiime hitac fit-filter \
-#--i-reference-reads db-seqs.qza \
-#--i-reference-taxonomy db-tax.qza \
-#--o-filter filter.qza
-#
-#qiime hitac filter \
-#--i-filter filter.qza \
-#--i-reads q-seqs.qza \
-#--i-classification classifier_output.qza \
-#--o-filtered-classification filter_output.qza
+hitac fit-filter \
+--reference reference.fasta \
+--filter filter.pkl
+
+hitac filter \
+--filter filter.pkl \
+--reads reads.fasta \
+--classification classification.tsv \
+--filtered-classification filtered_classification.tsv
 ```
 
 ### Output File
 
-The predictions can be exported from QIIME 2 to a TSV file:
+HiTaC generates a TSV file for the predictions. The first column in the TSV file contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
 
 ```shell
-qiime tools export \
---input-path classifier_output.qza \
---output-path output_dir
-```
-
-or alternativelly if the filter was used:
-
-```shell
-qiime tools export \
---input-path filter_output.qza \
---output-path output_dir
-```
-
-The first column in the TSV file contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
-
-```shell
-Feature ID	Taxon	Confidence
-EU254776;tax=d:Fungi,p:Ascomycota,c:Sordariomycetes,o:Diaporthales,f:Gnomoniaceae,g:Gnomonia;	d__Fungi; p__Ascomycota; c__Sordariomycetes; o__Diaporthales; f__Valsaceae; g__Cryptosporella	-1
-FJ711636;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Agaricales,f:Marasmiaceae,g:Armillaria;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Agaricales; f__Marasmiaceae; g__Armillaria	-1
-UDB016040;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Russulales; f__Russulaceae; g__Russula	-1
-GU827310;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
-JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
+EU254776	d:Fungi,p:Ascomycota,c:Sordariomycetes,o:Diaporthales,f:Valsaceae,g:Cryptosporella,s:Cryptosporella_femoralis
+FJ711636	d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Agaricales,f:Marasmiaceae,g:Armillaria,s:Armillaria_tabescens
+UDB016040	d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula,s:Russula_adusta
+GU827310	d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina,s:Ramalina_conduplicans
+JN943699	d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Punctelia,s:Punctelia_caseana
 ```
 
 ## Install as a QIIME2 plugin
 
 ### Option 1: Conda
 
-HiTaC can also be installed as a QIIME 2 plugin. We recommend using QIIME 2 version 2023.2. To install QIIME 2 in a GNU/Linux machine, run:
+HiTaC can also be installed as a QIIME 2 plugin. To install QIIME 2 version 2023.2 in a GNU/Linux machine, run:
 
 ```shell
 wget https://data.qiime2.org/distro/core/qiime2-2023.2-py38-linux-conda.yml
@@ -254,20 +235,20 @@ HiTaC accepts taxonomy in TSV format and training and test files in FASTA format
 
 ```shell
 qiime tools import \
---input-path $qfa \
---output-path q-seqs.qza \
+--input-path query.fasta \
+--output-path query.qza \
 --type 'FeatureData[Sequence]'
 
 qiime tools import \
---input-path dbq.fa \
---output-path db-seqs.qza \
+--input-path reference.fasta \
+--output-path reference.qza \
 --type 'FeatureData[Sequence]'
 
 qiime tools import \
 --type 'FeatureData[Taxonomy]' \
 --input-format HeaderlessTSVTaxonomyFormat \
---input-path db-tax.txt \
---output-path db-tax.qza
+--input-path taxonomy.txt \
+--output-path taxonomy.qza
 ```
 
 ### Training and predicting taxonomies
@@ -276,29 +257,29 @@ To train the model and classify, simply run:
 
 ```shell
 qiime hitac fit \
---i-reference-reads db-seqs.qza \
---i-reference-taxonomy db-tax.qza \
+--i-reference-reads reference.qza \
+--i-reference-taxonomy taxonomy.qza \
 --o-classifier classifier.qza
 
 qiime hitac classify \
 --i-classifier classifier.qza \
---i-reads q-seqs.qza \
---o-classification classifier_output.qza
+--i-reads query.qza \
+--o-classification classification.qza
 ```
 
 Additionally, a filter can be trained to remove ranks where the predictions might be inaccurate and to compute the confidence score:
 
 ```shell
 qiime hitac fit-filter \
---i-reference-reads db-seqs.qza \
---i-reference-taxonomy db-tax.qza \
+--i-reference-reads reference.qza \
+--i-reference-taxonomy taxonomy.qza \
 --o-filter filter.qza
 
 qiime hitac filter \
 --i-filter filter.qza \
---i-reads q-seqs.qza \
---i-classification classifier_output.qza \
---o-filtered-classification filter_output.qza
+--i-reads query.qza \
+--i-classification classification.qza \
+--o-filtered-classification filtered_classification.qza
 ```
 
 ### Output File
@@ -307,7 +288,7 @@ The predictions can be exported from QIIME 2 to a TSV file:
 
 ```shell
 qiime tools export \
---input-path classifier_output.qza \
+--input-path classification.qza \
 --output-path output_dir
 ```
 
@@ -319,15 +300,15 @@ qiime tools export \
 --output-path output_dir
 ```
 
-The first column in the TSV file contains the identifier of the test sequence and the second column holds the predictions made by HiTaC. For example:
+The first column in the TSV file contains the identifier of the test sequence, while the second column holds the predictions made by HiTaC and the third column is the prediction probability if the filter was applied. For example:
 
 ```shell
 Feature ID	Taxon	Confidence
-EU254776;tax=d:Fungi,p:Ascomycota,c:Sordariomycetes,o:Diaporthales,f:Gnomoniaceae,g:Gnomonia;	d__Fungi; p__Ascomycota; c__Sordariomycetes; o__Diaporthales; f__Valsaceae; g__Cryptosporella	-1
-FJ711636;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Agaricales,f:Marasmiaceae,g:Armillaria;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Agaricales; f__Marasmiaceae; g__Armillaria	-1
-UDB016040;tax=d:Fungi,p:Basidiomycota,c:Agaricomycetes,o:Russulales,f:Russulaceae,g:Russula;	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Russulales; f__Russulaceae; g__Russula	-1
-GU827310;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Ramalinaceae,g:Ramalina;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
-JN943699;tax=d:Fungi,p:Ascomycota,c:Lecanoromycetes,o:Lecanorales,f:Parmeliaceae,g:Melanohalea;	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
+EU254776	d__Fungi; p__Ascomycota; c__Sordariomycetes; o__Diaporthales; f__Valsaceae; g__Cryptosporella	-1
+FJ711636	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Agaricales; f__Marasmiaceae; g__Armillaria	-1
+UDB016040	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Russulales; f__Russulaceae; g__Russula	-1
+GU827310	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
+JN943699	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
 ```
 
 ## Support
