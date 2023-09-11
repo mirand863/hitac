@@ -1,0 +1,5 @@
+sp_rdp_its	fl	100	TPR	hitac_standalone	c	100.0
+sp_rdp_its	fl	100	UCR	hitac_standalone	c	0.0
+sp_rdp_its	fl	100	MCR	hitac_standalone	c	0.0
+sp_rdp_its	fl	100	OCR	hitac_standalone	c	.
+sp_rdp_its	fl	100	Acc	hitac_standalone	c	100.0

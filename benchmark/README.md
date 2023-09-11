@@ -39,6 +39,12 @@ snakemake \
     --cores 12
 ```
 
-The parameter --keep-going forces Snakemake to keep executing independent tasks if an unrelated one fails, while the parameter --printshellcmds enables printing the commands that will be executed, the parameter --reason makes Snakemake print the reason for each executed rule, the parameters --use-singularity is necessary to indicate that Singularity will be used to manage the software dependencies of the pipeline, and the parameter --cores tells Snakemake how many cpus can be used overall (the more cpus you can spare, the faster the pipeline will finish).
+Each parameter has the following meaning:
+
+- `--keep-going` forces Snakemake to keep executing independent tasks if an unrelated one fails;
+- `--printshellcmds` enables printing the commands that will be executed;
+- `--reason` makes Snakemake print the reason for each executed rule;
+- `--use-singularity` is necessary to indicate that Singularity will be used to manage the software dependencies of the pipeline;
+- `--cores` tells Snakemake how many cpus can be used overall (the more cpus you can spare, the faster the pipeline will finish).
 
 The benchmarks, predictions and metrics for each model are saved in the results folder.

@@ -22,7 +22,7 @@ URL_GITHUB = "https://gitlab.com/dacs-hpi/hitac"
 URL_ISSUES = "https://gitlab.com/dacs-hpi/hitac/-/issues"
 EMAIL = "fabio.malchermiranda@hpi.de"
 AUTHOR = "Fabio Malcher Miranda"
-REQUIRES_PYTHON = ">=3.8.3"
+REQUIRES_PYTHON = ">=3.8"
 KEYWORDS = ["hierarchical taxonomic classifier"]
 DACS_SOFTWARE = "https://gitlab.com/dacs-hpi"
 # What packages are required for this module to be executed?
@@ -30,7 +30,16 @@ REQUIRED = ["pandas", "numpy", "scikit-learn", "hiclass", "scikit-bio"]
 
 # What packages are optional?
 # 'fancy feature': ['django'],}
-EXTRAS = {"ray": ["ray>=1.11.0"]}
+# EXTRAS = {"ray": ["ray>=1.11.0"]}
+extras = dict()
+extras["dev"] = [
+    "pytest",
+    "flake8",
+    "pydocstyle",
+    "pytest-cov",
+    "pre-commit",
+    "pyfakefs",
+]
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
@@ -114,13 +123,18 @@ setup(
         "Related Software": DACS_SOFTWARE,
     },
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
-    # If your package is a single module, use this instead of 'packages':
-    # py_modules=['mypackage'],
-    # 'mycli=mymodule:cli'
-    entry_points={"qiime2.plugins": ["hitac=hitac.plugin_setup:plugin"]},
+    entry_points={
+        "qiime2.plugins": ["hitac=hitac.plugin_setup:plugin"],
+        "console_scripts": [
+            "hitac-fit=hitac.hitac_fit:main",
+            "hitac-classify=hitac.hitac_classify:main",
+            "hitac-fit-filter=hitac.hitac_fit_filter:main",
+            "hitac-filter=hitac.hitac_filter:main",
+        ],
+    },
     package_data={"hitac": ["citations.bib"]},
     install_requires=REQUIRED,
-    extras_require=EXTRAS,
+    extras_require=extras,
     include_package_data=True,
     license="BSD 3-Clause",
     keywords=KEYWORDS,
@@ -130,7 +144,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: Implementation :: PyPy",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "License :: OSI Approved",
     ],
 )
 #    # $ setup.py publish support.

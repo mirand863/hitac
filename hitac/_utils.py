@@ -5,6 +5,11 @@ from itertools import product
 from multiprocessing import cpu_count
 
 import numpy as np
+from hiclass import LocalClassifierPerParentNode
+from sklearn.linear_model import LogisticRegression
+from typing import List, TextIO
+
+from hitac.filter import Filter
 
 
 def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
@@ -197,12 +202,12 @@ def _extract_reads(reads) -> zip:
 
 def convert_taxonomy_to_qiime2(predictions: np.array) -> list:
     """
-    Convert predictions made by HiClass to QIIME2 taxonomy format.
+    Convert predictions made by HiTaC to QIIME2 taxonomy format.
 
     Parameters
     ----------
     predictions : np.array
-        Predictions made by HiClass.
+        Predictions made by HiTaC.
 
     Returns
     -------
@@ -282,3 +287,192 @@ def compute_confidence(
             else:
                 predictions[row].insert(0, "")
     return predictions, confidence
+
+
+def load_fasta(fasta_path: str, reference) -> tuple:
+    """
+    Load reference FASTA file.
+
+    Parameters
+    ----------
+    fasta_path : str
+        Path where the FASTA file is stored.
+    reference : Bool
+        Is this file the reference? True of False.
+
+    Returns
+    -------
+    sequences, taxonomy : tuple
+        Sequences and taxonomy loaded from FASTA file.
+    """
+    with open(fasta_path) as fin:
+        header = None
+        sequence = None
+        sequences = []
+        headers = []
+        for line in fin:
+            if line.startswith(">"):
+                if header:
+                    sequences.append(str.encode(sequence))
+                else:
+                    header = line.strip()
+                sequence = ""
+                if reference:
+                    headers.append(extract_taxxi_taxonomy(line.strip()))
+                else:
+                    headers.append(line.strip()[1:])
+            else:
+                sequence = sequence + line.strip()
+        sequences.append(str.encode(sequence))
+    if reference:
+        return tuple(sequences), np.array(headers, dtype="object")
+    else:
+        return tuple(sequences), headers
+
+
+def extract_taxxi_taxonomy(taxxi: str) -> str:
+    """
+    Convert taxonomy from TAXXI format to a format used by HiTaC.
+
+    Parameters
+    ----------
+    taxxi : str
+        Taxonomy in TAXXI format.
+
+    Returns
+    -------
+    taxonomy : str
+        Taxonomy in format used by HiTaC.
+    """
+    taxonomy = []
+    for rank in taxxi.split(","):
+        taxonomy.append(rank)
+    taxonomy[0] = taxonomy[0][taxonomy[0].find("=") + 1 :]
+    taxonomy[-1] = taxonomy[-1][:-1]
+    return taxonomy
+
+
+def convert_taxonomy_to_taxxi(predictions: np.array) -> list:
+    """
+    Convert predictions made by HiTaC to TAXXI taxonomy format.
+
+    Parameters
+    ----------
+    predictions : np.array
+        Predictions made by HiTaC.
+
+    Returns
+    -------
+    taxonomy : list
+        List containing converted taxonomy.
+    """
+    taxonomy = []
+    for prediction in predictions:
+        tax = ""
+        for i in range(len(prediction) - 1):
+            tax = tax + prediction[i] + ","
+        tax = tax + prediction[-1]
+        taxonomy.append(tax)
+    return taxonomy
+
+
+def save_tsv(output: TextIO, ids: List[str], taxonomy: List[str]) -> None:
+    """
+    Store TSV containing predictions.
+
+    Parameters
+    ----------
+    output : TextIO
+        The output stream to write to.
+    ids : List[str]
+        The IDs for the query sequences.
+    taxonomy : List[str]
+        The predicted taxonomy.
+    """
+    for id, tax in zip(ids, taxonomy):
+        output.write(id)
+        output.write("\t")
+        output.write(tax)
+        output.write("\n")
+
+
+def get_logistic_regression() -> LogisticRegression:
+    """
+    Build a logistic regression classifier.
+
+    Returns
+    -------
+    logistic_regression : LogisticRegression
+        The logistic regression classifier
+    """
+    logistic_regression = LogisticRegression(
+        solver="liblinear",
+        multi_class="auto",
+        class_weight="balanced",
+        max_iter=10000,
+        verbose=0,
+        n_jobs=1,
+    )
+    return logistic_regression
+
+
+def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
+    """
+    Build the hierarchical classifier.
+
+    Parameters
+    ----------
+    threads : int
+        The number of threads for training in parallel.
+
+    Returns
+    -------
+    hierarchical_classifier : LocalClassifierPerParentNode
+        The hierarchical classifier.
+    """
+    logistic_regression = get_logistic_regression()
+    hierarchical_classifier = LocalClassifierPerParentNode(
+        local_classifier=logistic_regression, n_jobs=threads
+    )
+    return hierarchical_classifier
+
+
+def get_hierarchical_filter(threads: int) -> Filter:
+    """
+    Build the hierarchical filter.
+
+    Parameters
+    ----------
+    threads : int
+        The number of threads for training in parallel.
+
+    Returns
+    -------
+    hierarchical_filter : Filter
+        The hierarchical filter.
+    """
+    logistic_regression = get_logistic_regression()
+    hierarchical_filter = Filter(local_classifier=logistic_regression, n_jobs=threads)
+    return hierarchical_filter
+
+
+def load_classification(classification_path: str) -> np.ndarray:
+    """
+    Load a classification TSV file and extract taxonomy.
+
+    Parameters
+    ----------
+    classification_path : str
+        The path to the TSV file containing the predictions.
+
+    Returns
+    -------
+    classification : np.ndarray
+        The classification matrix.
+    """
+    classification = []
+    with open(classification_path, "r") as fin:
+        for line in fin:
+            taxonomy = line.strip().split("\t")[-1].split(",")
+            classification.append(taxonomy)
+        return np.array(classification, dtype="object")
