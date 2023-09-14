@@ -27,12 +27,12 @@ include: "rules/rdp.smk"
 include: "rules/sintax.smk"
 include: "rules/spingo.smk"
 include: "rules/top.smk"
-include: "rules/compute_metrics.smk"
+include: "rules/compute_taxxi_metrics.smk"
 
 rule all:
     input:
         metrics = expand(
-            "results/metrics/{method}/{dataset}/{rank}.tsv",
+            "results/taxxi_metrics/{method}/{dataset}/{rank}.tsv",
             method=config["methods"],
             dataset=config["datasets"],
             rank=config["ranks"],
