@@ -1,0 +1,12 @@
+metric	value
+accuracy	0.9250645994832042
+balanced_accuracy	0.8279043325910038
+f1_micro	0.9250645994832042
+f1_macro	0.6731057184836285
+f1_weighted	0.9602589960299599
+precision_micro	0.9250645994832042
+precision_macro	0.75
+precision_weighted	1.0
+jaccard_micro	0.8605769230769231
+jaccard_macro	0.6209282494432529
+jaccard_weighted	0.9250645994832042
