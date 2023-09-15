@@ -1,4 +1,4 @@
-workdir: /run/media/fabio/1e2a0325-a011-43c5-a95a-397b94e233c7/hitac/benchmark
+workdir: /run/media/fabio/9a846308-6659-4a3e-b18f-58210fc0f88a1/hitac/benchmark
 
 threads: 12
 
@@ -36,6 +36,7 @@ scripts:
     - microclass.R
     - microclass2tab.py
     - fasta_utax2rdp.py
+    - compute_ml_metrics.py
 
 methods:
     - blca
@@ -63,6 +64,10 @@ methods:
     - spingo
     - top
 
+metrics:
+    - taxxi  # original metrics from taxxi benchmark
+    - ml  # standard machine learning metrics, e.g., f-score, accuracy, etc
+
 ranks:
     - p  # phylum
     - c  # class
@@ -86,6 +91,7 @@ containers:
     qiime1: "docker://mirand863/qiime:1.9.1"
     qiime2: "docker://quay.io/qiime2/core:2023.2"
     python2: "docker://python:2.7-slim"
+    metrics: "docker://mirand863/metrics:1.0"
 
 urls:
     train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"
