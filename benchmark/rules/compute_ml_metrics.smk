@@ -1,4 +1,4 @@
-rule compute_ml_metrics:
+rule compute_ml_metrics_for_rank:
     input:
         scripts = expand("scripts/{script}",script=config["scripts"]),
         predictions = "results/predictions/{dataset}/{method}.tsv"

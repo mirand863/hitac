@@ -1,9 +1,9 @@
-workdir: /run/media/fabio/9a846308-6659-4a3e-b18f-58210fc0f88a1/hitac/benchmark
+workdir: /run/media/fabio/9a846308-6659-4a3e-b18f-58210fc0f88a/hitac/benchmark
 
 threads: 12
 
 benchmark:
-    repeat: 5
+    repeat: 1
 
 datasets:
     - sp_rdp_its.90
@@ -37,6 +37,7 @@ scripts:
     - microclass2tab.py
     - fasta_utax2rdp.py
     - compute_ml_metrics.py
+    - compute_hierarchical_metrics.py
 
 methods:
     - blca
@@ -64,9 +65,11 @@ methods:
     - spingo
     - top
 
-metrics:
+-metrics:
     - taxxi  # original metrics from taxxi benchmark
     - ml  # standard machine learning metrics, e.g., f-score, accuracy, etc
+    - hierarchical  # hierarchical machine learning metrics , i.e., f1, precision and recall
+
 
 ranks:
     - p  # phylum
@@ -92,6 +95,7 @@ containers:
     qiime2: "docker://quay.io/qiime2/core:2023.2"
     python2: "docker://python:2.7-slim"
     metrics: "docker://mirand863/metrics:1.0"
+    hierarchical_metrics: "docker://mirand863/hierarchical_metrics:1.0"
 
 urls:
     train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"

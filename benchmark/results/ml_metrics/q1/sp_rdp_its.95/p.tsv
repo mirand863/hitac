@@ -7,6 +7,9 @@ f1_weighted	0.999208460856236
 precision_micro	0.9984189723320158
 precision_macro	0.75
 precision_weighted	1.0
+recall_micro	0.9984189723320158
+recall_macro	0.7493523316062176
+recall_weighted	0.9984189723320158
 jaccard_micro	0.9968429360694554
 jaccard_macro	0.7493523316062176
 jaccard_weighted	0.9984189723320158
