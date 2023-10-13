@@ -98,7 +98,7 @@ my_pal <- rcartocolor::carto_pal(n = 20, name = "Bold")[c(1, 2, 3, 4, 5, 6, 7, 8
 
 # boxplot
 g <- ggplot(data, aes(x = group, y = value, color = group, fill = group)) +
-  scale_y_continuous(breaks = seq(0,1,0.1)) +
+  scale_y_continuous(breaks = seq(0,1,0.05)) +
   scale_color_manual(values = my_pal, guide = "none") +
   scale_fill_manual(values = my_pal, guide = "none")
 
