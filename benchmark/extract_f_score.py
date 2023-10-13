@@ -15,7 +15,7 @@ methods = [
     "knn",
     "nbc50",
     "q2sk",
-    "rdp50",
+    # "rdp50",
     # "ct1",
     # "btop",
     # "microclass",

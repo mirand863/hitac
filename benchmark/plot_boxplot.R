@@ -69,7 +69,7 @@ theme_flip <-
 ## custom colors
 # my_pal <- rcartocolor::carto_pal(n = 8, name = "Bold")[c(1, 3, 7, 2)]
 # my_pal <- rcartocolor::carto_pal(n = 8, name = "Bold")[c(1, 2, 3, 4, 5, 6, 7, 8)]
-my_pal <- rcartocolor::carto_pal(n = 20, name = "Bold")[c(1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4)]
+my_pal <- rcartocolor::carto_pal(n = 12, name = "Safe")[c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)]
 
 
 # barplot
