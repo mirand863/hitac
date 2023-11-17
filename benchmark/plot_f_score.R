@@ -110,7 +110,7 @@ g +
   geom_jitter(width = .1, size = 7, alpha = .5) #+
 #   coord_cartesian(ylim=c(0,100))
 ggsave(
-  "boxplot.pdf",
+  "f_score.pdf",
   plot = last_plot(),
   device = "pdf",
   scale = 0.5,
