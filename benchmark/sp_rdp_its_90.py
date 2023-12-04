@@ -1,10 +1,13 @@
 from os.path import exists
 
 import matplotlib
-import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from matplotlib import pyplot as plt
 
+sns.set_theme(style="whitegrid")
+
+# penguins = sns.load_dataset("penguins")
 
 methods = [
     "hitac_filter_standalone",
@@ -13,21 +16,22 @@ methods = [
     "ct2",
     "nbc80",
     "rdp80",
+    "sintax50",
     "sintax80",
     "q2blast",
     "metaxa2",
     "knn",
     "nbc50",
     "q2sk",
-    # "rdp50",
-    # "ct1",
-    # "btop",
-    # "microclass",
-    # "top",
-    # "ktop",
-    # "blca",
-    # "q1",
-    # "spingo",
+    "rdp50",
+    "ct1",
+    "btop",
+    "microclass",
+    "top",
+    "ktop",
+    "blca",
+    "q1",
+    "spingo",
 ]
 datasets = [
     "sp_rdp_its.90",
@@ -43,6 +47,7 @@ pretty_name = {
     "ct2": "CT2",
     "nbc80": "NBC80",
     "rdp80": "RDP80",
+    "sintax50": "SINTAX50",
     "sintax80": "SINTAX80",
     "q2blast": "Q2_BLAST",
     "metaxa2": "Metaxa2",
@@ -80,35 +85,38 @@ for method in methods:
             results["result"].append(recall)
 results_df = pd.DataFrame(data=results)
 
-sns.set_theme(
-    style="whitegrid",
-    font_scale=3,
+# sort values
+results_df.sort_values(
+    by=["result"],
+    inplace=True,
+    ascending=False,
 )
 
-# Draw a nested barplot
+# multiply values by 100 to standardize
+results_df["result"] = results_df["result"].apply(lambda x: round(x * 100, 2))
+
+print(results_df)
+print(matplotlib.rcParams["font.family"])
+
+# Draw a nested barplot by species and sex
 g = sns.catplot(
     data=results_df,
     kind="bar",
-    x="method",
-    y="result",
+    x="result",
+    y="method",
     hue="metric",
-    errorbar=None,
-    palette="dark",
-    alpha=0.8,
-    # height=6,
-    aspect=4,
+    errorbar="sd",
+    palette=["#001219", "#0A9396"],
+    # palette="dark",
+    # alpha=.6,
+    height=6,
+    orient="h",
 )
 g.despine(left=True)
 g.set_axis_labels("", "")
 g.legend.set_title("")
-# g._legend.remove()
-plt.ylim(0, 1)
-plt.yticks([0, 0.25, 0.50, 0.75, 1], [0, 0.25, 0.50, 0.75, 1])
-plt.xticks(rotation=60)
-# plt.show()
+plt.show()
 plt.savefig(
     "sp_rdp_its_90.pdf",
     bbox_inches="tight",
 )
-print(results_df)
-print(matplotlib.rcParams["font.family"])
