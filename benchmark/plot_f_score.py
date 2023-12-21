@@ -76,6 +76,13 @@ for method in methods:
             results["result"].append(f1)
 results_df = pd.DataFrame(data=results)
 
+# sort values
+results_df.sort_values(
+    by=["result"],
+    inplace=True,
+    ascending=[False],
+)
+
 # multiply values by 100 to standardize
 results_df["result"] = results_df["result"].apply(lambda x: round(x * 100, 2))
 
