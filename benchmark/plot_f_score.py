@@ -1,6 +1,8 @@
 from os.path import exists
 
 import pandas as pd
+import seaborn as sns
+from matplotlib import pyplot as plt
 
 methods = [
     "hitac_filter_standalone",
@@ -33,21 +35,6 @@ datasets = [
     "sp_rdp_its.99",
     "sp_rdp_its.100",
 ]
-ranks = {
-    "sp_rdp_its.90": "g",
-    "sp_rdp_its.95": "g",
-    "sp_rdp_its.97": "g",
-    "sp_rdp_its.99": "s",
-    "sp_rdp_its.100": "s",
-}
-groups = {
-    "sp_rdp_its.90": "A",
-    "sp_rdp_its.95": "B",
-    "sp_rdp_its.97": "C",
-    "sp_rdp_its.99": "D",
-    "sp_rdp_its.100": "E",
-}
-
 pretty_name = {
     "hitac_filter_standalone": "HiTaC_Filter",
     "hitac_standalone": "HiTaC",
@@ -73,20 +60,35 @@ pretty_name = {
     "spingo": "SPINGO",
 }
 
-with open("sensitivity.csv", "w") as fout:
-    fout.write("Method,TPR,Group\n")
+results = {
+    "method": [],
+    "metric": [],
+    "result": [],
+}
+for method in methods:
     for dataset in datasets:
-        for method in methods:
-            file = f"results/taxxi_metrics/{method}/{dataset}/{ranks[dataset]}.tsv"
-            if exists(file):
-                with open(file, "r") as fin:
-                    line = fin.readline()
-                    sensitivity = line.split("\t")[-1].strip()
-                    if float(sensitivity) > 11:
-                        fout.write(
-                            f"{pretty_name[method]},{sensitivity},{groups[dataset]}\n"
-                        )
-                    else:
-                        fout.write(
-                            f"{pretty_name[method]} ({sensitivity}),{sensitivity},{groups[dataset]}\n"
-                        )
+        file = f"results/hierarchical_metrics/{method}/{dataset}.tsv"
+        if exists(file):
+            df = pd.read_csv(file, sep="\t")
+            f1 = df["f1"].iloc[0]
+            results["method"].append(pretty_name[method])
+            results["metric"].append("f1")
+            results["result"].append(f1)
+results_df = pd.DataFrame(data=results)
+
+print(results_df)
+
+# titanic = sns.load_dataset('titanic')
+#
+# print(titanic)
+
+# sns.boxplot(data=titanic, x="age", y="deck", width=.5)
+sns.set_palette("colorblind")
+g = sns.boxplot(data=results_df, x="result", y="method", whis=(0, 100))
+g.set(xlabel=None)
+g.set(ylabel=None)
+plt.show()
+plt.savefig(
+    "f_score.pdf",
+    bbox_inches="tight",
+)
