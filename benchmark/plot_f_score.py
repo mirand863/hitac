@@ -76,15 +76,18 @@ for method in methods:
             results["result"].append(f1)
 results_df = pd.DataFrame(data=results)
 
+# multiply values by 100 to standardize
+results_df["result"] = results_df["result"].apply(lambda x: round(x * 100, 2))
+
 print(results_df)
 
-# titanic = sns.load_dataset('titanic')
-#
-# print(titanic)
-
-# sns.boxplot(data=titanic, x="age", y="deck", width=.5)
 sns.set_palette("colorblind")
-g = sns.boxplot(data=results_df, x="result", y="method", whis=(0, 100))
+g = sns.boxplot(
+    data=results_df,
+    x="result",
+    y="method",
+    whis=(0, 100),
+)
 g.set(xlabel=None)
 g.set(ylabel=None)
 plt.show()
