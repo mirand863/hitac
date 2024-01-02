@@ -35,6 +35,13 @@ datasets = [
     "sp_rdp_its.99",
     "sp_rdp_its.100",
 ]
+pretty_datasets = {
+    "sp_rdp_its.90": "SP RDP ITS 90",
+    "sp_rdp_its.95": "SP RDP ITS 95",
+    "sp_rdp_its.97": "SP RDP ITS 97",
+    "sp_rdp_its.99": "SP RDP ITS 99",
+    "sp_rdp_its.100": "SP RDP ITS 100",
+}
 pretty_name = {
     "hitac_filter_standalone": "HiTaC_Filter",
     "hitac_standalone": "HiTaC",
@@ -92,7 +99,6 @@ for dataset in datasets:
     results_df["precision"] = results_df["precision"].apply(lambda x: round(x * 100, 2))
     results_df["recall"] = results_df["recall"].apply(lambda x: round(x * 100, 2))
 
-    new_dataset = dataset.replace("_", "\_")
     results_df.rename(
         columns={
             "f1": "f-score",
@@ -103,7 +109,7 @@ for dataset in datasets:
         results_df.to_latex(
             index=False,
             bold_rows=True,
-            label=dataset,
-            caption=f"Hierarchical metrics computed for the dataset {new_dataset}.",
+            label=f"hierarchical:{dataset}",
+            caption=f"Hierarchical metrics computed for the dataset {pretty_datasets[dataset]}.",
         )
     )
