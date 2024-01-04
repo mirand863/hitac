@@ -1,8 +1,6 @@
 from os.path import exists
 
 import pandas as pd
-import seaborn as sns
-from matplotlib import pyplot as plt
 
 methods = [
     "hitac_filter_standalone",
@@ -78,9 +76,9 @@ for dataset in datasets:
         file = f"results/hierarchical_metrics/{method}/{dataset}.tsv"
         if exists(file):
             df = pd.read_csv(file, sep="\t")
-            f1 = df["f1"].iloc[0]
-            precision = df["precision"].iloc[0]
-            recall = df["recall"].iloc[0]
+            f1 = float(df["f1"].iloc[0])
+            precision = float(df["precision"].iloc[0])
+            recall = float(df["recall"].iloc[0])
             results["method"].append(pretty_name[method])
             results["f1"].append(f1)
             results["precision"].append(precision)

@@ -1,9 +1,7 @@
+import warnings
 from os.path import exists
 
-import warnings
 import pandas as pd
-import seaborn as sns
-from matplotlib import pyplot as plt
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -90,9 +88,9 @@ pretty_ranks = {
 def get_value(line):
     value = line.strip().split("\t")[-1]
     if value == ".":
-        return "-"
+        return float("nan")
     else:
-        return value
+        return float(value)
 
 
 for dataset in datasets:
@@ -128,12 +126,6 @@ for dataset in datasets:
             ascending=[False],
         )
 
-        results_df.rename(
-            columns={
-                "f1": "f-score",
-            },
-            inplace=True,
-        )
         print(
             results_df.to_latex(
                 index=False,
