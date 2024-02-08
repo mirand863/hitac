@@ -67,8 +67,8 @@ pretty_name = {
 
 results = {
     "method": [],
-    "metric": [],
-    "result": [],
+    "precision": [],
+    "recall": [],
 }
 for method in methods:
     for dataset in datasets:
@@ -78,22 +78,39 @@ for method in methods:
             precision = df["precision"].iloc[0]
             recall = df["recall"].iloc[0]
             results["method"].append(pretty_name[method])
-            results["method"].append(pretty_name[method])
-            results["metric"].append("Precision")
-            results["metric"].append("Recall")
-            results["result"].append(precision)
-            results["result"].append(recall)
+            results["precision"].append(precision)
+            results["recall"].append(recall)
 results_df = pd.DataFrame(data=results)
+
+# multiply values by 100 to standardize
+results_df["precision"] = results_df["precision"].apply(lambda x: round(x * 100, 2))
+results_df["recall"] = results_df["recall"].apply(lambda x: round(x * 100, 2))
 
 # sort values
 results_df.sort_values(
-    by=["result"],
+    by=["precision", "recall"],
     inplace=True,
-    ascending=[False],
+    ascending=[False, False],
 )
 
-# multiply values by 100 to standardize
-results_df["result"] = results_df["result"].apply(lambda x: round(x * 100, 2))
+results_df.reset_index(drop=True, inplace=True)
+
+def merge_columns(df):
+    results = {
+        "method": [],
+        "metric": [],
+        "result": [],
+    }
+    for i in df.index:
+        results["method"].append(df["method"][i])
+        results["method"].append(df["method"][i])
+        results["metric"].append("Precision")
+        results["metric"].append("Recall")
+        results["result"].append(df["precision"][i])
+        results["result"].append(df["recall"][i])
+    return pd.DataFrame(data=results)
+
+results_df = merge_columns(results_df)
 
 print(results_df)
 print(matplotlib.rcParams["font.family"])
@@ -115,7 +132,7 @@ g = sns.catplot(
 g.despine(left=True)
 g.set_axis_labels("", "")
 g.legend.set_title("")
-plt.show()
+# plt.show()
 plt.savefig(
     "sp_rdp_its_100.pdf",
     bbox_inches="tight",
