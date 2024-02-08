@@ -95,6 +95,7 @@ results_df.sort_values(
 
 results_df.reset_index(drop=True, inplace=True)
 
+
 def merge_columns(df):
     results = {
         "method": [],
@@ -109,6 +110,7 @@ def merge_columns(df):
         results["result"].append(df["precision"][i])
         results["result"].append(df["recall"][i])
     return pd.DataFrame(data=results)
+
 
 results_df = merge_columns(results_df)
 

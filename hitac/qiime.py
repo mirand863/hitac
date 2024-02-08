@@ -1,4 +1,5 @@
 """QIIME2 public functions for HiTaC."""
+
 from multiprocessing import cpu_count
 
 import pandas as pd
