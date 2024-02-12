@@ -69,6 +69,7 @@ results = {
     "method": [],
     "precision": [],
     "recall": [],
+    "f1": [],
 }
 for method in methods:
     for dataset in datasets:
@@ -77,20 +78,23 @@ for method in methods:
             df = pd.read_csv(file, sep="\t")
             precision = df["precision"].iloc[0]
             recall = df["recall"].iloc[0]
+            f1 = df["f1"].iloc[0]
             results["method"].append(pretty_name[method])
             results["precision"].append(precision)
             results["recall"].append(recall)
+            results["f1"].append(f1)
 results_df = pd.DataFrame(data=results)
 
 # multiply values by 100 to standardize
 results_df["precision"] = results_df["precision"].apply(lambda x: round(x * 100, 2))
 results_df["recall"] = results_df["recall"].apply(lambda x: round(x * 100, 2))
+results_df["f1"] = results_df["f1"].apply(lambda x: round(x * 100, 2))
 
 # sort values
 results_df.sort_values(
-    by=["precision", "recall"],
+    by=["precision", "f1", "recall"],
     inplace=True,
-    ascending=[False, False],
+    ascending=[False, False, False],
 )
 
 results_df.reset_index(drop=True, inplace=True)
@@ -105,9 +109,12 @@ def merge_columns(df):
     for i in df.index:
         results["method"].append(df["method"][i])
         results["method"].append(df["method"][i])
+        results["method"].append(df["method"][i])
         results["metric"].append("Precision")
+        results["metric"].append("F1-score")
         results["metric"].append("Recall")
         results["result"].append(df["precision"][i])
+        results["result"].append(df["f1"][i])
         results["result"].append(df["recall"][i])
     return pd.DataFrame(data=results)
 
@@ -125,7 +132,7 @@ g = sns.catplot(
     y="method",
     hue="metric",
     errorbar="sd",
-    palette=["#001219", "#0A9396"],
+    palette=["#001219", "#0A9396", "#AE2012"],
     # palette="dark",
     # alpha=.6,
     height=6,
