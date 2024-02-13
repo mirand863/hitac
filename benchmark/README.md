@@ -16,7 +16,7 @@ conda activate base
 Create a new environment with snakemake by running the following command:
 
 ```shell
-mamba create -c conda-forge -c bioconda -n snakemake snakemake
+mamba env create --name snakemake --file snakemake.yml
 ```
 
 The file `config.yml` holds configuration information to run the pipeline, e.g., working directory, number of threads to run tasks in parallel, number of times to repeat the benchmark, datasets, methods, taxonomic ranks, etc. For the purpose of this tutorial, we will keep most parameters intact and modify only the working directory. In order to do that, run the command:
