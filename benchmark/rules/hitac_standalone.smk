@@ -1,10 +1,10 @@
-rule hitac_standalone_fit:
+rule train_hitac_standalone:
     input:
         reference = "data/train/{dataset}.fasta"
     output:
         classifier = temp("results/temp/{dataset}/hitac_standalone/classifier.pkl")
     benchmark:
-        repeat("results/benchmark/{dataset}/hitac_standalone_fit.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/train/hitac_standalone.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
@@ -19,14 +19,14 @@ rule hitac_standalone_fit:
         """
 
 
-rule hitac_standalone_classify:
+rule classify_hitac_standalone:
     input:
         query = "data/test/{dataset}.fasta",
         classifier = "results/temp/{dataset}/hitac_standalone/classifier.pkl"
     output:
         predictions = "results/predictions/{dataset}/hitac_standalone.tsv"
     benchmark:
-        repeat("results/benchmark/{dataset}/hitac_standalone_classify.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/hitac_standalone.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

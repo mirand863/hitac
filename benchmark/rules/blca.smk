@@ -24,11 +24,9 @@ rule taxxi2blca:
         """
 
 
-rule blca:
+rule train_blca:
     input:
-        reference_reads = "results/temp/{dataset}/blca/reference_reads.fasta",
-        query_reads = "results/temp/{dataset}/blca/query_reads.fasta",
-        reference_taxonomy = "results/temp/{dataset}/blca/reference_taxonomy.txt",
+        reference_reads = "results/temp/{dataset}/blca/reference_reads.fasta"
     output:
         ndb = temp("results/temp/{dataset}/blca/database.ndb"),
         nhr = temp("results/temp/{dataset}/blca/database.nhr"),
@@ -38,12 +36,11 @@ rule blca:
         not_ = temp("results/temp/{dataset}/blca/database.not"),
         nsq = temp("results/temp/{dataset}/blca/database.nsq"),
         ntf = temp("results/temp/{dataset}/blca/database.ntf"),
-        nto = temp("results/temp/{dataset}/blca/database.nto"),
-        predictions = temp("results/temp/{dataset}/blca/query_reads.fasta.blca.out")
+        nto = temp("results/temp/{dataset}/blca/database.nto")
     params:
         database = "results/temp/{dataset}/blca/database"
     benchmark:
-        repeat("results/benchmark/{dataset}/blca.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/train/blca.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
@@ -55,7 +52,34 @@ rule blca:
             -dbtype nucl \
             -parse_seqids \
             -out {params.database}
+        """
 
+
+rule classify_blca:
+    input:
+        ndb = "results/temp/{dataset}/blca/database.ndb",
+        nhr = "results/temp/{dataset}/blca/database.nhr",
+        nin = "results/temp/{dataset}/blca/database.nin",
+        nog = "results/temp/{dataset}/blca/database.nog",
+        nos = "results/temp/{dataset}/blca/database.nos",
+        not_ = "results/temp/{dataset}/blca/database.not",
+        nsq = "results/temp/{dataset}/blca/database.nsq",
+        ntf = "results/temp/{dataset}/blca/database.ntf",
+        nto = "results/temp/{dataset}/blca/database.nto",
+        query_reads = "results/temp/{dataset}/blca/query_reads.fasta",
+        reference_taxonomy = "results/temp/{dataset}/blca/reference_taxonomy.txt"
+    output:
+        predictions = temp("results/temp/{dataset}/blca/query_reads.fasta.blca.out")
+    params:
+        database = "results/temp/{dataset}/blca/database"
+    benchmark:
+        repeat("results/benchmark/{dataset}/classify/blca.tsv", config["benchmark"]["repeat"])
+    threads:
+        config["threads"]
+    container:
+        config["containers"]["blca"]
+    shell:
+        """
         2.blca_main.py \
             -i {input.query_reads} \
             -r {input.reference_taxonomy} \
