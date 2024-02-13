@@ -14,10 +14,9 @@ rule taxxi2btop:
         """
 
 
-rule btop:
+rule train_btop:
     input:
-        reference = "results/temp/{dataset}/btop/reference.fasta",
-        test = "data/test/{dataset}.fasta"
+        reference = "results/temp/{dataset}/btop/reference.fasta"
     output:
         ndb = temp("results/temp/{dataset}/btop/database.ndb"),
         nhr = temp("results/temp/{dataset}/btop/database.nhr"),
@@ -27,12 +26,11 @@ rule btop:
         not_ = temp("results/temp/{dataset}/btop/database.not"),
         nsq = temp("results/temp/{dataset}/btop/database.nsq"),
         ntf = temp("results/temp/{dataset}/btop/database.ntf"),
-        nto = temp("results/temp/{dataset}/btop/database.nto"),
-        predictions = temp("results/temp/{dataset}/btop/predictions.tsv")
+        nto = temp("results/temp/{dataset}/btop/database.nto")
     params:
-        database = "results/temp/{dataset}/btop/database"
+        database="results/temp/{dataset}/btop/database"
     benchmark:
-        repeat("results/benchmark/{dataset}/btop.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/train/btop.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
@@ -44,7 +42,33 @@ rule btop:
             -dbtype nucl \
             -parse_seqids \
             -out {params.database}
-        
+        """
+
+
+rule classify_btop:
+    input:
+        ndb = "results/temp/{dataset}/btop/database.ndb",
+        nhr = "results/temp/{dataset}/btop/database.nhr",
+        nin = "results/temp/{dataset}/btop/database.nin",
+        nog = "results/temp/{dataset}/btop/database.nog",
+        nos = "results/temp/{dataset}/btop/database.nos",
+        not_ = "results/temp/{dataset}/btop/database.not",
+        nsq = "results/temp/{dataset}/btop/database.nsq",
+        ntf = "results/temp/{dataset}/btop/database.ntf",
+        nto = "results/temp/{dataset}/btop/database.nto",
+        test = "data/test/{dataset}.fasta"
+    output:
+        predictions = temp("results/temp/{dataset}/btop/predictions.tsv")
+    params:
+        database = "results/temp/{dataset}/btop/database"
+    benchmark:
+        repeat("results/benchmark/{dataset}/classify/btop.tsv", config["benchmark"]["repeat"])
+    threads:
+        config["threads"]
+    container:
+        config["containers"]["btop"]
+    shell:
+        """
         blastn \
             -task megablast \
             -db {params.database} \

@@ -1,4 +1,4 @@
-rule q2blast:
+rule classify_q2blast:
     input:
         reference_reads = "results/temp/{dataset}/qiime2/reference_reads.qza",
         reference_taxonomy = "results/temp/{dataset}/qiime2/reference_taxonomy.qza",
@@ -7,7 +7,7 @@ rule q2blast:
         predictions = temp("results/temp/{dataset}/q2blast/predictions.qza"),
         search_results = temp("results/temp/{dataset}/q2blast/search_results.qza")
     benchmark:
-        repeat("results/benchmark/{dataset}/q2blast.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/q2blast.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

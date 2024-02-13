@@ -1,11 +1,11 @@
-rule ktop:
+rule classify_ktop:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta"
     output:
         predictions = "results/predictions/{dataset}/ktop.tsv"
     benchmark:
-        repeat("results/benchmark/{dataset}/ktop.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/ktop.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
