@@ -16,13 +16,11 @@ rule taxxi_to_metaxa2:
         """
 
 
-rule metaxa2:
+rule train_metaxa2:
     input:
         reference_reads = "results/temp/{dataset}/metaxa2/reference_reads.fasta",
-        reference_taxonomy = "results/temp/{dataset}/metaxa2/reference_taxonomy.txt",
-        test = "data/test/{dataset}.fasta"
+        reference_taxonomy = "results/temp/{dataset}/metaxa2/reference_taxonomy.txt"
     output:
-        predictions = temp("results/temp/{dataset}/metaxa2/results.taxonomy.txt"),
         archaea = temp("results/temp/{dataset}/metaxa2/results.archaea.fasta"),
         bacteria = temp("results/temp/{dataset}/metaxa2/results.bacteria.fasta"),
         chloroplast = temp("results/temp/{dataset}/metaxa2/results.chloroplast.fasta"),
@@ -34,12 +32,9 @@ rule metaxa2:
         summary = temp("results/temp/{dataset}/metaxa2/results.summary.txt"),
         uncertain = temp("results/temp/{dataset}/metaxa2/results.uncertain.fasta")
     params:
-        database = "results/temp/{dataset}/metaxa2/database",
-        blast = "results/temp/{dataset}/metaxa2/database/blast",
-        hhms = "results/temp/{dataset}/metaxa2/database/HMMs",
-        predictions = "results/temp/{dataset}/metaxa2/results"
+        database = "results/temp/{dataset}/metaxa2/database"
     benchmark:
-        repeat("results/benchmark/{dataset}/metaxa2.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/train/metaxa2.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
@@ -53,14 +48,44 @@ rule metaxa2:
             --auto_rep T \
             --cpu {threads} \
             --mode divergent
-        
+        """
+
+
+rule classify_metaxa2:
+    input:
+        test = "data/test/{dataset}.fasta",
+        archaea = "results/temp/{dataset}/metaxa2/results.archaea.fasta",
+        bacteria = "results/temp/{dataset}/metaxa2/results.bacteria.fasta",
+        chloroplast = "results/temp/{dataset}/metaxa2/results.chloroplast.fasta",
+        eukaryota = "results/temp/{dataset}/metaxa2/results.eukaryota.fasta",
+        extraction_fasta = "results/temp/{dataset}/metaxa2/results.extraction.fasta",
+        extraction_results = "results/temp/{dataset}/metaxa2/results.extraction.results",
+        graph = "results/temp/{dataset}/metaxa2/results.graph",
+        mitochrondria = "results/temp/{dataset}/metaxa2/results.mitochondria.fasta",
+        summary = "results/temp/{dataset}/metaxa2/results.summary.txt",
+        uncertain = "results/temp/{dataset}/metaxa2/results.uncertain.fasta"
+    output:
+        predictions = temp("results/temp/{dataset}/metaxa2/results.taxonomy.txt")
+    params:
+        database = "results/temp/{dataset}/metaxa2/database",
+        blast = "results/temp/{dataset}/metaxa2/database/blast",
+        hhms = "results/temp/{dataset}/metaxa2/database/HMMs",
+        predictions = "results/temp/{dataset}/metaxa2/results"
+    benchmark:
+        repeat("results/benchmark/{dataset}/classify/metaxa2.tsv", config["benchmark"]["repeat"])
+    threads:
+        config["threads"]
+    container:
+        config["containers"]["metaxa2"]
+    shell:
+        """
         metaxa2 \
             -i {input.test} \
             -d {params.blast} \
             -p {params.hhms} \
             -o {params.predictions} \
             -cpu {threads}
-        
+
         rm -rf \
             {params.database}
         """
