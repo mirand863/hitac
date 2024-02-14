@@ -1,4 +1,4 @@
-workdir: /media/fabio/67F5-78E9/hitac/benchmark
+workdir: /run/media/fabio/samsung_4tb/hitac/benchmark
 
 threads: 12
 
@@ -7,10 +7,10 @@ benchmark:
 
 datasets:
     - sp_rdp_its.90
-#    - sp_rdp_its.95
-#    - sp_rdp_its.97
-#    - sp_rdp_its.99
-#    - sp_rdp_its.100
+    - sp_rdp_its.95
+    - sp_rdp_its.97
+    - sp_rdp_its.99
+    - sp_rdp_its.100
 
 scripts:
     - fasta_utax2_to_blca.py
@@ -40,24 +40,24 @@ scripts:
     - compute_hierarchical_metrics.py
 
 methods:
-    - blca
-    - btop
-    - ct1
-    - ct2
-    - hitac_qiime
-    - hitac_standalone
-    - hitac_filter_qiime
-    - hitac_filter_standalone
-    - knn
-    - ktop
+#    - blca
+#    - btop
+#    - ct1
+#    - ct2
+#    - hitac_qiime
+#    - hitac_standalone
+#    - hitac_filter_qiime
+#    - hitac_filter_standalone
+#    - knn
+#    - ktop
     - metaxa2
-    - microclass
-    - nbc50
-    - nbc80
-    - q1
-    - q2blast
-    - q2sk
-    - q2vs
+#    - microclass
+#    - nbc50
+#    - nbc80
+#    - q1
+#    - q2blast
+#    - q2sk
+#    - q2vs
 #    - rdp50
 #    - rdp80
 #    - sintax50
