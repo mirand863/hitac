@@ -14,14 +14,14 @@ rule taxxi2spingo:
         """
 
 
-rule spingo:
+rule classify_spingo:
     input:
         reference_reads = "results/temp/{dataset}/spingo/reference_reads.fasta",
         test = "data/test/{dataset}.fasta"
     output:
         predictions = temp("results/temp/{dataset}/spingo/predictions.tsv")
     benchmark:
-        repeat("results/benchmark/{dataset}/spingo.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/spingo.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
