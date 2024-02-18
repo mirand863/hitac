@@ -1,4 +1,4 @@
-workdir: /media/fabio/E7DE-3F64/hitac/benchmark
+workdir: /media/fabio/samsung_4tb/hitac/benchmark
 
 threads: 12
 
@@ -40,30 +40,30 @@ scripts:
     - compute_hierarchical_metrics.py
 
 methods:
-    - blca
-    - btop
-    - ct1
-    - ct2
-    - hitac_qiime
-    - hitac_standalone
-    - hitac_filter_qiime
-    - hitac_filter_standalone
-    - knn
-    - ktop
+#    - blca
+#    - btop
+#    - ct1
+#    - ct2
+#    - hitac_qiime
+#    - hitac_standalone
+#    - hitac_filter_qiime
+#    - hitac_filter_standalone
+#    - knn
+#    - ktop
     - metaxa2
-    - microclass
-    - nbc50
-    - nbc80
-    - q1
-    - q2blast
-    - q2sk
-    - q2vs
-    - rdp50
-    - rdp80
-    - sintax50
-    - sintax80
-    - spingo
-    - top
+#    - microclass
+#    - nbc50
+#    - nbc80
+#    - q1
+#    - q2blast
+#    - q2sk
+#    - q2vs
+#    - rdp50
+#    - rdp80
+#    - sintax50
+#    - sintax80
+#    - spingo
+#    - top
 
 -metrics:
     - taxxi  # original metrics from taxxi benchmark
