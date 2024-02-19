@@ -69,7 +69,8 @@ rule classify_blca:
         query_reads = "results/temp/{dataset}/blca/query_reads.fasta",
         reference_taxonomy = "results/temp/{dataset}/blca/reference_taxonomy.txt"
     output:
-        predictions = temp("results/temp/{dataset}/blca/query_reads.fasta.blca.out")
+        predictions = temp("results/temp/{dataset}/blca/query_reads.fasta.blca.out"),
+        blastn = temp("results/temp/{dataset}/blca/query_reads.fasta.blastn")
     params:
         database = "results/temp/{dataset}/blca/database"
     benchmark:
