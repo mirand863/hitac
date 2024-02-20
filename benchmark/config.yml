@@ -70,7 +70,6 @@ methods:
     - ml  # standard machine learning metrics, e.g., f-score, accuracy, etc
     - hierarchical  # hierarchical machine learning metrics , i.e., f1, precision and recall
 
-
 ranks:
     - p  # phylum
     - c  # class
