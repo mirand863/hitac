@@ -48,3 +48,15 @@ Each parameter has the following meaning:
 - `--cores` tells Snakemake how many cpus can be used overall (the more cpus you can spare, the faster the pipeline will finish).
 
 The benchmarks, predictions and metrics for each model are saved in the results folder.
+
+After running the previous pipeline, you can optionally recreate the tables and figures by running the command:
+
+```shell
+snakemake \
+    --snakefile figures_and_tables/Snakefile \
+    --keep-going \
+    --printshellcmds \
+    --reason \
+    --use-singularity \
+    --cores 12
+```

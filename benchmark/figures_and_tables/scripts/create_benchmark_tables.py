@@ -1,11 +1,11 @@
 import argparse
+import pandas as pd
 import sys
 from argparse import Namespace
 from copy import deepcopy
 from glob import glob
+from os.path import exists
 from typing import TextIO, List
-
-import pandas as pd
 
 
 def parse_args(args: list) -> Namespace:
@@ -43,8 +43,8 @@ def parse_args(args: list) -> Namespace:
         "--output",
         type=str,
         required=False,
-        default="results/benchmark/sp_rdp_its_100.txt",
-        help="Output to write results [default: results/benchmark/sp_rdp_its_100.txt]",
+        default="results/figures_and_tables/benchmarks/sp_rdp_its_100.txt",
+        help="Output to write results [default: results/figures_and_tables/benchmarks/sp_rdp_its_100.txt]",
     )
     return parser.parse_args(args)
 
@@ -65,8 +65,9 @@ def get_methods(benchmark_folder: str, dataset: str) -> List[str]:
     methods : List[str]
         Methods in benchmark folder.
     """
-    paths = glob(f"{benchmark_folder}/{dataset}/*", recursive=True)
+    paths = glob(f"{benchmark_folder}/{dataset}/*/*", recursive=True)
     methods = [method.split("/")[-1].replace(".tsv", "") for method in paths]
+    methods = list(set(methods))
     methods.sort()
     return methods
 
@@ -91,7 +92,7 @@ def add_zero(number: int) -> str:
     return number_with_zeros
 
 
-def compute_time(benchmark_folder: str, dataset: str, method: str) -> str:
+def compute_time(benchmark_folder: str, train_or_classify: str, dataset: str, method: str) -> str:
     """
     Compute average time spent by a method from a Snakemake benchmark TSV file.
 
@@ -99,6 +100,8 @@ def compute_time(benchmark_folder: str, dataset: str, method: str) -> str:
     ----------
     benchmark_folder : str
         Path to the metrics folder.
+    train_or_classify : str
+        Distinguish between training or classification benchmarks.
     dataset : str
         Dataset to extract benchmark results.
     method : str
@@ -109,18 +112,21 @@ def compute_time(benchmark_folder: str, dataset: str, method: str) -> str:
     time : str
         The average time in hh:mm:ss.
     """
-    file = f"{benchmark_folder}/{dataset}/{method}.tsv"
-    df = pd.read_csv(file, sep="\t", usecols=["s"])
-    average_time = df["s"].mean()
-    hours = add_zero(average_time / 3600)
-    average_time = average_time % 3600
-    minutes = add_zero(average_time / 60)
-    average_time = add_zero(average_time % 60)
-    time = f"{hours}:{minutes}:{average_time}"
-    return time
+    file = f"{benchmark_folder}/{dataset}/{train_or_classify}/{method}.tsv"
+    if exists(file):
+        df = pd.read_csv(file, sep="\t", usecols=["s"])
+        average_time = df["s"].mean()
+        hours = add_zero(average_time / 3600)
+        average_time = average_time % 3600
+        minutes = add_zero(average_time / 60)
+        average_time = add_zero(average_time % 60)
+        time = f"{hours}:{minutes}:{average_time}"
+        return time
+    else:
+        return "nan"
 
 
-def compute_memory(benchmark_folder: str, dataset: str, method: str) -> float:
+def compute_memory(benchmark_folder: str, train_or_classify: str, dataset: str, method: str) -> float:
     """
     Compute average memory spent by a method from a Snakemake benchmark TSV file.
 
@@ -128,6 +134,8 @@ def compute_memory(benchmark_folder: str, dataset: str, method: str) -> float:
     ----------
     benchmark_folder : str
         Path to the metrics folder.
+    train_or_classify : str
+        Distinguish between training or classification benchmarks.
     dataset : str
         Dataset to extract benchmark results.
     method : str
@@ -138,10 +146,13 @@ def compute_memory(benchmark_folder: str, dataset: str, method: str) -> float:
     memory : float
         The average memory.
     """
-    file = f"{benchmark_folder}/{dataset}/{method}.tsv"
-    df = pd.read_csv(file, sep="\t", usecols=["max_rss"])
-    memory = df["max_rss"].mean()
-    return round(memory, 2)
+    file = f"{benchmark_folder}/{dataset}/{train_or_classify}/{method}.tsv"
+    if exists(file):
+        df = pd.read_csv(file, sep="\t", usecols=["max_rss"])
+        memory = df["max_rss"].mean()
+        return round(memory, 2)
+    else:
+        return "nan"
 
 
 pretty_name = {
@@ -168,39 +179,44 @@ pretty_name = {
     "ct1": "CT1",
 }
 
-
-def write(method: str, time: str, memory: float, output: TextIO) -> None:
-    """
-    Write benchmark result to output file in latex format.
-
-    Parameters
-    ----------
-    method : str
-        Method name.
-    time : str
-        CPU time.
-    memory : float
-        Memory usage.
-    output : TextIO
-        Output to write results.
-    """
-    output.write(f"{pretty_name[method]} & {time} & {memory} \\\\\n")
-
-
 def main():  # pragma: no cover
-    """Plot sunburst chart with a given taxonomy."""
+    """Generate benchmark tables."""
     args = parse_args(sys.argv[1:])
     with open(args.output, "w") as output:
         methods = get_methods(args.benchmark, args.dataset)
-        time = {}
-        memory = {}
+        results = {
+            "method": [],
+            "training_time": [],
+            "training_memory": [],
+            "classification_time": [],
+            "classification_memory": [],
+        }
         for method in methods:
-            time[method] = compute_time(args.benchmark, args.dataset, method)
-            memory[method] = compute_memory(args.benchmark, args.dataset, method)
-        # Sort methods according to CPU time
-        time = {k: v for k, v in sorted(time.items(), key=lambda item: item[1])}
-        for method in time:
-            write(method, time[method], memory[method], output)
+            training_time = compute_time(args.benchmark, "train", args.dataset, method)
+            classification_time = compute_time(args.benchmark, "classify", args.dataset, method)
+            training_memory = compute_memory(args.benchmark, "train", args.dataset, method)
+            classification_memory = compute_memory(args.benchmark, "classify", args.dataset, method)
+            results["method"].append(pretty_name[method])
+            results["training_time"].append(training_time)
+            results["training_memory"].append(training_memory)
+            results["classification_time"].append(classification_time)
+            results["classification_memory"].append(classification_memory)
+        results_df = pd.DataFrame(data=results)
+        # Sort methods according to CPU training time
+        results_df.sort_values(
+            by=["training_time"],
+            inplace=True,
+            ascending=[True],
+        )
+        # Write results
+        output.write(
+            results_df.to_latex(
+                index=False,
+                bold_rows=True,
+                label=f"benchmark:{args.dataset}",
+                caption=f"Results obtained by the resources benchmark for the dataset {args.dataset}.",
+            )
+        )
 
 
 if __name__ == "__main__":  # pragma: no cover

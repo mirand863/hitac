@@ -1,0 +1,12 @@
+configfile: "config.yml"
+
+workdir: config["workdir"]
+
+include: "rules/benchmark_tables.smk"
+
+rule all:
+    input:
+        benchmark_tables = expand(
+            "results/figures_and_tables/benchmarks/{dataset}.txt",
+            dataset=config["datasets"],
+        )
