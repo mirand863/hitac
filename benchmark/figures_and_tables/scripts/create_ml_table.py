@@ -22,34 +22,32 @@ def parse_args(args: list) -> Namespace:
     _ : Namespace
         Parsed arguments.
     """
-    parser = argparse.ArgumentParser(description="Create ML tables for given dataset")
+    parser = argparse.ArgumentParser(
+        description="Create ML metric table for a given dataset"
+    )
     parser.add_argument(
         "--ml-metrics",
         type=str,
-        required=False,
-        default="results/ml_metrics",
-        help="Folder where metrics results are stored [default: results/ml_metrics]",
+        required=True,
+        help="Folder where metrics results are stored",
     )
     parser.add_argument(
         "--dataset",
         type=str,
-        required=False,
-        default="sp_rdp_its.90",
-        help="Dataset to compute metrics [default: sp_rdp_its.90]",
+        required=True,
+        help="Dataset to compute metrics",
     )
     parser.add_argument(
         "--rank",
         type=str,
-        required=False,
-        default="g",
-        help="Taxonomic rank to compute metrics [default: g]",
+        required=True,
+        help="Taxonomic rank to compute metrics",
     )
     parser.add_argument(
         "--output",
         type=str,
-        required=False,
-        default="results/figures_and_tables/ml_metrics/sp_rdp_its_100.txt",
-        help="Output to write results [default: results/figures_and_tables/ml_metrics/sp_rdp_its_100.txt]",
+        required=True,
+        help="Output to write results",
     )
     return parser.parse_args(args)
 
@@ -167,38 +165,36 @@ def load_and_append(file: str, results: Dict[str, List]) -> None:
         The dictionary that stores the results.
     """
     df = pd.read_csv(file, sep="\t")
-    accuracy = round(float(df["accuracy"].iloc[0]) * 100, 2)
-    balanced_accuracy = round(float(df["balanced_accuracy"].iloc[0]) * 100, 2)
-    f1_micro = round(float(df["f1_micro"].iloc[0]) * 100, 2)
-    f1_macro = round(float(df["f1_macro"].iloc[0]) * 100, 2)
-    f1_weighted = round(float(df["f1_weighted"].iloc[0]) * 100, 2)
-    precision_micro = round(float(df["precision_micro"].iloc[0]) * 100, 2)
-    precision_macro = round(float(df["precision_macro"].iloc[0]) * 100, 2)
-    precision_weighted = round(float(df["precision_weighted"].iloc[0]) * 100, 2)
-    recall_micro = round(float(df["recall_micro"].iloc[0]) * 100, 2)
-    recall_macro = round(float(df["recall_macro"].iloc[0]) * 100, 2)
-    recall_weighted = round(float(df["recall_weighted"].iloc[0]) * 100, 2)
-    jaccard_micro = round(float(df["jaccard_micro"].iloc[0]) * 100, 2)
-    jaccard_macro = round(float(df["jaccard_macro"].iloc[0]) * 100, 2)
-    jaccard_weighted = round(float(df["jaccard_weighted"].iloc[0]) * 100, 2)
-    results["accuracy"].append(accuracy)
-    results["balanced_accuracy"].append(balanced_accuracy)
-    results["f1_micro"].append(f1_micro)
-    results["f1_macro"].append(f1_macro)
-    results["f1_weighted"].append(f1_weighted)
-    results["precision_micro"].append(precision_micro)
-    results["precision_macro"].append(precision_macro)
-    results["precision_weighted"].append(precision_weighted)
-    results["recall_micro"].append(recall_micro)
-    results["recall_macro"].append(recall_macro)
-    results["recall_weighted"].append(recall_weighted)
-    results["jaccard_micro"].append(jaccard_micro)
-    results["jaccard_macro"].append(jaccard_macro)
-    results["jaccard_weighted"].append(jaccard_weighted)
+    results["accuracy"].append(round(float(df["accuracy"].iloc[0]) * 100, 2))
+    results["balanced_accuracy"].append(
+        round(float(df["balanced_accuracy"].iloc[0]) * 100, 2)
+    )
+    results["f1_micro"].append(round(float(df["f1_micro"].iloc[0]) * 100, 2))
+    results["f1_macro"].append(round(float(df["f1_macro"].iloc[0]) * 100, 2))
+    results["f1_weighted"].append(round(float(df["f1_weighted"].iloc[0]) * 100, 2))
+    results["precision_micro"].append(
+        round(float(df["precision_micro"].iloc[0]) * 100, 2)
+    )
+    results["precision_macro"].append(
+        round(float(df["precision_macro"].iloc[0]) * 100, 2)
+    )
+    results["precision_weighted"].append(
+        round(float(df["precision_weighted"].iloc[0]) * 100, 2)
+    )
+    results["recall_micro"].append(round(float(df["recall_micro"].iloc[0]) * 100, 2))
+    results["recall_macro"].append(round(float(df["recall_macro"].iloc[0]) * 100, 2))
+    results["recall_weighted"].append(
+        round(float(df["recall_weighted"].iloc[0]) * 100, 2)
+    )
+    results["jaccard_micro"].append(round(float(df["jaccard_micro"].iloc[0]) * 100, 2))
+    results["jaccard_macro"].append(round(float(df["jaccard_macro"].iloc[0]) * 100, 2))
+    results["jaccard_weighted"].append(
+        round(float(df["jaccard_weighted"].iloc[0]) * 100, 2)
+    )
 
 
 def main():  # pragma: no cover
-    """Generate ML tables."""
+    """Generate ML metric table."""
     args = parse_args(sys.argv[1:])
     with open(args.output, "w") as output:
         methods = get_methods(args.ml_metrics, args.dataset, args.rank)

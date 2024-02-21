@@ -1,7 +1,6 @@
 import argparse
 import pandas as pd
 import sys
-import warnings
 from argparse import Namespace
 from glob import glob
 from os.path import exists
@@ -23,25 +22,19 @@ def parse_args(args: list) -> Namespace:
         Parsed arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Create TAXXI metric table for a given dataset"
+        description="Create hierarchical metric table for a given dataset"
     )
     parser.add_argument(
-        "--taxxi-metrics",
+        "--hierarchical-metrics",
         type=str,
         required=True,
-        help="Folder where metrics results are stored [default: results/taxxi_metrics]",
+        help="Folder where metrics results are stored",
     )
     parser.add_argument(
         "--dataset",
         type=str,
         required=True,
         help="Dataset to compute metrics",
-    )
-    parser.add_argument(
-        "--rank",
-        type=str,
-        required=True,
-        help="Taxonomic rank to compute metrics",
     )
     parser.add_argument(
         "--output",
@@ -53,28 +46,25 @@ def parse_args(args: list) -> Namespace:
 
 
 def get_methods(
-    taxxi_folder: str,
+    hierarchical_folder: str,
     dataset: str,
-    rank: str,
 ) -> List[str]:
     """
     Return all methods names.
 
     Parameters
     ----------
-    taxxi_folder : str
+    hierarchical_folder : str
         Path to the metrics folder.
     dataset : str
         Dataset to extract metrics from.
-    rank : str
-        Taxonomic rank to extract metrics from.
 
     Returns
     -------
     methods : List[str]
         Methods in metrics folder.
     """
-    paths = glob(f"{taxxi_folder}/*/{dataset}/{rank}.tsv", recursive=True)
+    paths = glob(f"{hierarchical_folder}/*/{dataset}.tsv", recursive=True)
     methods = [path.split("/")[2] for path in paths]
     methods = list(set(methods))
     methods.sort()
@@ -114,61 +104,43 @@ pretty_name = {
     "blca": "BLCA",
     "ct1": "CT1",
 }
-pretty_ranks = {
-    "p": "phylum",
-    "c": "class",
-    "o": "order",
-    "f": "family",
-    "g": "genus",
-    "s": "species",
-}
-
-
-def get_value(line):
-    value = line.strip().split("\t")[-1]
-    if value == ".":
-        return float("nan")
-    else:
-        return float(value)
 
 
 def main():  # pragma: no cover
-    """Generate TAXXI metric table."""
+    """Generate hierarchical metric table."""
     args = parse_args(sys.argv[1:])
     with open(args.output, "w") as output:
-        methods = get_methods(args.taxxi_metrics, args.dataset, args.rank)
+        methods = get_methods(args.hierarchical_metrics, args.dataset)
         results = {
             "method": [],
-            "acc": [],
-            "mcr": [],
-            "ocr": [],
-            "tpr": [],
-            "ucr": [],
+            "f1": [],
+            "precision": [],
+            "recall": [],
         }
         for method in methods:
-            file = f"{args.taxxi_metrics}/{method}/{args.dataset}/{args.rank}.tsv"
+            file = f"results/hierarchical_metrics/{method}/{args.dataset}.tsv"
             if exists(file):
-                with open(file, "r") as fin:
-                    results["tpr"].append(get_value(fin.readline()))
-                    results["ucr"].append(get_value(fin.readline()))
-                    results["mcr"].append(get_value(fin.readline()))
-                    results["ocr"].append(get_value(fin.readline()))
-                    results["acc"].append(get_value(fin.readline()))
-                    results["method"].append(pretty_name[method])
+                df = pd.read_csv(file, sep="\t")
+                results["method"].append(pretty_name[method])
+                results["f1"].append(round(float(df["f1"].iloc[0]) * 100, 2))
+                results["precision"].append(
+                    round(float(df["precision"].iloc[0]) * 100, 2)
+                )
+                results["recall"].append(round(float(df["recall"].iloc[0]) * 100, 2))
         results_df = pd.DataFrame(data=results)
-        # Sort values by accuracy
+        # Sort values by f1-score
         results_df.sort_values(
-            by=["acc"],
+            by=["f1"],
             inplace=True,
             ascending=[False],
         )
-        # Write results
+        # Save results
         output.write(
             results_df.to_latex(
                 index=False,
                 bold_rows=True,
-                label=f"taxxi:{args.dataset}:{pretty_ranks[args.rank]}",
-                caption=f"TAXXI metrics computed for the dataset {pretty_datasets[args.dataset]} at the {pretty_ranks[args.rank]} level.",
+                label=f"hierarchical:{args.dataset}",
+                caption=f"Hierarchical metrics computed for the dataset {pretty_datasets[args.dataset]}.",
             )
         )
 
