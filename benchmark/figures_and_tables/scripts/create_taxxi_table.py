@@ -62,7 +62,7 @@ def get_methods(
     rank: str,
 ) -> List[str]:
     """
-    Return all methods with Acc set to NaN.
+    Return all methods names.
 
     Parameters
     ----------

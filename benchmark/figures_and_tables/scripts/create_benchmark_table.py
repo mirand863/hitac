@@ -51,7 +51,7 @@ def parse_args(args: list) -> Namespace:
 
 def get_methods(benchmark_folder: str, dataset: str) -> List[str]:
     """
-    Return all methods with Acc set to NaN.
+    Return all methods names.
 
     Parameters
     ----------
