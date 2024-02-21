@@ -2,11 +2,17 @@ configfile: "config.yml"
 
 workdir: config["workdir"]
 
-include: "rules/benchmark_tables.smk"
+include: "rules/benchmark_table.smk"
+include: "rules/taxxi_table.smk"
 
 rule all:
     input:
         benchmark_tables = expand(
             "results/figures_and_tables/benchmarks/{dataset}.txt",
             dataset=config["datasets"],
+        ),
+        taxxi_tables = expand(
+            "results/figures_and_tables/taxxi_metrics/{dataset}/{rank}.txt",
+            dataset=config["datasets"],
+            rank=config["ranks"],
         )

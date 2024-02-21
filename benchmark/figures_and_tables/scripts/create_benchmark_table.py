@@ -23,7 +23,7 @@ def parse_args(args: list) -> Namespace:
         Parsed arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Get accuracy results for selected datasets and taxonomic ranks"
+        description="Create benchmark table for given dataset"
     )
     parser.add_argument(
         "--benchmark",
@@ -56,7 +56,7 @@ def get_methods(benchmark_folder: str, dataset: str) -> List[str]:
     Parameters
     ----------
     benchmark_folder : str
-        Path to the metrics folder.
+        Path to the benchmark folder.
     dataset : str
         Dataset to extract benchmark results.
 
@@ -66,7 +66,7 @@ def get_methods(benchmark_folder: str, dataset: str) -> List[str]:
         Methods in benchmark folder.
     """
     paths = glob(f"{benchmark_folder}/{dataset}/*/*", recursive=True)
-    methods = [method.split("/")[-1].replace(".tsv", "") for method in paths]
+    methods = [path.split("/")[-1].replace(".tsv", "") for path in paths]
     methods = list(set(methods))
     methods.sort()
     return methods
@@ -92,7 +92,9 @@ def add_zero(number: int) -> str:
     return number_with_zeros
 
 
-def compute_time(benchmark_folder: str, train_or_classify: str, dataset: str, method: str) -> str:
+def compute_time(
+    benchmark_folder: str, train_or_classify: str, dataset: str, method: str
+) -> str:
     """
     Compute average time spent by a method from a Snakemake benchmark TSV file.
 
@@ -126,7 +128,9 @@ def compute_time(benchmark_folder: str, train_or_classify: str, dataset: str, me
         return "nan"
 
 
-def compute_memory(benchmark_folder: str, train_or_classify: str, dataset: str, method: str) -> float:
+def compute_memory(
+    benchmark_folder: str, train_or_classify: str, dataset: str, method: str
+) -> float:
     """
     Compute average memory spent by a method from a Snakemake benchmark TSV file.
 
@@ -178,6 +182,14 @@ pretty_name = {
     "blca": "BLCA",
     "ct1": "CT1",
 }
+pretty_datasets = {
+    "sp_rdp_its.90": "SP RDP ITS 90",
+    "sp_rdp_its.95": "SP RDP ITS 95",
+    "sp_rdp_its.97": "SP RDP ITS 97",
+    "sp_rdp_its.99": "SP RDP ITS 99",
+    "sp_rdp_its.100": "SP RDP ITS 100",
+}
+
 
 def main():  # pragma: no cover
     """Generate benchmark tables."""
@@ -193,9 +205,15 @@ def main():  # pragma: no cover
         }
         for method in methods:
             training_time = compute_time(args.benchmark, "train", args.dataset, method)
-            classification_time = compute_time(args.benchmark, "classify", args.dataset, method)
-            training_memory = compute_memory(args.benchmark, "train", args.dataset, method)
-            classification_memory = compute_memory(args.benchmark, "classify", args.dataset, method)
+            classification_time = compute_time(
+                args.benchmark, "classify", args.dataset, method
+            )
+            training_memory = compute_memory(
+                args.benchmark, "train", args.dataset, method
+            )
+            classification_memory = compute_memory(
+                args.benchmark, "classify", args.dataset, method
+            )
             results["method"].append(pretty_name[method])
             results["training_time"].append(training_time)
             results["training_memory"].append(training_memory)
@@ -214,7 +232,7 @@ def main():  # pragma: no cover
                 index=False,
                 bold_rows=True,
                 label=f"benchmark:{args.dataset}",
-                caption=f"Results obtained by the resources benchmark for the dataset {args.dataset}.",
+                caption=f"Results obtained by the resources benchmark for the dataset {pretty_datasets[args.dataset]}.",
             )
         )
 

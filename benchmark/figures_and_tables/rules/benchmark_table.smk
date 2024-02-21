@@ -8,7 +8,7 @@ rule benchmark_table:
         config["containers"]["pandas"]
     shell:
         """
-        python figures_and_tables/scripts/create_benchmark_tables.py \
+        python figures_and_tables/scripts/create_benchmark_table.py \
             --benchmark {params.benchmark_folder} \
             --dataset {params.dataset} \
             --output {output.table}
