@@ -91,7 +91,7 @@ pretty_datasets = {
     "sp_rdp_its.100": "SP RDP ITS 100",
 }
 pretty_name = {
-    "q2vs": r"Q2\_VS",
+    "q2vs": r"Q2_VS",
     "sintax50": "SINTAX50",
     "sintax80": "SINTAX80",
     "btop": "BTOP",
@@ -100,7 +100,7 @@ pretty_name = {
     "knn": "KNN",
     "q1": "Q1",
     "hitac_standalone": "HiTaC",
-    "q2sk": r"Q2\_SK",
+    "q2sk": r"Q2_SK",
     "nbc50": "NBC50",
     "nbc80": "NBC80",
     "rdp50": "RDP50",
@@ -109,8 +109,8 @@ pretty_name = {
     "metaxa2": "Metaxa2",
     "ktop": "KTOP",
     "top": "TOP",
-    "hitac_filter_standalone": r"HiTaC\_Filter",
-    "q2blast": r"Q2\_BLAST",
+    "hitac_filter_standalone": r"HiTaC_Filter",
+    "q2blast": r"Q2_BLAST",
     "blca": "BLCA",
     "ct1": "CT1",
 }
@@ -134,21 +134,21 @@ def initialize_results() -> Dict[str, List]:
         Dictionary that stores the results
     """
     results = {
-        "method": [],
-        "accuracy": [],
-        "balanced_accuracy": [],
-        "f1_micro": [],
-        "f1_macro": [],
-        "f1_weighted": [],
-        "precision_micro": [],
-        "precision_macro": [],
-        "precision_weighted": [],
-        "recall_micro": [],
-        "recall_macro": [],
-        "recall_weighted": [],
-        "jaccard_micro": [],
-        "jaccard_macro": [],
-        "jaccard_weighted": [],
+        "Method": [],
+        "Accuracy": [],
+        "Balanced Accuracy": [],
+        "F1-score Micro": [],
+        "F1-score Macro": [],
+        "F1-score Weighted": [],
+        "Precision Micro": [],
+        "Precision Macro": [],
+        "Precision Weighted": [],
+        "Recall Micro": [],
+        "Recall Macro": [],
+        "Recall Weighted": [],
+        "Jaccard Micro": [],
+        "Jaccard Macro": [],
+        "Jaccard Weighted": [],
     }
     return results
 
@@ -165,30 +165,32 @@ def load_and_append(file: str, results: Dict[str, List]) -> None:
         The dictionary that stores the results.
     """
     df = pd.read_csv(file, sep="\t")
-    results["accuracy"].append(round(float(df["accuracy"].iloc[0]) * 100, 2))
-    results["balanced_accuracy"].append(
+    results["Accuracy"].append(round(float(df["accuracy"].iloc[0]) * 100, 2))
+    results["Balanced Accuracy"].append(
         round(float(df["balanced_accuracy"].iloc[0]) * 100, 2)
     )
-    results["f1_micro"].append(round(float(df["f1_micro"].iloc[0]) * 100, 2))
-    results["f1_macro"].append(round(float(df["f1_macro"].iloc[0]) * 100, 2))
-    results["f1_weighted"].append(round(float(df["f1_weighted"].iloc[0]) * 100, 2))
-    results["precision_micro"].append(
+    results["F1-score Micro"].append(round(float(df["f1_micro"].iloc[0]) * 100, 2))
+    results["F1-score Macro"].append(round(float(df["f1_macro"].iloc[0]) * 100, 2))
+    results["F1-score Weighted"].append(
+        round(float(df["f1_weighted"].iloc[0]) * 100, 2)
+    )
+    results["Precision Micro"].append(
         round(float(df["precision_micro"].iloc[0]) * 100, 2)
     )
-    results["precision_macro"].append(
+    results["Precision Macro"].append(
         round(float(df["precision_macro"].iloc[0]) * 100, 2)
     )
-    results["precision_weighted"].append(
+    results["Precision Weighted"].append(
         round(float(df["precision_weighted"].iloc[0]) * 100, 2)
     )
-    results["recall_micro"].append(round(float(df["recall_micro"].iloc[0]) * 100, 2))
-    results["recall_macro"].append(round(float(df["recall_macro"].iloc[0]) * 100, 2))
-    results["recall_weighted"].append(
+    results["Recall Micro"].append(round(float(df["recall_micro"].iloc[0]) * 100, 2))
+    results["Recall Macro"].append(round(float(df["recall_macro"].iloc[0]) * 100, 2))
+    results["Recall Weighted"].append(
         round(float(df["recall_weighted"].iloc[0]) * 100, 2)
     )
-    results["jaccard_micro"].append(round(float(df["jaccard_micro"].iloc[0]) * 100, 2))
-    results["jaccard_macro"].append(round(float(df["jaccard_macro"].iloc[0]) * 100, 2))
-    results["jaccard_weighted"].append(
+    results["Jaccard Micro"].append(round(float(df["jaccard_micro"].iloc[0]) * 100, 2))
+    results["Jaccard Macro"].append(round(float(df["jaccard_macro"].iloc[0]) * 100, 2))
+    results["Jaccard Weighted"].append(
         round(float(df["jaccard_weighted"].iloc[0]) * 100, 2)
     )
 
@@ -202,12 +204,12 @@ def main():  # pragma: no cover
         for method in methods:
             file = f"{args.ml_metrics}/{method}/{args.dataset}/{args.rank}.tsv"
             if exists(file):
-                results["method"].append(pretty_name[method])
+                results["Method"].append(pretty_name[method])
                 load_and_append(file, results)
         results_df = pd.DataFrame(data=results)
         # Sort values by accuracy
         results_df.sort_values(
-            by=["accuracy"],
+            by=["Accuracy"],
             inplace=True,
             ascending=[False],
         )

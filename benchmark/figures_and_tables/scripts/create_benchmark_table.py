@@ -68,8 +68,8 @@ def get_methods(benchmark_folder: str, dataset: str) -> List[str]:
     paths = glob(f"{benchmark_folder}/{dataset}/*/*", recursive=True)
     methods = [path.split("/")[-1].replace(".tsv", "") for path in paths]
     methods = list(set(methods))
-    methods.remove("hitac_filter_qiime")
-    methods.remove("hitac_qiime")
+    # methods.remove("hitac_filter_qiime")
+    # methods.remove("hitac_qiime")
     methods.sort()
     return methods
 
@@ -162,7 +162,7 @@ def compute_memory(
 
 
 pretty_name = {
-    "q2vs": r"Q2\_VS",
+    "q2vs": r"Q2_VS",
     "sintax": "SINTAX",
     "btop": "BTOP",
     "microclass": "Microclass",
@@ -170,15 +170,15 @@ pretty_name = {
     "knn": "KNN",
     "q1": "Q1",
     "hitac_standalone": "HiTaC",
-    "q2sk": r"Q2\_SK",
+    "q2sk": r"Q2_SK",
     "nbc": "NBC",
     "rdp": "RDP",
     "ct2": "CT2",
     "metaxa2": "Metaxa2",
     "ktop": "KTOP",
     "top": "TOP",
-    "hitac_filter_standalone": r"HiTaC\_Filter",
-    "q2blast": r"Q2\_BLAST",
+    "hitac_filter_standalone": r"HiTaC_Filter",
+    "q2blast": r"Q2_BLAST",
     "blca": "BLCA",
     "ct1": "CT1",
 }
@@ -197,11 +197,11 @@ def main():  # pragma: no cover
     with open(args.output, "w") as output:
         methods = get_methods(args.benchmark, args.dataset)
         results = {
-            "method": [],
-            "training_time": [],
-            "training_memory": [],
-            "classification_time": [],
-            "classification_memory": [],
+            "Method": [],
+            "Training Time": [],
+            "Training Memory": [],
+            "Classification Time": [],
+            "Classification Memory": [],
         }
         for method in methods:
             training_time = compute_time(args.benchmark, "train", args.dataset, method)
@@ -214,15 +214,15 @@ def main():  # pragma: no cover
             classification_memory = compute_memory(
                 args.benchmark, "classify", args.dataset, method
             )
-            results["method"].append(pretty_name[method])
-            results["training_time"].append(training_time)
-            results["training_memory"].append(training_memory)
-            results["classification_time"].append(classification_time)
-            results["classification_memory"].append(classification_memory)
+            results["Method"].append(pretty_name[method])
+            results["Training Time"].append(training_time)
+            results["Training Memory"].append(training_memory)
+            results["Classification Time"].append(classification_time)
+            results["Classification Memory"].append(classification_memory)
         results_df = pd.DataFrame(data=results)
         # Sort methods according to CPU training time
         results_df.sort_values(
-            by=["training_time"],
+            by=["Training Time"],
             inplace=True,
             ascending=[True],
         )

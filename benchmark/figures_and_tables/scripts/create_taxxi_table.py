@@ -91,7 +91,7 @@ pretty_datasets = {
     "sp_rdp_its.100": "SP RDP ITS 100",
 }
 pretty_name = {
-    "q2vs": r"Q2\_VS",
+    "q2vs": r"Q2_VS",
     "sintax50": "SINTAX50",
     "sintax80": "SINTAX80",
     "btop": "BTOP",
@@ -100,7 +100,7 @@ pretty_name = {
     "knn": "KNN",
     "q1": "Q1",
     "hitac_standalone": "HiTaC",
-    "q2sk": r"Q2\_SK",
+    "q2sk": r"Q2_SK",
     "nbc50": "NBC50",
     "nbc80": "NBC80",
     "rdp50": "RDP50",
@@ -109,8 +109,8 @@ pretty_name = {
     "metaxa2": "Metaxa2",
     "ktop": "KTOP",
     "top": "TOP",
-    "hitac_filter_standalone": r"HiTaC\_Filter",
-    "q2blast": r"Q2\_BLAST",
+    "hitac_filter_standalone": r"HiTaC_Filter",
+    "q2blast": r"Q2_BLAST",
     "blca": "BLCA",
     "ct1": "CT1",
 }
@@ -138,27 +138,31 @@ def main():  # pragma: no cover
     with open(args.output, "w") as output:
         methods = get_methods(args.taxxi_metrics, args.dataset, args.rank)
         results = {
-            "method": [],
-            "acc": [],
-            "mcr": [],
-            "ocr": [],
-            "tpr": [],
-            "ucr": [],
+            "Method": [],
+            "Accuracy": [],
+            "Misclassification Rate": [],
+            "Over-classification Rate": [],
+            "True Positive Rate": [],
+            "Under-classification Rate": [],
         }
         for method in methods:
             file = f"{args.taxxi_metrics}/{method}/{args.dataset}/{args.rank}.tsv"
             if exists(file):
                 with open(file, "r") as fin:
-                    results["tpr"].append(get_value(fin.readline()))
-                    results["ucr"].append(get_value(fin.readline()))
-                    results["mcr"].append(get_value(fin.readline()))
-                    results["ocr"].append(get_value(fin.readline()))
-                    results["acc"].append(get_value(fin.readline()))
-                    results["method"].append(pretty_name[method])
+                    results["True Positive Rate"].append(get_value(fin.readline()))
+                    results["Under-classification Rate"].append(
+                        get_value(fin.readline())
+                    )
+                    results["Misclassification Rate"].append(get_value(fin.readline()))
+                    results["Over-classification Rate"].append(
+                        get_value(fin.readline())
+                    )
+                    results["Accuracy"].append(get_value(fin.readline()))
+                    results["Method"].append(pretty_name[method])
         results_df = pd.DataFrame(data=results)
         # Sort values by accuracy
         results_df.sort_values(
-            by=["acc"],
+            by=["Accuracy"],
             inplace=True,
             ascending=[False],
         )

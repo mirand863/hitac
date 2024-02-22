@@ -81,7 +81,7 @@ pretty_datasets = {
     "sp_rdp_its.100": "SP RDP ITS 100",
 }
 pretty_name = {
-    "q2vs": r"Q2\_VS",
+    "q2vs": r"Q2_VS",
     "sintax50": "SINTAX50",
     "sintax80": "SINTAX80",
     "btop": "BTOP",
@@ -90,7 +90,7 @@ pretty_name = {
     "knn": "KNN",
     "q1": "Q1",
     "hitac_standalone": "HiTaC",
-    "q2sk": r"Q2\_SK",
+    "q2sk": r"Q2_SK",
     "nbc50": "NBC50",
     "nbc80": "NBC80",
     "rdp50": "RDP50",
@@ -99,8 +99,8 @@ pretty_name = {
     "metaxa2": "Metaxa2",
     "ktop": "KTOP",
     "top": "TOP",
-    "hitac_filter_standalone": r"HiTaC\_Filter",
-    "q2blast": r"Q2\_BLAST",
+    "hitac_filter_standalone": r"HiTaC_Filter",
+    "q2blast": r"Q2_BLAST",
     "blca": "BLCA",
     "ct1": "CT1",
 }
@@ -112,25 +112,25 @@ def main():  # pragma: no cover
     with open(args.output, "w") as output:
         methods = get_methods(args.hierarchical_metrics, args.dataset)
         results = {
-            "method": [],
-            "f1": [],
-            "precision": [],
-            "recall": [],
+            "Method": [],
+            "F1-score": [],
+            "Precision": [],
+            "Recall": [],
         }
         for method in methods:
             file = f"results/hierarchical_metrics/{method}/{args.dataset}.tsv"
             if exists(file):
                 df = pd.read_csv(file, sep="\t")
-                results["method"].append(pretty_name[method])
-                results["f1"].append(round(float(df["f1"].iloc[0]) * 100, 2))
-                results["precision"].append(
+                results["Method"].append(pretty_name[method])
+                results["F1-score"].append(round(float(df["f1"].iloc[0]) * 100, 2))
+                results["Precision"].append(
                     round(float(df["precision"].iloc[0]) * 100, 2)
                 )
-                results["recall"].append(round(float(df["recall"].iloc[0]) * 100, 2))
+                results["Recall"].append(round(float(df["recall"].iloc[0]) * 100, 2))
         results_df = pd.DataFrame(data=results)
         # Sort values by f1-score
         results_df.sort_values(
-            by=["f1"],
+            by=["F1-score"],
             inplace=True,
             ascending=[False],
         )
