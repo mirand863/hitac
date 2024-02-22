@@ -1,4 +1,4 @@
-workdir: /media/fabio/samsung_4tb/hitac/benchmark
+workdir: /home/fabio/Desktop/hitac/benchmark
 
 threads: 12
 
@@ -95,6 +95,7 @@ containers:
     python2: "docker://python:2.7-slim"
     metrics: "docker://mirand863/metrics:1.0"
     hierarchical_metrics: "docker://mirand863/hierarchical_metrics:1.0"
+    seaborn: "docker://mirand863/seaborn:0.13.2"
 
 urls:
     train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"

@@ -6,6 +6,7 @@ include: "rules/benchmark_table.smk"
 include: "rules/taxxi_table.smk"
 include: "rules/ml_table.smk"
 include: "rules/hierarchical_table.smk"
+include: "rules/hierarchical_bar_plot.smk"
 
 rule all:
     input:
@@ -19,7 +20,8 @@ rule all:
             rank=config["ranks"],
             metric=["taxxi", "ml"]
         ),
-        hierarchical_tables = expand(
-            "results/figures_and_tables/hierarchical_metrics/{dataset}.txt",
+        hierarchical_tables_and_plots = expand(
+            "results/figures_and_tables/hierarchical_metrics/{dataset}.{extension}",
             dataset=config["datasets"],
+            extension=["txt", "pdf"]
         )
