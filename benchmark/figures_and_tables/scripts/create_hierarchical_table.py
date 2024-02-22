@@ -67,6 +67,8 @@ def get_methods(
     paths = glob(f"{hierarchical_folder}/*/{dataset}.tsv", recursive=True)
     methods = [path.split("/")[2] for path in paths]
     methods = list(set(methods))
+    methods.remove("hitac_filter_qiime")
+    methods.remove("hitac_qiime")
     methods.sort()
     return methods
 
@@ -87,8 +89,7 @@ pretty_name = {
     "spingo": "SPINGO",
     "knn": "KNN",
     "q1": "Q1",
-    "hitac_qiime": "HiTaC\_QIIME",
-    "hitac_standalone": "HiTaC\_standalone",
+    "hitac_standalone": "HiTaC",
     "q2sk": r"Q2\_SK",
     "nbc50": "NBC50",
     "nbc80": "NBC80",
@@ -98,8 +99,7 @@ pretty_name = {
     "metaxa2": "Metaxa2",
     "ktop": "KTOP",
     "top": "TOP",
-    "hitac_filter_qiime": r"HiTaC\_Filter\_QIIME",
-    "hitac_filter_standalone": r"HiTaC\_Filter\_standalone",
+    "hitac_filter_standalone": r"HiTaC\_Filter",
     "q2blast": r"Q2\_BLAST",
     "blca": "BLCA",
     "ct1": "CT1",

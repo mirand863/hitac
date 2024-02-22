@@ -5,7 +5,7 @@ rule hierarchical_bar_plot:
         hierarchical_metrics = "results/hierarchical_metrics",
         dataset = "{dataset}"
     container:
-        config["containers"]["pandas"]
+        config["containers"]["seaborn"]
     shell:
         """
         python figures_and_tables/scripts/create_hierarchical_bar_plot.py \

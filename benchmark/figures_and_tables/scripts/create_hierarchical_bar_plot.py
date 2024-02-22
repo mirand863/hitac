@@ -1,9 +1,13 @@
-from os.path import exists
-
+import argparse
 import matplotlib
 import pandas as pd
 import seaborn as sns
+import sys
+from argparse import Namespace
+from glob import glob
 from matplotlib import pyplot as plt
+from os.path import exists
+from typing import List
 
 
 def parse_args(args: list) -> Namespace:
@@ -44,7 +48,101 @@ def parse_args(args: list) -> Namespace:
     return parser.parse_args(args)
 
 
-sns.set_theme(style="whitegrid")
+def get_methods(
+    hierarchical_folder: str,
+    dataset: str,
+) -> List[str]:
+    """
+    Return all methods names.
+
+    Parameters
+    ----------
+    hierarchical_folder : str
+        Path to the metrics folder.
+    dataset : str
+        Dataset to extract metrics from.
+
+    Returns
+    -------
+    methods : List[str]
+        Methods in metrics folder.
+    """
+    paths = glob(f"{hierarchical_folder}/*/{dataset}.tsv", recursive=True)
+    methods = [path.split("/")[2] for path in paths]
+    methods = list(set(methods))
+    methods.remove("hitac_filter_qiime")
+    methods.remove("hitac_qiime")
+    methods.sort()
+    return methods
+
+
+def merge_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Merge precision, recall and f1-score columns.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe containing precision, recall and f1-score.
+
+    Returns
+    -------
+    df : pd.DataFrame
+        Dataframe containing merged precision, recall and f1.
+    """
+    results = {
+        "method": [],
+        "metric": [],
+        "result": [],
+    }
+    for i in df.index:
+        results["method"].append(df["method"][i])
+        results["method"].append(df["method"][i])
+        results["method"].append(df["method"][i])
+        results["metric"].append("F1-score")
+        results["metric"].append("Precision")
+        results["metric"].append("Recall")
+        results["result"].append(df["f1"][i])
+        results["result"].append(df["precision"][i])
+        results["result"].append(df["recall"][i])
+    return pd.DataFrame(data=results)
+
+
+def plot(df: pd.DataFrame, output: str) -> None:
+    """
+    Draw a nested barplot from the hierarchical metrics.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe containing the hierarchical metrics.
+    output : str
+        Output file to write PDF.
+
+    Returns
+    -------
+
+    """
+    sns.set_theme(style="whitegrid")
+    g = sns.catplot(
+        data=df,
+        kind="bar",
+        x="result",
+        y="method",
+        hue="metric",
+        errorbar="sd",
+        palette=["#001219", "#0A9396", "#AE2012"],
+        height=6,
+        orient="h",
+    )
+    g.despine(left=True)
+    g.set_axis_labels("", "")
+    g.legend.set_title("")
+    plt.show()
+    plt.savefig(
+        output,
+        bbox_inches="tight",
+    )
 
 
 pretty_name = {
@@ -83,85 +181,25 @@ results = {
 def main():  # pragma: no cover
     """Generate bar plot for hierarchical metrics."""
     args = parse_args(sys.argv[1:])
-    with open(args.output, "w") as output:
-        methods = get_methods(args.hierarchical_metrics, args.dataset)
-        print(methods)
-        # for method in methods:
-        #     file = f"results/hierarchical_metrics/{method}/{dataset}.tsv"
-        #     if exists(file):
-        #         df = pd.read_csv(file, sep="\t")
-        #         precision = df["precision"].iloc[0]
-        #         recall = df["recall"].iloc[0]
-        #         f1 = df["f1"].iloc[0]
-        #         results["method"].append(pretty_name[method])
-        #         results["precision"].append(precision)
-        #         results["recall"].append(recall)
-        #         results["f1"].append(f1)
-
-
-# results_df = pd.DataFrame(data=results)
-#
-# # multiply values by 100 to standardize
-# results_df["precision"] = results_df["precision"].apply(lambda x: round(x * 100, 2))
-# results_df["recall"] = results_df["recall"].apply(lambda x: round(x * 100, 2))
-# results_df["f1"] = results_df["f1"].apply(lambda x: round(x * 100, 2))
-#
-# # sort values
-# results_df.sort_values(
-#     by=["precision", "f1", "recall"],
-#     inplace=True,
-#     ascending=[False, False, False],
-# )
-#
-# results_df.reset_index(drop=True, inplace=True)
-#
-#
-# def merge_columns(df):
-#     results = {
-#         "method": [],
-#         "metric": [],
-#         "result": [],
-#     }
-#     for i in df.index:
-#         results["method"].append(df["method"][i])
-#         results["method"].append(df["method"][i])
-#         results["method"].append(df["method"][i])
-#         results["metric"].append("Precision")
-#         results["metric"].append("F1-score")
-#         results["metric"].append("Recall")
-#         results["result"].append(df["precision"][i])
-#         results["result"].append(df["f1"][i])
-#         results["result"].append(df["recall"][i])
-#     return pd.DataFrame(data=results)
-#
-#
-# results_df = merge_columns(results_df)
-#
-# print(results_df)
-# print(matplotlib.rcParams["font.family"])
-#
-# # Draw a nested barplot by species and sex
-# g = sns.catplot(
-#     data=results_df,
-#     kind="bar",
-#     x="result",
-#     y="method",
-#     hue="metric",
-#     errorbar="sd",
-#     palette=["#001219", "#0A9396", "#AE2012"],
-#     # palette="dark",
-#     # alpha=.6,
-#     height=6,
-#     orient="h",
-# )
-# g.despine(left=True)
-# g.set_axis_labels("", "")
-# g.legend.set_title("")
-# plt.show()
-# plt.savefig(
-#     "sp_rdp_its_90.pdf",
-#     bbox_inches="tight",
-# )
+    methods = get_methods(args.hierarchical_metrics, args.dataset)
+    for method in methods:
+        file = f"results/hierarchical_metrics/{method}/{args.dataset}.tsv"
+        if exists(file):
+            df = pd.read_csv(file, sep="\t")
+            results["method"].append(pretty_name[method])
+            results["precision"].append(round(df["precision"].iloc[0] * 100, 2))
+            results["recall"].append(round(df["recall"].iloc[0] * 100, 2))
+            results["f1"].append(round(df["f1"].iloc[0] * 100, 2))
+    results_df = pd.DataFrame(data=results)
+    # Sort values
+    results_df.sort_values(
+        by=["f1", "precision", "recall", "method"],
+        inplace=True,
+        ascending=[False, False, False, False],
+    )
+    results_df.reset_index(drop=True, inplace=True)
+    results_df = merge_columns(results_df)
+    plot(results_df, args.output)
 
 
 if __name__ == "__main__":  # pragma: no cover
