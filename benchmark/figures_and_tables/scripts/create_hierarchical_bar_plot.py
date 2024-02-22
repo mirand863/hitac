@@ -5,8 +5,9 @@ from glob import glob
 from os.path import exists
 from typing import List
 
+import matplotlib as mpl
+import numpy as np
 import pandas as pd
-import seaborn as sns
 from matplotlib import pyplot as plt
 
 
@@ -76,38 +77,6 @@ def get_methods(
     return methods
 
 
-def merge_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Merge precision, recall and f1-score columns.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Dataframe containing precision, recall and f1-score.
-
-    Returns
-    -------
-    df : pd.DataFrame
-        Dataframe containing merged precision, recall and f1.
-    """
-    results = {
-        "method": [],
-        "metric": [],
-        "result": [],
-    }
-    for i in df.index:
-        results["method"].append(df["method"][i])
-        results["method"].append(df["method"][i])
-        results["method"].append(df["method"][i])
-        results["metric"].append("F1-score")
-        results["metric"].append("Precision")
-        results["metric"].append("Recall")
-        results["result"].append(df["f1"][i])
-        results["result"].append(df["precision"][i])
-        results["result"].append(df["recall"][i])
-    return pd.DataFrame(data=results)
-
-
 def plot(df: pd.DataFrame, output: str) -> None:
     """
     Draw a nested barplot from the hierarchical metrics.
@@ -123,30 +92,53 @@ def plot(df: pd.DataFrame, output: str) -> None:
     -------
 
     """
-    sns.set_theme(style="whitegrid")
-    g = sns.catplot(
-        data=df,
-        kind="bar",
-        x="result",
-        y="method",
-        hue="metric",
-        errorbar="sd",
-        palette=["#001219", "#0A9396", "#AE2012"],
-        height=6,
-        orient="h",
-    )
-    g.despine(left=True)
-    g.set_axis_labels("", "")
-    g.legend.set_title("")
-    ax = g.facet_axis(0, 0)  # or ax = g.axes.flat[0]
-    for c in ax.containers:
-        labels = [f"{(v.get_width()):.1f}" for v in c]
-        ax.bar_label(c, labels=labels, label_type="edge", fontsize="6")
-    plt.show()
-    plt.savefig(
-        output,
-        bbox_inches="tight",
-    )
+    # Source: https://sharkcoder.com/data-visualization/mpl-double-bar
+    # Variables
+    width = 0.2  # the width of the bars
+    # Set fontsize for ylabels
+    plt.rcParams.update({"font.size": 22})
+    fig, ax = plt.subplots(figsize=(16, 16))
+    plt.tight_layout()
+    # Plot double bars
+    y = np.arange(len(df["Method"]))  # Label locations
+    ax.barh(y + 0.2, df["F1-score"], width + 0.2, label="F1-score", color="#001219")
+    ax.barh(y, df["Precision"], width, label="Precision", color="#0A9396")
+    ax.barh(y - 0.2, df["Recall"], width, label="Recall", color="#AE2012")
+    # Format ticks
+    ax.xaxis.set_major_formatter(mpl.ticker.StrMethodFormatter("{x:,.0f}"))
+    # Adjust subplots
+    plt.subplots_adjust(left=0.35, top=0.9)
+    # Create labels
+    rects = ax.patches
+    for rect in rects:
+        # Get X and Y placement of label from rect.
+        x_value = rect.get_width()
+        y_value = rect.get_y() + rect.get_height() / 2
+        space = 5
+        ha = "left"
+        if x_value < 0:
+            space *= -1
+            ha = "right"
+        label = "{:,.0f}".format(x_value)
+        plt.annotate(
+            label,
+            (x_value, y_value),
+            xytext=(space, 0),
+            textcoords="offset points",
+            va="center",
+            ha=ha,
+            fontsize=12,
+        )
+    # Set y-labels and legend
+    ax.set_yticklabels(df["Method"])
+    ax.legend()
+    # Put legend outside plot
+    plt.legend(loc=(1.02, 0))
+    # Add grid lines
+    plt.grid(color="black", axis="x", alpha=0.2)
+    # To show each y-label, not just even ones
+    plt.yticks(np.arange(min(y), max(y) + 1, 1.0))
+    plt.savefig(output, bbox_inches="tight")
 
 
 pretty_name = {
@@ -175,10 +167,10 @@ pretty_name = {
 }
 
 results = {
-    "method": [],
-    "precision": [],
-    "recall": [],
-    "f1": [],
+    "Method": [],
+    "Precision": [],
+    "Recall": [],
+    "F1-score": [],
 }
 
 
@@ -190,19 +182,18 @@ def main():  # pragma: no cover
         file = f"results/hierarchical_metrics/{method}/{args.dataset}.tsv"
         if exists(file):
             df = pd.read_csv(file, sep="\t")
-            results["method"].append(pretty_name[method])
-            results["precision"].append(round(df["precision"].iloc[0] * 100, 2))
-            results["recall"].append(round(df["recall"].iloc[0] * 100, 2))
-            results["f1"].append(round(df["f1"].iloc[0] * 100, 2))
+            results["Method"].append(pretty_name[method])
+            results["Precision"].append(round(df["precision"].iloc[0] * 100, 2))
+            results["Recall"].append(round(df["recall"].iloc[0] * 100, 2))
+            results["F1-score"].append(round(df["f1"].iloc[0] * 100, 2))
     results_df = pd.DataFrame(data=results)
     # Sort values
     results_df.sort_values(
-        by=["f1", "precision", "recall", "method"],
+        by=["F1-score", "Precision", "Recall", "Method"],
         inplace=True,
-        ascending=[False, False, False, False],
+        ascending=[True, True, True, True],
     )
     results_df.reset_index(drop=True, inplace=True)
-    results_df = merge_columns(results_df)
     plot(results_df, args.output)
 
 
