@@ -1,13 +1,13 @@
 import argparse
-import matplotlib
-import pandas as pd
-import seaborn as sns
 import sys
 from argparse import Namespace
 from glob import glob
-from matplotlib import pyplot as plt
 from os.path import exists
 from typing import List
+
+import pandas as pd
+import seaborn as sns
+from matplotlib import pyplot as plt
 
 
 def parse_args(args: list) -> Namespace:
@@ -138,6 +138,10 @@ def plot(df: pd.DataFrame, output: str) -> None:
     g.despine(left=True)
     g.set_axis_labels("", "")
     g.legend.set_title("")
+    ax = g.facet_axis(0, 0)  # or ax = g.axes.flat[0]
+    for c in ax.containers:
+        labels = [f"{(v.get_width()):.1f}" for v in c]
+        ax.bar_label(c, labels=labels, label_type="edge", fontsize="6")
     plt.show()
     plt.savefig(
         output,

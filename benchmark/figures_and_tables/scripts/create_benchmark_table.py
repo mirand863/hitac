@@ -198,10 +198,10 @@ def main():  # pragma: no cover
         methods = get_methods(args.benchmark, args.dataset)
         results = {
             "Method": [],
-            "Training Time": [],
-            "Training Memory": [],
-            "Classification Time": [],
-            "Classification Memory": [],
+            "Training Time (hh:mm:ss)": [],
+            "Training Memory (MB)": [],
+            "Classification Time (hh:mm:ss)": [],
+            "Classification Memory (MB)": [],
         }
         for method in methods:
             training_time = compute_time(args.benchmark, "train", args.dataset, method)
@@ -215,14 +215,14 @@ def main():  # pragma: no cover
                 args.benchmark, "classify", args.dataset, method
             )
             results["Method"].append(pretty_name[method])
-            results["Training Time"].append(training_time)
-            results["Training Memory"].append(training_memory)
-            results["Classification Time"].append(classification_time)
-            results["Classification Memory"].append(classification_memory)
+            results["Training Time (hh:mm:ss)"].append(training_time)
+            results["Training Memory (MB)"].append(training_memory)
+            results["Classification Time (hh:mm:ss)"].append(classification_time)
+            results["Classification Memory (MB)"].append(classification_memory)
         results_df = pd.DataFrame(data=results)
         # Sort methods according to CPU training time
         results_df.sort_values(
-            by=["Training Time"],
+            by=["Training Time (hh:mm:ss)"],
             inplace=True,
             ascending=[True],
         )

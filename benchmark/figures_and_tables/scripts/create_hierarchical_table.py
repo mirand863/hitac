@@ -130,9 +130,9 @@ def main():  # pragma: no cover
         results_df = pd.DataFrame(data=results)
         # Sort values by f1-score
         results_df.sort_values(
-            by=["F1-score"],
+            by=["F1-score", "Method"],
             inplace=True,
-            ascending=[False],
+            ascending=[False, False],
         )
         # Save results
         output.write(
