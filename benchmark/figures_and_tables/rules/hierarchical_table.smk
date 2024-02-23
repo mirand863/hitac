@@ -1,6 +1,6 @@
 rule hierarchical_table:
     output:
-        table = "results/figures_and_tables/hierarchical_metrics/{dataset}.txt"
+        table = "results/figures_and_tables/hierarchical_metrics/{dataset}.csv"
     params:
         hierarchical_metrics = "results/hierarchical_metrics",
         dataset = "{dataset}"

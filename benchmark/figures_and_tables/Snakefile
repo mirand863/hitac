@@ -24,6 +24,6 @@ rule all:
         hierarchical_tables_and_plots = expand(
             "results/figures_and_tables/hierarchical_metrics/{dataset}.{extension}",
             dataset=config["datasets"],
-            extension=["txt", "pdf"]
+            extension=["csv", "pdf"]
         ),
         fscore = "results/figures_and_tables/hierarchical_metrics/fscore.pdf"
