@@ -26,7 +26,7 @@ def parse_args(args: list) -> Namespace:
         Parsed arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Create bar plot for hierarchical metrics"
+        description="Create barplot for hierarchical metrics"
     )
     parser.add_argument(
         "--hierarchical-metrics",
@@ -175,7 +175,7 @@ results = {
 
 
 def main():  # pragma: no cover
-    """Generate bar plot for hierarchical metrics."""
+    """Generate barplot for hierarchical metrics."""
     args = parse_args(sys.argv[1:])
     methods = get_methods(args.hierarchical_metrics, args.dataset)
     for method in methods:

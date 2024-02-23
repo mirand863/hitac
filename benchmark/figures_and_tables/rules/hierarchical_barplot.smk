@@ -1,4 +1,4 @@
-rule hierarchical_bar_plot:
+rule hierarchical_barplot:
     output:
         plot = "results/figures_and_tables/hierarchical_metrics/{dataset}.pdf"
     params:
@@ -8,7 +8,7 @@ rule hierarchical_bar_plot:
         config["containers"]["seaborn"]
     shell:
         """
-        python figures_and_tables/scripts/create_hierarchical_bar_plot.py \
+        python figures_and_tables/scripts/plot_hierarchical_barplot.py \
             --hierarchical-metrics {params.hierarchical_metrics} \
             --dataset {params.dataset} \
             --output {output.plot}

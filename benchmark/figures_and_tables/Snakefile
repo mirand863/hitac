@@ -6,7 +6,8 @@ include: "rules/benchmark_table.smk"
 include: "rules/taxxi_table.smk"
 include: "rules/ml_table.smk"
 include: "rules/hierarchical_table.smk"
-include: "rules/hierarchical_bar_plot.smk"
+include: "rules/hierarchical_barplot.smk"
+include: "rules/fscore_boxplot.smk"
 
 rule all:
     input:
@@ -24,4 +25,5 @@ rule all:
             "results/figures_and_tables/hierarchical_metrics/{dataset}.{extension}",
             dataset=config["datasets"],
             extension=["txt", "pdf"]
-        )
+        ),
+        fscore = "results/figures_and_tables/hierarchical_metrics/fscore.pdf"
