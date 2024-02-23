@@ -16,7 +16,7 @@ rule all:
             dataset=config["datasets"],
         ),
         taxxi_and_ml_tables = expand(
-            "results/figures_and_tables/{metric}_metrics/{dataset}/{rank}.txt",
+            "results/figures_and_tables/{metric}_metrics/{dataset}/{rank}.csv",
             dataset=config["datasets"],
             rank=config["ranks"],
             metric=["taxxi", "ml"]

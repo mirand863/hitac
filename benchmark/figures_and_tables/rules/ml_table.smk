@@ -1,6 +1,6 @@
 rule ml_table:
     output:
-        table = "results/figures_and_tables/ml_metrics/{dataset}/{rank}.txt"
+        table = "results/figures_and_tables/ml_metrics/{dataset}/{rank}.csv"
     params:
         ml_metrics = "results/ml_metrics",
         dataset = "{dataset}",

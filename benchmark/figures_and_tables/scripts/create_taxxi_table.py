@@ -83,15 +83,8 @@ def get_methods(
     return methods
 
 
-pretty_datasets = {
-    "sp_rdp_its.90": "SP RDP ITS 90",
-    "sp_rdp_its.95": "SP RDP ITS 95",
-    "sp_rdp_its.97": "SP RDP ITS 97",
-    "sp_rdp_its.99": "SP RDP ITS 99",
-    "sp_rdp_its.100": "SP RDP ITS 100",
-}
 pretty_name = {
-    "q2vs": r"Q2_VS",
+    "q2vs": r"Q2\_VS",
     "sintax50": "SINTAX50",
     "sintax80": "SINTAX80",
     "btop": "BTOP",
@@ -100,7 +93,7 @@ pretty_name = {
     "knn": "KNN",
     "q1": "Q1",
     "hitac_standalone": "HiTaC",
-    "q2sk": r"Q2_SK",
+    "q2sk": r"Q2\_SK",
     "nbc50": "NBC50",
     "nbc80": "NBC80",
     "rdp50": "RDP50",
@@ -109,8 +102,8 @@ pretty_name = {
     "metaxa2": "Metaxa2",
     "ktop": "KTOP",
     "top": "TOP",
-    "hitac_filter_standalone": r"HiTaC_Filter",
-    "q2blast": r"Q2_BLAST",
+    "hitac_filter_standalone": r"HiTaC\_Filter",
+    "q2blast": r"Q2\_BLAST",
     "blca": "BLCA",
     "ct1": "CT1",
 }
@@ -138,43 +131,31 @@ def main():  # pragma: no cover
     with open(args.output, "w") as output:
         methods = get_methods(args.taxxi_metrics, args.dataset, args.rank)
         results = {
-            "Method": [],
-            "Accuracy": [],
-            "Misclassification Rate": [],
-            "Over-classification Rate": [],
-            "True Positive Rate": [],
-            "Under-classification Rate": [],
+            "method": [],
+            "acc": [],
+            "mcr": [],
+            "ocr": [],
+            "tpr": [],
+            "ucr": [],
         }
         for method in methods:
             file = f"{args.taxxi_metrics}/{method}/{args.dataset}/{args.rank}.tsv"
             if exists(file):
                 with open(file, "r") as fin:
-                    results["True Positive Rate"].append(get_value(fin.readline()))
-                    results["Under-classification Rate"].append(
-                        get_value(fin.readline())
-                    )
-                    results["Misclassification Rate"].append(get_value(fin.readline()))
-                    results["Over-classification Rate"].append(
-                        get_value(fin.readline())
-                    )
-                    results["Accuracy"].append(get_value(fin.readline()))
-                    results["Method"].append(pretty_name[method])
+                    results["tpr"].append(get_value(fin.readline()))
+                    results["ucr"].append(get_value(fin.readline()))
+                    results["mcr"].append(get_value(fin.readline()))
+                    results["ocr"].append(get_value(fin.readline()))
+                    results["acc"].append(get_value(fin.readline()))
+                    results["method"].append(pretty_name[method])
         results_df = pd.DataFrame(data=results)
         # Sort values by accuracy
         results_df.sort_values(
-            by=["Accuracy"],
+            by=["acc"],
             inplace=True,
             ascending=[False],
         )
-        # Write results
-        output.write(
-            results_df.to_latex(
-                index=False,
-                bold_rows=True,
-                label=f"taxxi:{args.dataset}:{pretty_ranks[args.rank]}",
-                caption=f"TAXXI metrics computed for the dataset {pretty_datasets[args.dataset]} at the {pretty_ranks[args.rank]} level.",
-            )
-        )
+        results_df.to_csv(args.output, index=False, float_format="%.2f", na_rep=".")
 
 
 if __name__ == "__main__":  # pragma: no cover

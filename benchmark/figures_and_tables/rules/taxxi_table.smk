@@ -1,6 +1,6 @@
 rule taxxi_table:
     output:
-        table = "results/figures_and_tables/taxxi_metrics/{dataset}/{rank}.txt"
+        table = "results/figures_and_tables/taxxi_metrics/{dataset}/{rank}.csv"
     params:
         taxxi_metrics = "results/taxxi_metrics",
         dataset = "{dataset}",
