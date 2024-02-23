@@ -127,7 +127,7 @@ def main():  # pragma: no cover
             inplace=True,
             ascending=[False, False],
         )
-        results_df.to_csv(args.output, index=False)
+        results_df.to_csv(args.output, index=False, float_format="%.2f")
 
 
 if __name__ == "__main__":  # pragma: no cover
