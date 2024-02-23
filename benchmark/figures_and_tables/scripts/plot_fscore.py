@@ -123,10 +123,10 @@ def plot(df: pd.DataFrame, output) -> None:
         y="method",
         whis=(0, 100),
         palette="colorblind",
+        hue="method",
     )
     g.set(xlabel=None)
     g.set(ylabel=None)
-    plt.show()
     plt.savefig(
         output,
         bbox_inches="tight",
