@@ -151,9 +151,9 @@ def main():  # pragma: no cover
         results_df = pd.DataFrame(data=results)
         # Sort values by accuracy
         results_df.sort_values(
-            by=["acc"],
+            by=["acc", "mcr", "ocr", "tpr", "ucr", "method"],
             inplace=True,
-            ascending=[False],
+            ascending=[False, True, True, False, True, True],
         )
         results_df.to_csv(args.output, index=False, float_format="%.2f", na_rep=".")
 
