@@ -129,19 +129,19 @@ def initialize_results() -> Dict[str, List]:
     results = {
         "method": [],
         "accuracy": [],
-        "balanced_accuracy": [],
-        "f1_micro": [],
-        "f1_macro": [],
-        "f1_weighted": [],
-        "precision_micro": [],
-        "precision_macro": [],
-        "precision_weighted": [],
-        "recall_micro": [],
-        "recall_macro": [],
-        "recall_weighted": [],
-        "jaccard_micro": [],
-        "jaccard_macro": [],
-        "jaccard_weighted": [],
+        "balancedaccuracy": [],
+        "f1micro": [],
+        "f1macro": [],
+        "f1weighted": [],
+        "precisionmicro": [],
+        "precisionmacro": [],
+        "precisionweighted": [],
+        "recallmicro": [],
+        "recallmacro": [],
+        "recallweighted": [],
+        "jaccardmicro": [],
+        "jaccardmacro": [],
+        "jaccardweighted": [],
     }
     return results
 
@@ -159,29 +159,29 @@ def load_and_append(file: str, results: Dict[str, List]) -> None:
     """
     df = pd.read_csv(file, sep="\t")
     results["accuracy"].append(round(float(df["accuracy"].iloc[0]) * 100, 2))
-    results["balanced_accuracy"].append(
+    results["balancedaccuracy"].append(
         round(float(df["balanced_accuracy"].iloc[0]) * 100, 2)
     )
-    results["f1_micro"].append(round(float(df["f1_micro"].iloc[0]) * 100, 2))
-    results["f1_macro"].append(round(float(df["f1_macro"].iloc[0]) * 100, 2))
-    results["f1_weighted"].append(round(float(df["f1_weighted"].iloc[0]) * 100, 2))
-    results["precision_micro"].append(
+    results["f1micro"].append(round(float(df["f1_micro"].iloc[0]) * 100, 2))
+    results["f1macro"].append(round(float(df["f1_macro"].iloc[0]) * 100, 2))
+    results["f1weighted"].append(round(float(df["f1_weighted"].iloc[0]) * 100, 2))
+    results["precisionmicro"].append(
         round(float(df["precision_micro"].iloc[0]) * 100, 2)
     )
-    results["precision_macro"].append(
+    results["precisionmacro"].append(
         round(float(df["precision_macro"].iloc[0]) * 100, 2)
     )
-    results["precision_weighted"].append(
+    results["precisionweighted"].append(
         round(float(df["precision_weighted"].iloc[0]) * 100, 2)
     )
-    results["recall_micro"].append(round(float(df["recall_micro"].iloc[0]) * 100, 2))
-    results["recall_macro"].append(round(float(df["recall_macro"].iloc[0]) * 100, 2))
-    results["recall_weighted"].append(
+    results["recallmicro"].append(round(float(df["recall_micro"].iloc[0]) * 100, 2))
+    results["recallmacro"].append(round(float(df["recall_macro"].iloc[0]) * 100, 2))
+    results["recallweighted"].append(
         round(float(df["recall_weighted"].iloc[0]) * 100, 2)
     )
-    results["jaccard_micro"].append(round(float(df["jaccard_micro"].iloc[0]) * 100, 2))
-    results["jaccard_macro"].append(round(float(df["jaccard_macro"].iloc[0]) * 100, 2))
-    results["jaccard_weighted"].append(
+    results["jaccardmicro"].append(round(float(df["jaccard_micro"].iloc[0]) * 100, 2))
+    results["jaccardmacro"].append(round(float(df["jaccard_macro"].iloc[0]) * 100, 2))
+    results["jaccardweighted"].append(
         round(float(df["jaccard_weighted"].iloc[0]) * 100, 2)
     )
 
@@ -198,19 +198,19 @@ def sort(df: pd.DataFrame):
     df.sort_values(
         by=[
             "accuracy",
-            "balanced_accuracy",
-            "f1_micro",
-            "f1_macro",
-            "f1_weighted",
-            "precision_micro",
-            "precision_macro",
-            "precision_weighted",
-            "recall_micro",
-            "recall_macro",
-            "recall_weighted",
-            "jaccard_micro",
-            "jaccard_macro",
-            "jaccard_weighted",
+            "balancedaccuracy",
+            "f1micro",
+            "f1macro",
+            "f1weighted",
+            "precisionmicro",
+            "precisionmacro",
+            "precisionweighted",
+            "recallmicro",
+            "recallmacro",
+            "recallweighted",
+            "jaccardmicro",
+            "jaccardmacro",
+            "jaccardweighted",
             "method",
         ],
         inplace=True,
