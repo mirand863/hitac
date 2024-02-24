@@ -1,10 +1,11 @@
 import argparse
-import pandas as pd
 import sys
 from argparse import Namespace
 from glob import glob
 from os.path import exists
 from typing import List
+
+import pandas as pd
 
 
 def parse_args(args: list) -> Namespace:
