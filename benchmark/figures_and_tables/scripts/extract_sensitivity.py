@@ -5,6 +5,8 @@ from glob import glob
 from os.path import exists
 from typing import List
 
+import pandas as pd
+
 
 def parse_args(args: list) -> Namespace:
     """
@@ -110,28 +112,39 @@ pretty_name = {
     "spingo": "SPINGO",
 }
 
+results = {
+    "Method": [],
+    "TPR": [],
+    "Group": [],
+}
+
 
 def main():  # pragma: no cover
     """Get sensitivity from TAXXI metrics."""
     args = parse_args(sys.argv[1:])
     methods = get_methods(args.taxxi_metrics)
-    with open(args.output, "w") as fout:
-        fout.write("Method,TPR,Group\n")
-        for dataset in args.datasets:
-            for method in methods:
-                file = f"{args.taxxi_metrics}/{method}/{dataset}/{ranks[dataset]}.tsv"
-                if exists(file):
-                    with open(file, "r") as fin:
-                        line = fin.readline()
-                        sensitivity = line.split("\t")[-1].strip()
-                        if float(sensitivity) > 11:
-                            fout.write(
-                                f"{pretty_name[method]},{sensitivity},{groups[dataset]}\n"
-                            )
-                        else:
-                            fout.write(
-                                f"{pretty_name[method]} ({sensitivity}),{sensitivity},{groups[dataset]}\n"
-                            )
+    for dataset in args.datasets:
+        for method in methods:
+            file = f"{args.taxxi_metrics}/{method}/{dataset}/{ranks[dataset]}.tsv"
+            if exists(file):
+                with open(file, "r") as fin:
+                    line = fin.readline()
+                    sensitivity = float(line.split("\t")[-1].strip())
+                    results["TPR"].append(sensitivity)
+                    results["Group"].append(groups[dataset])
+                    if sensitivity > 11:
+                        results["Method"].append(pretty_name[method])
+                    else:
+                        results["Method"].append(
+                            f"{pretty_name[method]} ({sensitivity})"
+                        )
+    results_df = pd.DataFrame(data=results)
+    results_df.sort_values(
+        by=["Group", "TPR", "Method"],
+        inplace=True,
+        ascending=[True, False, True],
+    )
+    results_df.to_csv(args.output, index=False, float_format="%.2f")
 
 
 if __name__ == "__main__":  # pragma: no cover

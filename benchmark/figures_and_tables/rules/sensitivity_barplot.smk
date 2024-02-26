@@ -20,11 +20,15 @@ rule plot_sensitivity:
         csv = "results/figures_and_tables/taxxi_metrics/sensitivity.csv"
     output:
         plot = "results/figures_and_tables/taxxi_metrics/sensitivity.pdf"
+    params:
+        file = "sensitivity.pdf",
+        path = "results/figures_and_tables/taxxi_metrics"
     container:
         config["containers"]["r_base"]
     shell:
         """
         Rscript --vanilla figures_and_tables/scripts/plot_sensitivity.R \
             --input {input.csv} \
-            --output {output.plot}
+            --path {params.path} \
+            --file {params.file}
         """
