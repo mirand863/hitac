@@ -21,7 +21,7 @@ rule plot_sensitivity:
     output:
         plot = "results/figures_and_tables/taxxi_metrics/sensitivity.pdf"
     container:
-        config["containers"]["seaborn"]
+        config["containers"]["r_base"]
     shell:
         """
         Rscript --vanilla figures_and_tables/scripts/plot_sensitivity.R \

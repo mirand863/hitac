@@ -96,6 +96,7 @@ containers:
     metrics: "docker://mirand863/metrics:1.0"
     hierarchical_metrics: "docker://mirand863/hierarchical_metrics:1.0"
     seaborn: "docker://mirand863/seaborn:0.13.2"
+    r_base: "docker://mirand863/r_base:4.3.2"
 
 urls:
     train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"
