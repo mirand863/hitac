@@ -1,14 +1,18 @@
-# library
+#!/usr/bin/env Rscript
+
 library(tidyverse)
+library(optparse)
 
-# # Create dataset
-# data <- data.frame(
-#   individual=paste( "Method ", seq(1,110), sep=""),
-#   group=c( rep('A', 22), rep('B', 22), rep('C', 22), rep('D', 22), rep('E', 22)) ,
-#   value=c(rep(rev(79:100), 5))
-# )
+option_list <- list(
+  make_option(c("-i", "--input"), type="character", default=NULL, help="input file name", metavar="character"),
+  make_option(c("-p", "--path"), type="character", default=NULL, help="output path", metavar="character"),
+  make_option(c("-f", "--file"), type="character", default=NULL, help="output file name", metavar="character")
+);
 
-data <- read.csv("results/images/accuracy.csv", header=T, sep=",")
+opt_parser <- OptionParser(option_list=option_list);
+opt <- parse_args(opt_parser);
+
+data <- read.csv(opt$input, header=T, sep=",")
 
 # Set a number of 'empty bar' to add at the end of each group
 empty_bar <- 3
@@ -49,15 +53,6 @@ p <- ggplot(data, aes(x=as.factor(id), y=Acc, fill=Group)) +       # Note that i
 
   geom_bar(aes(x=as.factor(id), y=Acc, fill=Group), stat="identity", alpha=1) +
 
-  # Add a val=100/75/50/25 lines. I do it at the beginning to make sur barplots are OVER it.
-  # geom_segment(data=grid_data, aes(x = end, y = 80, xend = start, yend = 80), colour = "grey", alpha=1, size=0.3 , inherit.aes = FALSE ) +
-  # geom_segment(data=grid_data, aes(x = end, y = 60, xend = start, yend = 60), colour = "grey", alpha=1, size=0.3 , inherit.aes = FALSE ) +
-  # geom_segment(data=grid_data, aes(x = end, y = 40, xend = start, yend = 40), colour = "grey", alpha=1, size=0.3 , inherit.aes = FALSE ) +
-  # geom_segment(data=grid_data, aes(x = end, y = 20, xend = start, yend = 20), colour = "grey", alpha=1, size=0.3 , inherit.aes = FALSE ) +
-
-  # Add text showing the value of each 100/75/50/25 lines
-  # annotate("text", x = rep(max(data$id),4), y = c(20, 40, 60, 80), label = c("20", "40", "60", "80") , color="grey", size=3 , angle=0, fontface="bold", hjust=1) +
-
   geom_bar(aes(x=as.factor(id), y=Acc, fill=Group), stat="identity", alpha=1) +
   ylim(-100,120) +
   theme_minimal() +
@@ -77,10 +72,10 @@ p <- ggplot(data, aes(x=as.factor(id), y=Acc, fill=Group)) +       # Note that i
   geom_text(data=base_data, aes(x = title, y = -18, label=Group), hjust=c(1,1,0,0,0), colour = "black", alpha=1, size=4, fontface="bold", inherit.aes = FALSE)
 
 ggsave(
-  "accuracy.pdf",
+  opt$file,
   plot = last_plot(),
   device = "pdf",
-  path = ".",
+  path = opt$path,
   scale = 1,
   width = 21,
   height = 29.7,

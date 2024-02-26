@@ -23,7 +23,7 @@ def parse_args(args: list) -> Namespace:
         Parsed arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Extract sensitivity for circular barplot"
+        description="Extract accuracy for circular barplot"
     )
     parser.add_argument(
         "--taxxi-metrics",
@@ -114,13 +114,13 @@ pretty_name = {
 
 results = {
     "Method": [],
-    "TPR": [],
+    "Acc": [],
     "Group": [],
 }
 
 
 def main():  # pragma: no cover
-    """Get sensitivity from TAXXI metrics."""
+    """Get accuracy from TAXXI metrics."""
     args = parse_args(sys.argv[1:])
     methods = get_methods(args.taxxi_metrics)
     for dataset in args.datasets:
@@ -128,19 +128,19 @@ def main():  # pragma: no cover
             file = f"{args.taxxi_metrics}/{method}/{dataset}/{ranks[dataset]}.tsv"
             if exists(file):
                 with open(file, "r") as fin:
+                    for i in range(4):
+                        fin.readline()
                     line = fin.readline()
-                    sensitivity = float(line.split("\t")[-1].strip())
-                    results["TPR"].append(sensitivity)
+                    accuracy = float(line.split("\t")[-1].strip())
+                    results["Acc"].append(accuracy)
                     results["Group"].append(groups[dataset])
-                    if sensitivity > 11:
+                    if accuracy > 11:
                         results["Method"].append(pretty_name[method])
                     else:
-                        results["Method"].append(
-                            f"{pretty_name[method]} ({sensitivity})"
-                        )
+                        results["Method"].append(f"{pretty_name[method]} ({accuracy})")
     results_df = pd.DataFrame(data=results)
     results_df.sort_values(
-        by=["Group", "TPR", "Method"],
+        by=["Group", "Acc", "Method"],
         inplace=True,
         ascending=[True, False, True],
     )

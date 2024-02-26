@@ -9,6 +9,7 @@ include: "rules/hierarchical_table.smk"
 include: "rules/hierarchical_barplot.smk"
 include: "rules/fscore_boxplot.smk"
 include: "rules/sensitivity_barplot.smk"
+include: "rules/accuracy_barplot.smk"
 
 rule all:
     input:
@@ -28,4 +29,7 @@ rule all:
             extension=["csv", "pdf"]
         ),
         fscore = "results/figures_and_tables/hierarchical_metrics/fscore.pdf",
-        sensitivity = "results/figures_and_tables/taxxi_metrics/sensitivity.pdf"
+        sensitivity_and_accuracy = expand(
+            "results/figures_and_tables/taxxi_metrics/{metric}.pdf",
+            metric=["sensitivity", "accuracy"]
+        )
