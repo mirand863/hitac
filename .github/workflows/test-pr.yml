@@ -42,7 +42,7 @@ jobs:
       matrix:
 #        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass, pandas, metaxa2]
 #       container: [hitac_qiime, hitac_standalone]
-       container: [seaborn]
+       container: [r]
     steps:
       - uses: actions/checkout@v3
       - name: Docker meta
