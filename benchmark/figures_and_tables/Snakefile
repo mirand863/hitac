@@ -11,6 +11,7 @@ include: "rules/fscore_boxplot.smk"
 include: "rules/sensitivity_barplot.smk"
 include: "rules/accuracy_lollipop.smk"
 include: "rules/ocr_ucr_scatterplot.smk"
+include: "rules/mcr_barplot.smk"
 
 rule all:
     input:
@@ -30,6 +31,7 @@ rule all:
             extension=["csv", "pdf"]
         ),
         fscore = "results/figures_and_tables/hierarchical_metrics/fscore.pdf",
+        mcr = "results/figures_and_tables/taxxi_metrics/mcr.pdf",
         sensitivity_and_accuracy = expand(
             "results/figures_and_tables/taxxi_metrics/{metric}.pdf",
             metric=["sensitivity", "accuracy"]
