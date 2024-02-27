@@ -77,22 +77,6 @@ def get_methods(
     return methods
 
 
-ranks = {
-    "sp_rdp_its.90": "g",
-    "sp_rdp_its.95": "g",
-    "sp_rdp_its.97": "g",
-    "sp_rdp_its.99": "s",
-    "sp_rdp_its.100": "s",
-}
-
-subplot_title = {
-    "sp_rdp_its.90": "SP RDP ITS 90\ngenus level",
-    "sp_rdp_its.95": "SP RDP ITS 95\ngenus level",
-    "sp_rdp_its.97": "SP RDP ITS 97\ngenus level",
-    "sp_rdp_its.99": "SP RDP ITS 99\nspecies level",
-    "sp_rdp_its.100": "SP RDP ITS 100\nspecies level",
-}
-
 pretty_name = {
     "hitac_filter_standalone": "HiTaC_Filter",
     "hitac_standalone": "HiTaC",
@@ -124,184 +108,134 @@ results = {
     "MCR": [],
 }
 
+metadata = {
+    "sp_rdp_its.90": {
+        "rank": "g",
+        "subplot_title": "SP RDP ITS 90\ngenus level",
+        "bar_color": "#001219",
+        "grid": 151,
+    },
+    "sp_rdp_its.95": {
+        "rank": "g",
+        "subplot_title": "SP RDP ITS 95\ngenus level",
+        "bar_color": "#005F73",
+        "grid": 152,
+    },
+    "sp_rdp_its.97": {
+        "rank": "g",
+        "subplot_title": "SP RDP ITS 97\ngenus level",
+        "bar_color": "#EE9B00",
+        "grid": 153,
+    },
+    "sp_rdp_its.99": {
+        "rank": "s",
+        "subplot_title": "SP RDP ITS 99\nspecies level",
+        "bar_color": "#CA6702",
+        "grid": 154,
+    },
+    "sp_rdp_its.100": {
+        "rank": "s",
+        "subplot_title": "SP RDP ITS 100\nspecies level",
+        "bar_color": "#9B2226",
+        "grid": 155,
+    },
+}
 
-def plot(df: pd.DataFrame, output) -> None:
+
+def subplot(
+    df: pd.DataFrame, dataset: str, fig: plt.figure, y: np.ndarray, width: float
+):
+    """
+    Plot a subplot.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataframe containing the data.
+    dataset : str
+        The name of the dataset to plot.
+    fig : plt.figure
+        The matplotlib figure to plot the subplot.
+    y : np.ndarray
+        Locations of labels.
+    width : The width of the bar in the subplot.
+
+    Returns
+    -------
+    ax : matplotlib.axes.Axis
+        The axis instance the artist resides in.
+    """
+    subset = df[df["Dataset"] == dataset]
+    ax = fig.add_subplot(metadata[dataset]["grid"], axes_class=axisartist.Axes)
+    ax.barh(
+        y, subset["MCR"], width + 0.2, label="MCR", color=metadata[dataset]["bar_color"]
+    )
+    ax.set(xlim=(min(df["MCR"]), max(df["MCR"])), ylim=(min(y) - 1, max(y) + 1))
+    ax.set_xticks([])
+    ax.set_yticks(y)
+    ax.set_yticklabels(subset["Method"])
+    ax.axis["left"].major_ticklabels.set_ha("left")
+    ax.set_title(metadata[dataset]["subplot_title"], fontweight="bold", fontsize="10")
+    ax.axis["top"].set_visible(False)
+    ax.axis["right"].set_visible(False)
+    ax.axis["bottom"].set_visible(False)
+    if dataset != "sp_rdp_its.90":
+        ax.axis["left"].set_visible(False)  # this also erases the labels
+    for i, v in enumerate(subset["MCR"].to_numpy()):
+        if v >= 6:
+            ax.text(
+                0.1,
+                i,
+                str(v),
+                color="white",
+                verticalalignment="center",
+            )
+        elif math.isnan(v):
+            ax.text(
+                1,
+                i,
+                "Memory\nexceeded",
+                color="black",
+                verticalalignment="center",
+            )
+        else:
+            ax.text(
+                v,
+                i,
+                str(v),
+                color="black",
+                verticalalignment="center",
+            )
+    return ax
+
+
+def plot(df: pd.DataFrame, output: str) -> None:
+    """
+    Plot the miclassification rates.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataframe containint the results.
+    output : str
+        The file to save the plot.
+    """
     fig = plt.figure(figsize=(8.3, 11.7))
     axs = [None] * 5
     plt.subplots_adjust(wspace=0.05, hspace=0)
     plt.rc("font", weight="bold")
     width = 0.4  # the width of the bars
-    sp_rdp_its_90 = df[df["Dataset"] == "sp_rdp_its.90"]
-    sp_rdp_its_90.reset_index(drop=True, inplace=True)
-    y = np.arange(len(sp_rdp_its_90["Method"]))  # Label locations
-    axs[0] = fig.add_subplot(151, axes_class=axisartist.Axes)
-    axs[0].barh(y, sp_rdp_its_90["MCR"], width + 0.2, label="MCR", color="#001219")
-    axs[0].set_yticklabels(sp_rdp_its_90["Method"])
-    axs[0].set(xlim=(min(df["MCR"]), max(df["MCR"])), ylim=(min(y) - 1, max(y) + 1))
-    axs[0].set_xticks([])
-    axs[0].set_yticks(y)
-    axs[0].axis["left"].major_ticklabels.set_ha("left")
-    axs[0].set_title(subplot_title["sp_rdp_its.90"], fontweight="bold", fontsize="10")
-    axs[0].axis["top"].set_visible(False)
-    axs[0].axis["right"].set_visible(False)
-    axs[0].axis["bottom"].set_visible(False)
-    # axs[0].axis["left"].set_visible(False)  # this also erases the labels
-    for i, v in enumerate(sp_rdp_its_90["MCR"].to_numpy()):
-        if v >= 6:
-            axs[0].text(
-                0.1,
-                i,
-                str(v),
-                color="white",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-        else:
-            axs[0].text(
-                v,
-                i,
-                str(v),
-                color="black",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-    sp_rdp_its_95 = df[df["Dataset"] == "sp_rdp_its.95"]
-    axs[1] = fig.add_subplot(152, axes_class=axisartist.Axes)
-    axs[1].barh(
-        y, sp_rdp_its_95["MCR"].to_numpy(), width + 0.2, label="MCR", color="#005F73"
-    )
-    axs[1].set(xlim=(min(df["MCR"]), max(df["MCR"])), ylim=(min(y) - 1, max(y) + 1))
-    axs[1].set_xticks([])
-    axs[1].set_yticks([])
-    axs[1].set_title(subplot_title["sp_rdp_its.95"], fontweight="bold", fontsize="10")
-    axs[1].axis["top"].set_visible(False)
-    axs[1].axis["right"].set_visible(False)
-    axs[1].axis["bottom"].set_visible(False)
-    axs[1].axis["left"].set_visible(False)
-    for i, v in enumerate(sp_rdp_its_95["MCR"].to_numpy()):
-        if v >= 6:
-            axs[1].text(
-                0.1,
-                i,
-                str(v),
-                color="white",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-        else:
-            axs[1].text(
-                v,
-                i,
-                str(v),
-                color="black",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-    sp_rdp_its_97 = df[df["Dataset"] == "sp_rdp_its.97"]
-    axs[2] = fig.add_subplot(153, axes_class=axisartist.Axes)
-    axs[2].barh(
-        y, sp_rdp_its_97["MCR"].to_numpy(), width + 0.2, label="MCR", color="#EE9B00"
-    )
-    axs[2].set(xlim=(min(df["MCR"]), max(df["MCR"])), ylim=(min(y) - 1, max(y) + 1))
-    axs[2].set_xticks([])
-    axs[2].set_yticks([])
-    axs[2].set_title(subplot_title["sp_rdp_its.97"], fontweight="bold", fontsize="10")
-    axs[2].axis["top"].set_visible(False)
-    axs[2].axis["right"].set_visible(False)
-    axs[2].axis["bottom"].set_visible(False)
-    axs[2].axis["left"].set_visible(False)
-    for i, v in enumerate(sp_rdp_its_97["MCR"].to_numpy()):
-        if v >= 6:
-            axs[2].text(
-                0.1,
-                i,
-                str(v),
-                color="white",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-        else:
-            axs[2].text(
-                v,
-                i,
-                str(v),
-                color="black",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-    sp_rdp_its_99 = df[df["Dataset"] == "sp_rdp_its.99"]
-    axs[3] = fig.add_subplot(154, axes_class=axisartist.Axes)
-    axs[3].barh(
-        y, sp_rdp_its_99["MCR"].to_numpy(), width + 0.2, label="MCR", color="#CA6702"
-    )
-    axs[3].set(xlim=(min(df["MCR"]), max(df["MCR"])), ylim=(min(y) - 1, max(y) + 1))
-    axs[3].set_xticks([])
-    axs[3].set_yticks([])
-    axs[3].set_title(subplot_title["sp_rdp_its.99"], fontweight="bold", fontsize="10")
-    axs[3].axis["top"].set_visible(False)
-    axs[3].axis["right"].set_visible(False)
-    axs[3].axis["bottom"].set_visible(False)
-    axs[3].axis["left"].set_visible(False)
-    for i, v in enumerate(sp_rdp_its_99["MCR"].to_numpy()):
-        if v >= 6:
-            axs[3].text(
-                0.1,
-                i,
-                str(v),
-                color="white",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-        else:
-            axs[3].text(
-                v,
-                i,
-                str(v),
-                color="black",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-    sp_rdp_its_100 = df[df["Dataset"] == "sp_rdp_its.100"]
-    axs[4] = fig.add_subplot(155, axes_class=axisartist.Axes)
-    axs[4].barh(
-        y, sp_rdp_its_100["MCR"].to_numpy(), width + 0.2, label="MCR", color="#9B2226"
-    )
-    axs[4].set(xlim=(min(df["MCR"]), max(df["MCR"])), ylim=(min(y) - 1, max(y) + 1))
-    axs[4].set_xticks([])
-    axs[4].set_yticks([])
-    axs[4].set_title(subplot_title["sp_rdp_its.100"], fontweight="bold", fontsize="10")
-    axs[4].axis["top"].set_visible(False)
-    axs[4].axis["right"].set_visible(False)
-    axs[4].axis["bottom"].set_visible(False)
-    axs[4].axis["left"].set_visible(False)
-    for i, v in enumerate(sp_rdp_its_100["MCR"].to_numpy()):
-        if v >= 6:
-            axs[4].text(
-                0.1,
-                i,
-                str(v),
-                color="white",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-        elif math.isnan(v):
-            axs[4].text(
-                1,
-                i,
-                "Memory\nexceeded",
-                color="black",
-                fontweight="bold",
-                verticalalignment="center",
-            )
-        else:
-            axs[4].text(
-                v,
-                i,
-                str(v),
-                color="black",
-                fontweight="bold",
-                verticalalignment="center",
-            )
+    y = np.arange(22)  # Label locations
+    for i, dataset in enumerate(
+        [
+            "sp_rdp_its.90",
+            "sp_rdp_its.95",
+            "sp_rdp_its.97",
+            "sp_rdp_its.99",
+            "sp_rdp_its.100",
+        ]
+    ):
+        axs[i] = subplot(df, dataset, fig, y, width)
     fig.suptitle("Misclassification rate", fontweight="bold", fontsize="12", y=0.95)
     for i in range(21):
         con = ConnectionPatch(
@@ -337,7 +271,7 @@ def main():  # pragma: no cover
     methods = get_methods(args.taxxi_metrics)
     for dataset in args.datasets:
         for method in methods:
-            file = f"{args.taxxi_metrics}/{method}/{dataset}/{ranks[dataset]}.tsv"
+            file = f"{args.taxxi_metrics}/{method}/{dataset}/{metadata[dataset]['rank']}.tsv"
             results["Method"].append(pretty_name[method])
             results["Dataset"].append(dataset)
             if exists(file):
