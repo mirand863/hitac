@@ -13,6 +13,8 @@ RUN apt-get update && \
     libfreetype6-dev \
     libpng-dev \
     libtiff-dev \
-    libjpeg-dev && \
+    libjpeg-dev \
+    cmake && \
     R -e "install.packages('tidyverse', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages('optparse', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+    R -e "install.packages('optparse', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
+    R -e "install.packages('ggpubr', dependencies=TRUE, repos='http://cran.rstudio.com/')"
