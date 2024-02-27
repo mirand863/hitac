@@ -1,0 +1,5 @@
+sp_rdp_its	fl	90	TPR	rdp80	g	60.8
+sp_rdp_its	fl	90	UCR	rdp80	g	30.2
+sp_rdp_its	fl	90	MCR	rdp80	g	9.0
+sp_rdp_its	fl	90	OCR	rdp80	g	34.9
+sp_rdp_its	fl	90	Acc	rdp80	g	57.7

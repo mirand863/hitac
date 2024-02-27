@@ -1,6 +1,6 @@
 rule benchmark_table:
     output:
-        table = "results/figures_and_tables/benchmarks/{dataset}.txt"
+        table = "results/figures_and_tables/benchmarks/{dataset}.csv"
     params:
         benchmark_folder = "results/benchmark",
         dataset = "{dataset}"

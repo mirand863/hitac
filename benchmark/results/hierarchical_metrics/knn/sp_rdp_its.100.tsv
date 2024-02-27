@@ -1,0 +1,2 @@
+method	precision	recall	f1
+knn	1.0	0.7639542643591226	0.8661837552082807

@@ -68,8 +68,8 @@ def get_methods(benchmark_folder: str, dataset: str) -> List[str]:
     paths = glob(f"{benchmark_folder}/{dataset}/*/*", recursive=True)
     methods = [path.split("/")[-1].replace(".tsv", "") for path in paths]
     methods = list(set(methods))
-    # methods.remove("hitac_filter_qiime")
-    # methods.remove("hitac_qiime")
+    methods.remove("hitac_filter_qiime")
+    methods.remove("hitac_qiime")
     methods.sort()
     return methods
 
@@ -127,7 +127,7 @@ def compute_time(
         time = f"{hours}:{minutes}:{average_time}"
         return time
     else:
-        return "nan"
+        return float("nan")
 
 
 def compute_memory(
@@ -154,11 +154,11 @@ def compute_memory(
     """
     file = f"{benchmark_folder}/{dataset}/{train_or_classify}/{method}.tsv"
     if exists(file):
-        df = pd.read_csv(file, sep="\t", usecols=["max_rss"])
+        df = pd.read_csv(file, sep="\t", usecols=["max_rss"], na_values="-")
         memory = df["max_rss"].mean()
         return round(memory, 2)
     else:
-        return "nan"
+        return float("nan")
 
 
 pretty_name = {
@@ -197,11 +197,11 @@ def main():  # pragma: no cover
     with open(args.output, "w") as output:
         methods = get_methods(args.benchmark, args.dataset)
         results = {
-            "Method": [],
-            "Training Time (hh:mm:ss)": [],
-            "Training Memory (MB)": [],
-            "Classification Time (hh:mm:ss)": [],
-            "Classification Memory (MB)": [],
+            "method": [],
+            "trainingtime": [],
+            "trainingmemory": [],
+            "classificationtime": [],
+            "classificationmemory": [],
         }
         for method in methods:
             training_time = compute_time(args.benchmark, "train", args.dataset, method)
@@ -214,27 +214,24 @@ def main():  # pragma: no cover
             classification_memory = compute_memory(
                 args.benchmark, "classify", args.dataset, method
             )
-            results["Method"].append(pretty_name[method])
-            results["Training Time (hh:mm:ss)"].append(training_time)
-            results["Training Memory (MB)"].append(training_memory)
-            results["Classification Time (hh:mm:ss)"].append(classification_time)
-            results["Classification Memory (MB)"].append(classification_memory)
+            results["method"].append(pretty_name[method])
+            results["trainingtime"].append(training_time)
+            results["trainingmemory"].append(training_memory)
+            results["classificationtime"].append(classification_time)
+            results["classificationmemory"].append(classification_memory)
         results_df = pd.DataFrame(data=results)
-        # Sort methods according to CPU training time
         results_df.sort_values(
-            by=["Training Time (hh:mm:ss)"],
+            by=[
+                "trainingtime",
+                "classificationtime",
+                "trainingmemory",
+                "classificationmemory",
+                "method",
+            ],
             inplace=True,
-            ascending=[True],
+            ascending=[True, True, True, True, True],
         )
-        # Write results
-        output.write(
-            results_df.to_latex(
-                index=False,
-                bold_rows=True,
-                label=f"benchmark:{args.dataset}",
-                caption=f"Results obtained by the resources benchmark for the dataset {pretty_datasets[args.dataset]}.",
-            )
-        )
+        results_df.to_csv(args.output, index=False, float_format="%.2f", na_rep="-")
 
 
 if __name__ == "__main__":  # pragma: no cover

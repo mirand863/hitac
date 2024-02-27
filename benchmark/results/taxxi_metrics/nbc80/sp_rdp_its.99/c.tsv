@@ -1,0 +1,5 @@
+sp_rdp_its	fl	99	TPR	nbc80	c	100.0
+sp_rdp_its	fl	99	UCR	nbc80	c	0.0
+sp_rdp_its	fl	99	MCR	nbc80	c	0.0
+sp_rdp_its	fl	99	OCR	nbc80	c	.
+sp_rdp_its	fl	99	Acc	nbc80	c	100.0

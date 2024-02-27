@@ -16,7 +16,7 @@ include: "rules/mcr_barplot.smk"
 rule all:
     input:
         benchmark_tables = expand(
-            "results/figures_and_tables/benchmarks/{dataset}.txt",
+            "results/figures_and_tables/benchmarks/{dataset}.csv",
             dataset=config["datasets"],
         ),
         taxxi_and_ml_tables = expand(

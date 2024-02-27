@@ -1,0 +1,5 @@
+sp_rdp_its	fl	100	TPR	q2blast	c	99.7
+sp_rdp_its	fl	100	UCR	q2blast	c	0.0
+sp_rdp_its	fl	100	MCR	q2blast	c	0.2
+sp_rdp_its	fl	100	OCR	q2blast	c	.
+sp_rdp_its	fl	100	Acc	q2blast	c	99.7

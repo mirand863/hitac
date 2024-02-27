@@ -1,0 +1,5 @@
+sp_rdp_its	fl	95	TPR	knn	p	100.0
+sp_rdp_its	fl	95	UCR	knn	p	0.0
+sp_rdp_its	fl	95	MCR	knn	p	0.0
+sp_rdp_its	fl	95	OCR	knn	p	.
+sp_rdp_its	fl	95	Acc	knn	p	100.0

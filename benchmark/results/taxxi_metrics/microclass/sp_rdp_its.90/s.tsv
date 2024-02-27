@@ -1,0 +1,5 @@
+sp_rdp_its	fl	90	TPR	microclass	s	.
+sp_rdp_its	fl	90	UCR	microclass	s	.
+sp_rdp_its	fl	90	MCR	microclass	s	.
+sp_rdp_its	fl	90	OCR	microclass	s	100.0
+sp_rdp_its	fl	90	Acc	microclass	s	0.0
