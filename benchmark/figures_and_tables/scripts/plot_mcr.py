@@ -224,7 +224,7 @@ def plot(df: pd.DataFrame, output: str) -> None:
     axs = [None] * 5
     plt.subplots_adjust(wspace=0.05, hspace=0)
     plt.rc("font", weight="bold")
-    width = 0.4  # the width of the bars
+    width = 0.6  # the width of the bars
     y = np.arange(22)  # Label locations
     for i, dataset in enumerate(
         [
@@ -259,6 +259,7 @@ def plot(df: pd.DataFrame, output: str) -> None:
         color="black",
     )
     axs[4].add_artist(con)
+    axs[0].annotate("Method", (0, 21), xytext=(-70, 45), textcoords="offset points")
     plt.savefig(
         output,
         bbox_inches="tight",
