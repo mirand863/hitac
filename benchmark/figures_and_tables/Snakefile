@@ -10,6 +10,7 @@ include: "rules/hierarchical_barplot.smk"
 include: "rules/fscore_boxplot.smk"
 include: "rules/sensitivity_barplot.smk"
 include: "rules/accuracy_lollipop.smk"
+include: "rules/ocr_ucr_scatterplot.smk"
 
 rule all:
     input:
@@ -32,4 +33,8 @@ rule all:
         sensitivity_and_accuracy = expand(
             "results/figures_and_tables/taxxi_metrics/{metric}.pdf",
             metric=["sensitivity", "accuracy"]
+        ),
+        ocr_ucr = expand(
+            "results/figures_and_tables/taxxi_metrics/{dataset}.pdf",
+            dataset=config["datasets"]
         )
