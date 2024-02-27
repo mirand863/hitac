@@ -35,33 +35,33 @@ jobs:
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v2
 
-  docker:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-#        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass, pandas, metaxa2]
-#       container: [hitac_qiime, hitac_standalone]
-       container: [r_base]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: mirand863/${{ matrix.container }}
-          tags: |
-            type=raw,value=4.3.2
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          file: benchmark/dockerfiles/${{ matrix.container }}.dockerfile
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+#  docker:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+##        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass, pandas, metaxa2]
+##       container: [hitac_qiime, hitac_standalone]
+#       container: [r_base]
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Docker meta
+#        id: meta
+#        uses: docker/metadata-action@v4
+#        with:
+#          images: mirand863/${{ matrix.container }}
+#          tags: |
+#            type=raw,value=4.3.2
+#      - name: Login to DockerHub
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#      - name: Build and push
+#        uses: docker/build-push-action@v4
+#        with:
+#          file: benchmark/dockerfiles/${{ matrix.container }}.dockerfile
+#          context: .
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}

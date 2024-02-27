@@ -9,7 +9,7 @@ include: "rules/hierarchical_table.smk"
 include: "rules/hierarchical_barplot.smk"
 include: "rules/fscore_boxplot.smk"
 include: "rules/sensitivity_barplot.smk"
-include: "rules/accuracy_barplot.smk"
+include: "rules/accuracy_lollipop.smk"
 
 rule all:
     input:

@@ -39,6 +39,12 @@ def parse_args(args: list) -> Namespace:
         help="Datasets to plot figure",
     )
     parser.add_argument(
+        "--top",
+        type=int,
+        required=True,
+        help="Top n methods to return for each dataset",
+    )
+    parser.add_argument(
         "--output",
         type=str,
         required=True,
@@ -116,6 +122,7 @@ results = {
     "Method": [],
     "Acc": [],
     "Group": [],
+    "Label": [],
 }
 
 
@@ -132,18 +139,17 @@ def main():  # pragma: no cover
                         fin.readline()
                     line = fin.readline()
                     accuracy = float(line.split("\t")[-1].strip())
+                    results["Method"].append(f"{groups[dataset]} {pretty_name[method]}")
                     results["Acc"].append(accuracy)
                     results["Group"].append(groups[dataset])
-                    if accuracy > 11:
-                        results["Method"].append(pretty_name[method])
-                    else:
-                        results["Method"].append(f"{pretty_name[method]} ({accuracy})")
+                    results["Label"].append(pretty_name[method])
     results_df = pd.DataFrame(data=results)
     results_df.sort_values(
-        by=["Group", "Acc", "Method"],
+        by=["Group", "Acc", "Label", "Method"],
         inplace=True,
-        ascending=[True, False, True],
+        ascending=[True, False, True, True],
     )
+    results_df = results_df.groupby("Group").head(args.top).reset_index(drop=True)
     results_df.to_csv(args.output, index=False, float_format="%.2f")
 
 

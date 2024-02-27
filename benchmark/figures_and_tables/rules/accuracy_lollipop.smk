@@ -3,7 +3,8 @@ rule extract_accuracy:
         csv = temp("results/figures_and_tables/taxxi_metrics/accuracy.csv")
     params:
         taxxi_metrics = "results/taxxi_metrics",
-        datasets = expand("{dataset}", dataset=config["datasets"])
+        datasets = expand("{dataset}", dataset=config["datasets"]),
+        top = 5
     container:
         config["containers"]["seaborn"]
     shell:
@@ -11,6 +12,7 @@ rule extract_accuracy:
         python figures_and_tables/scripts/extract_accuracy.py \
             --taxxi-metrics {params.taxxi_metrics} \
             --datasets {params.datasets} \
+            --top {params.top} \
             --output {output.csv}
         """
 
