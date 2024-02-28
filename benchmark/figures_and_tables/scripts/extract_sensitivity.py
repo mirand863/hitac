@@ -142,7 +142,7 @@ def main():  # pragma: no cover
     results_df.sort_values(
         by=["Group", "TPR", "Method"],
         inplace=True,
-        ascending=[True, False, True],
+        ascending=[True, False, False],
     )
     results_df.to_csv(args.output, index=False, float_format="%.2f")
 

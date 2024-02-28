@@ -1,11 +1,11 @@
 import argparse
-import pandas as pd
 import sys
 from argparse import Namespace
-from copy import deepcopy
 from glob import glob
 from os.path import exists
-from typing import TextIO, List
+from typing import List
+
+import pandas as pd
 
 
 def parse_args(args: list) -> Namespace:
@@ -162,7 +162,7 @@ def compute_memory(
 
 
 pretty_name = {
-    "q2vs": r"Q2_VS",
+    "q2vs": r"Q2\_VS",
     "sintax": "SINTAX",
     "btop": "BTOP",
     "microclass": "Microclass",
@@ -170,15 +170,15 @@ pretty_name = {
     "knn": "KNN",
     "q1": "Q1",
     "hitac_standalone": "HiTaC",
-    "q2sk": r"Q2_SK",
+    "q2sk": r"Q2\_SK",
     "nbc": "NBC",
     "rdp": "RDP",
     "ct2": "CT2",
     "metaxa2": "Metaxa2",
     "ktop": "KTOP",
     "top": "TOP",
-    "hitac_filter_standalone": r"HiTaC_Filter",
-    "q2blast": r"Q2_BLAST",
+    "hitac_filter_standalone": r"HiTaC\_Filter",
+    "q2blast": r"Q2\_BLAST",
     "blca": "BLCA",
     "ct1": "CT1",
 }
