@@ -31,7 +31,12 @@ ggdotchart(data, x = "Method", y = "Acc",
   labs(y = "Accuracy", x = "", color="") +
   ggtitle("Highest accuracies") +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
-  scale_y_continuous(labels = c("0" = "0%", "25" = "25%", "50" = "50%", "75" = "75%", "100" = "100%"))
+  scale_y_continuous(labels = c("0" = "0%", "25" = "25%", "50" = "50%", "75" = "75%", "100" = "100%")) +
+  scale_x_discrete(
+    labels = rev(data$Label)
+  )
+
+print(data$Label)
 
 ggsave(
   opt$file,
