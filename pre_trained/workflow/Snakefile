@@ -3,10 +3,11 @@ configfile: "config/config.yml"
 workdir: config["workdir"]
 
 include: "rules/download_unite.smk"
+include: "rules/extract_unite.smk"
 
 rule all:
     input:
         unite = expand(
-            "data/unite/{dataset}.tgz",
+            "results/data/unite/{dataset}",
             dataset=config["urls"]["unite"],
         )
