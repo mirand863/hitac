@@ -7,7 +7,8 @@ include: "rules/extract_unite.smk"
 include: "rules/fix_formatting_unite.smk"
 include: "rules/import_sequences_unite.smk"
 include: "rules/import_taxonomy_unite.smk"
-include: "rules/train_hitac.smk"
+include: "rules/train_hitac_qiime.smk"
+include: "rules/train_hitac_filter_qiime.smk"
 
 
 rule all:
