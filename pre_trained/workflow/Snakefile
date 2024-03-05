@@ -7,6 +7,7 @@ include: "rules/extract_unite.smk"
 include: "rules/fix_formatting_unite.smk"
 include: "rules/import_sequences_unite.smk"
 include: "rules/import_taxonomy_unite.smk"
+include: "rules/train_hitac.smk"
 
 
 rule all:
@@ -19,8 +20,8 @@ def aggregate(wildcards):
     checkpoints.extract_unite.get(dataset=wildcards.dataset)
     filesnames = glob_wildcards(f"results/data/unite/{wildcards.dataset}/developer/sh_refs_qiime_{{filename}}.fasta").filename
     for filename in filesnames:
-        files.append(f"results/imported_qiime2/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.qza")
-        files.append(f"results/imported_qiime2/unite/{wildcards.dataset}/developer/sh_taxonomy_qiime_{filename}.qza")
+        files.append(f"results/hitac/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.qza")
+        # files.append(f"results/imported_qiime2/unite/{wildcards.dataset}/developer/sh_taxonomy_qiime_{filename}.qza")
     return files
 
 

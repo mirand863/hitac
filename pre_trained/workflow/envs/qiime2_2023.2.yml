@@ -146,6 +146,7 @@ dependencies:
   - harfbuzz=6.0.0
   - hdf5=1.10.6
   - hdmedians=0.14.2
+  - hitac=2.2.1
   - hmmer=3.1b2
   - htslib=1.16
   - icu=70.1
