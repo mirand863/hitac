@@ -1,0 +1,9 @@
+configfile: "config/config.yml"
+
+workdir: config["workdir"]
+
+include: "rules/download_unite.smk"
+
+rule all:
+    input:
+        unite = f"data/unite.tgz"

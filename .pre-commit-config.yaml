@@ -3,6 +3,10 @@ repos:
     rev: v2.3.0
     hooks:
       - id: check-yaml
+        exclude: |
+            (?x)^(
+                pre_trained/slurm/config.yml
+            )$
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/psf/black
