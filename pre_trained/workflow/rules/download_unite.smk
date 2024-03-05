@@ -4,10 +4,10 @@ HTTP = HTTPRemoteProvider()
 
 rule download_unite:
     input:
-        unite = HTTP.remote(config["urls"]["unite"], keep_local=True)
+        fungi_refs = lambda wildcards: HTTP.remote(config["urls"]["unite"][wildcards.dataset], keep_local=True)
     output:
-        unite = "data/unite.tgz"
+        dataset = "data/unite/{dataset}.tgz"
     shell:
         """
-        mv {input.unite} {output.unite}
+        mv {input.fungi_refs} {output.dataset}
         """

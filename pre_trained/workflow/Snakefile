@@ -6,4 +6,7 @@ include: "rules/download_unite.smk"
 
 rule all:
     input:
-        unite = f"data/unite.tgz"
+        unite = expand(
+            "data/unite/{dataset}.tgz",
+            dataset=config["urls"]["unite"],
+        )
