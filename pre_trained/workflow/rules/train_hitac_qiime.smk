@@ -12,6 +12,7 @@ rule train_hitac_qiime:
         mem_gb = get_mem_gb,
         cpus = 12,
         time = '5-00:00:00'
+    threads: 12
     conda:
         "../envs/qiime2_2023.2.yml"
     shell:
