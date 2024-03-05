@@ -5,7 +5,7 @@ repos:
       - id: check-yaml
         exclude: |
             (?x)^(
-                pre_trained/slurm/config.yml
+                pre_trained/slurm/config.yaml
             )$
       - id: end-of-file-fixer
       - id: trailing-whitespace

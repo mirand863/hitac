@@ -22,7 +22,7 @@ mamba env create --name snakemake --file snakemake.yml
 The file `config.yml` holds configuration information to run the pipeline, e.g., working directory, number of threads to run tasks in parallel, number of times to repeat the benchmark, datasets, methods, taxonomic ranks, etc. For the purpose of this tutorial, we will keep most parameters intact and modify only the working directory. In order to do that, run the command:
 
 ```shell
-sed -i "s?workdir.*?workdir: `pwd`?" config.yml
+sed -i "s?workdir.*?workdir: `pwd`?" config.yaml
 ```
 
 ## Running

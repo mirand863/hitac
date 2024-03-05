@@ -1,4 +1,4 @@
-configfile: "config/config.yml"
+configfile: "config/config.yaml"
 
 workdir: config["workdir"]
 
