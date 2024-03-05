@@ -4,10 +4,26 @@ workdir: config["workdir"]
 
 include: "rules/download_unite.smk"
 include: "rules/extract_unite.smk"
+include: "rules/fix_formatting_unite.smk"
+
 
 rule all:
     input:
-        unite = expand(
-            "results/data/unite/{dataset}",
-            dataset=config["urls"]["unite"],
-        )
+        [f"results/data/unite/{dataset}.out" for dataset in config["urls"]["unite"]]
+
+
+def aggregate(wildcards):
+    files = []
+    checkpoints.extract_unite.get(dataset=wildcards.dataset)
+    filesnames = glob_wildcards(f"results/data/unite/{wildcards.dataset}/developer/sh_refs_qiime_{{filename}}.fasta").filename
+    for filename in filesnames:
+        files.append(f"results/fix_formatting/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.fasta")
+        files.append(f"results/data/unite/{wildcards.dataset}/developer/sh_taxonomy_qiime_{filename}.txt")
+    return files
+
+
+rule do_everything:
+    input:
+        aggregate
+    output:
+        touch("results/data/unite/{dataset}.out")
