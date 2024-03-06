@@ -13,6 +13,8 @@ rule train_hitac_qiime:
         cpus = 1,
         time = '5-00:00:00'
     threads: 1
+    benchmark:
+        "results/hitac_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}.tsv"
     conda:
         "../envs/qiime2_2023.2.yml"
     shell:
