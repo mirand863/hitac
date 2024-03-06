@@ -1,4 +1,4 @@
-cluster: "sbatch -A renard -p {resources.partition} --cpus-per-task {resources.cpus} --mem={resources.mem_gb}G --gpus={resources.gpus} --time={resources.time} --constraint 'ARCH:X86'"
+cluster: "sbatch -A renard -p {resources.partition} --cpus-per-task {resources.cpus} --mem={resources.mem_gb}G --gpus={resources.gpus} --time={resources.time} --constraint 'ARCH:X86' --output='slurm-%j.out' --error='slurm-%j.err'"
 jobs: 24
 default-resources: [cpus=1, gpus=0, mem_gb=1, time='1-00:00:00', partition=magic]
 resources: [cpus=288, gpus=6, mem_gb=480]
@@ -8,4 +8,3 @@ restart-times: 24
 keep-going: true
 printshellcmds: true
 reason: true
-cluster_logpath: slurm-%j
