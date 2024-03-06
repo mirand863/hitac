@@ -11,8 +11,9 @@ local:  ## Run pipeline without slurm
 delab:  ## Run pipeline on delab with slurm
 	-sed -i "s?workdir.*?workdir: `pwd`?" config/config.yml
 	-rm -rf slurm*.out
-	-srun -A renard -p magic --cpus-per-task 1 --mem=160G --time='5-00:00:00' --constraint 'ARCH:X86' snakemake --printshellcmds --reason --use-conda --cores 1 --conda-frontend mamba
-#	-sbatch -J hitac allocate_job.slurm
+	-sbatch -J hitac allocate_job.slurm
+#	-srun -A renard -p magic --cpus-per-task 1 --mem=160G --time='5-00:00:00' --constraint 'ARCH:X86' snakemake --printshellcmds --reason --use-conda --cores 1 --conda-frontend mamba
+
 
 .PHONY: clean
 clean:  ## delete temporary files
