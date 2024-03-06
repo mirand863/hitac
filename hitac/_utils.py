@@ -2,11 +2,11 @@
 
 import concurrent.futures
 import itertools
-from itertools import product
-from multiprocessing import cpu_count
-
 import numpy as np
 from hiclass import LocalClassifierPerParentNode
+from itertools import product
+from multiprocessing import cpu_count
+from scipy import sparse
 from sklearn.linear_model import LogisticRegression
 from typing import List, TextIO
 
@@ -114,7 +114,7 @@ def compute_group_frequency(sequences_and_kmers: tuple) -> np.array:
 
 def compute_frequencies(
     sequences: list, kmers: list, threads: int = cpu_count(), batch_size: int = 100
-) -> np.array:
+) -> sparse.csr_matrix:
     """
     Compute k-mer frequency for all sequences.
 
@@ -131,8 +131,8 @@ def compute_frequencies(
 
     Returns
     -------
-    frequencies : np.array
-        Numpy array containing frequencies for all sequences.
+    frequencies : sparse.csr_matrix
+        Sparse array containing frequencies for all sequences.
     """
     sequences = [s.decode("utf-8") for s in sequences]
     executor = concurrent.futures.ProcessPoolExecutor(threads)
@@ -143,7 +143,7 @@ def compute_frequencies(
     concurrent.futures.wait(futures)
     frequencies = [f.result() for f in futures]
     frequencies = list(itertools.chain(*frequencies))
-    return np.array(frequencies)
+    return sparse.csr_matrix(np.array(frequencies))
 
 
 def extract_qiime2_ranks(taxonomy: str) -> np.array:
