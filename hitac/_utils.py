@@ -433,7 +433,7 @@ def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
     """
     logistic_regression = get_logistic_regression()
     hierarchical_classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=threads
+        local_classifier=logistic_regression, n_jobs=threads, verbose=5
     )
     return hierarchical_classifier
 
@@ -453,7 +453,7 @@ def get_hierarchical_filter(threads: int) -> Filter:
         The hierarchical filter.
     """
     logistic_regression = get_logistic_regression()
-    hierarchical_filter = Filter(local_classifier=logistic_regression, n_jobs=threads)
+    hierarchical_filter = Filter(local_classifier=logistic_regression, n_jobs=threads, verbose=5)
     return hierarchical_filter
 
 
