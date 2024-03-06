@@ -8,3 +8,4 @@ restart-times: 24
 keep-going: true
 printshellcmds: true
 reason: true
+cluster_logpath: slurm-%j
