@@ -9,7 +9,6 @@ rule import_taxonomy_unite:
         """
         qiime tools import \
             --type FeatureData[Taxonomy] \
-            --input-format HeaderlessTSVTaxonomyFormat \
             --input-path {input.taxonomy} \
             --output-path {output.qza}
         """
