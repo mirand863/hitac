@@ -13,6 +13,9 @@ rule train_hitac_qiime:
         cpus = 12,
         time = '5-00:00:00'
     threads: 12
+    log:
+       out = "results/hitac_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}.out",
+       err = "results/hitac_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}.err"
     conda:
         "../envs/qiime2_2023.2.yml"
     shell:
@@ -23,5 +26,7 @@ rule train_hitac_qiime:
             --p-kmer 6 \
             --p-threads {resources.cpus} \
             --o-classifier {output.classifier} \
-            --verbose
+            --verbose \
+            1> {log.out} \
+            2> {log.err}
         """
