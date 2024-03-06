@@ -22,5 +22,6 @@ rule train_hitac_filter_qiime:
             --i-reference-taxonomy {input.taxonomy} \
             --p-kmer 6 \
             --p-threads {resources.cpus} \
-            --o-filter {output.classifier}
+            --o-filter {output.classifier} \
+            --verbose
         """

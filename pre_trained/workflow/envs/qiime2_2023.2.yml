@@ -679,4 +679,4 @@ dependencies:
   - zstandard=0.19.0
   - zstd=1.5.2
   - pip:
-      - hitac==2.2.1
+      - -e /home/fabio/Desktop/hitac

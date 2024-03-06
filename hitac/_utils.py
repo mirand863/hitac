@@ -181,6 +181,7 @@ def extract_qiime2_taxonomy(taxonomy: list) -> np.array:
     extracted_taxonomy = []
     for record in taxonomy:
         extracted_taxonomy.append(extract_qiime2_ranks(record))
+    extracted_taxonomy.pop(0)  # TODO: test if "Taxon" is only present in UNITE dataset
     return np.array(extracted_taxonomy)
 
 
