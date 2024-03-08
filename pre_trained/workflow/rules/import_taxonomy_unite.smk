@@ -1,6 +1,6 @@
 rule import_taxonomy_unite:
     input:
-        taxonomy = "results/data/unite/{dataset}/developer/sh_taxonomy_qiime_{filename}.txt",
+        taxonomy = "results/data/unite/{dataset}/developer/sh_taxonomy_qiime_{filename}.txt"
     output:
         qza = "results/imported_qiime2/unite/{dataset}/developer/sh_taxonomy_qiime_{filename}.qza"
     conda:
