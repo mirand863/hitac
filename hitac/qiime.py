@@ -1,10 +1,9 @@
 """QIIME2 public functions for HiTaC."""
 
-from multiprocessing import cpu_count
-
 import pandas as pd
 import skbio
 from hiclass import LocalClassifierPerParentNode
+from multiprocessing import cpu_count
 from q2_types.feature_data import (
     DNAIterator,
     FeatureData,
@@ -12,7 +11,7 @@ from q2_types.feature_data import (
     Taxonomy,
     DNAFASTAFormat,
 )
-from qiime2.plugin import Float, Int
+from qiime2.plugin import Float, Int, Str
 
 from ._qiime import HierarchicalTaxonomicClassifier
 from ._utils import (
@@ -32,6 +31,7 @@ from .plugin_setup import citations, plugin
 def fit(
     reference_reads: DNAIterator,
     reference_taxonomy: pd.Series,
+    tmp_dir: str = None,
     kmer: int = 6,
     threads: int = cpu_count(),
 ) -> LocalClassifierPerParentNode:
@@ -44,6 +44,9 @@ def fit(
         Reference reads.
     reference_taxonomy : pd.Series
         Reference taxonomy.
+    tmp_dir : str
+        Temporary directory to persist local classifiers that are trained. If the job needs to be restarted,
+         it will skip the pre-trained local classifier found in the temporary directory.
     kmer : int, default=6
         K-mer size.
     threads : int, default='All CPUs'
@@ -58,7 +61,7 @@ def fit(
     _, training_sequences = _extract_reads(reference_reads)
     x_train = compute_frequencies(training_sequences, kmers, threads)
     y_train = extract_qiime2_taxonomy(reference_taxonomy)
-    hierarchical_classifier = get_hierarchical_classifier(threads)
+    hierarchical_classifier = get_hierarchical_classifier(threads, tmp_dir)
     hierarchical_classifier.fit(x_train, y_train)
     return hierarchical_classifier
 
@@ -69,8 +72,9 @@ plugin.methods.register_function(
         "reference_reads": FeatureData[Sequence],
         "reference_taxonomy": FeatureData[Taxonomy],
     },
-    parameters={"kmer": Int, "threads": Int},
+    parameters={"tmp_dir": Str, "kmer": Int, "threads": Int},
     parameter_descriptions={
+        "tmp_dir": "Temporary directory to persist local classifiers that are trained. If the job needs to be restarted, it will skip the pre-trained local classifier found in the temporary directory.",
         "kmer": "K-mer size.",
         "threads": "Number of threads for parallel training",
     },
@@ -148,6 +152,7 @@ plugin.methods.register_function(
 def fit_filter(
     reference_reads: DNAIterator,
     reference_taxonomy: pd.Series,
+    tmp_dir: str = None,
     kmer: int = 6,
     threads: int = cpu_count(),
 ) -> Filter:
@@ -160,6 +165,9 @@ def fit_filter(
         Reference reads.
     reference_taxonomy : pd.Series
         Reference taxonomy.
+    tmp_dir : str
+        Temporary directory to persist local classifiers that are trained. If the job needs to be restarted,
+         it will skip the pre-trained local classifier found in the temporary directory.
     kmer : int, default=6
         K-mer size.
     threads : int, default='All CPUs'
@@ -174,7 +182,7 @@ def fit_filter(
     _, training_sequences = _extract_reads(reference_reads)
     X_train = compute_frequencies(training_sequences, kmers, threads)
     Y_train = extract_qiime2_taxonomy(reference_taxonomy)
-    hierarchical_filter = get_hierarchical_filter(threads)
+    hierarchical_filter = get_hierarchical_filter(threads, tmp_dir)
     hierarchical_filter.fit(X_train, Y_train)
     return hierarchical_filter
 
@@ -185,8 +193,9 @@ plugin.methods.register_function(
         "reference_reads": FeatureData[Sequence],
         "reference_taxonomy": FeatureData[Taxonomy],
     },
-    parameters={"kmer": Int, "threads": Int},
+    parameters={"tmp_dir": Str, "kmer": Int, "threads": Int},
     parameter_descriptions={
+        "tmp_dir": "Temporary directory to persist local classifiers that are trained. If the job needs to be restarted, it will skip the pre-trained local classifier found in the temporary directory.",
         "kmer": "K-mer size.",
         "threads": "Number of threads for parallel training",
     },

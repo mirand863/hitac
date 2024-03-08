@@ -13,7 +13,7 @@ include: "rules/train_hitac_filter_qiime.smk"
 
 rule all:
     input:
-        [f"results/data/unite/{dataset}.out" for dataset in config["urls"]["unite"]]
+        [f"results/complete/unite/{dataset}.out" for dataset in config["urls"]["unite"]]
 
 
 def aggregate(wildcards):
@@ -30,4 +30,4 @@ rule do_everything:
     input:
         aggregate
     output:
-        touch("results/data/unite/{dataset}.out")
+        touch("results/complete/unite/{dataset}.out")

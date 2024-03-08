@@ -680,4 +680,3 @@ dependencies:
   - zstd=1.5.2
   - pip:
       - git+https://github.com/mirand863/hitac.git@refs/pull/18/head
-      - ray
