@@ -32,7 +32,7 @@ rule train_hitac_filter_qiime:
             --p-threads {resources.cpus} \
             --p-tmp-dir {params.tmp_dir} \
             --o-filter {output.classifier} \
-            --verbos
+            --verbose
 
         rm -rf {params.tmp_dir}
         """
