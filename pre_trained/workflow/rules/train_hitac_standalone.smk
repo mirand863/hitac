@@ -22,6 +22,8 @@ rule train_hitac_standalone:
         """
         export PYTHONUNBUFFERED=1
 
+        ulimit -m 1000000
+
         mkdir -p {params.tmp_dir}
 
         hitac-fit \
