@@ -14,7 +14,7 @@ rule taxxi2knn:
     shell:
         """
         cp {input.test} {output.query_reads}
-        
+
         python2 scripts/mothur_make_taxtrainfiles.py \
             {input.train} \
             {output.reference_reads} \
@@ -22,7 +22,7 @@ rule taxxi2knn:
         """
 
 
-rule knn:
+rule classify_knn:
     input:
         reference_reads = "results/temp/{dataset}/knn/reference_reads.fasta",
         reference_taxonomy = "results/temp/{dataset}/knn/reference_taxonomy.txt",
@@ -33,7 +33,7 @@ rule knn:
         kmer = temp("results/temp/{dataset}/knn/reference_reads.8mer"),
         tree = temp("results/temp/{dataset}/knn/reference_taxonomy.tree.sum")
     benchmark:
-        repeat("results/benchmark/{dataset}/knn.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/knn.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

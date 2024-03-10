@@ -1,4 +1,5 @@
 """QIIME2 private functions for HiTaC."""
+
 import json
 import os
 import tarfile

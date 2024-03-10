@@ -1,12 +1,2 @@
-metric	value
-accuracy	0.0
-balanced_accuracy	0.0
-f1_micro	0.0
-f1_macro	0.0
-f1_weighted	0.0
-precision_micro	0.0
-precision_macro	0.0
-precision_weighted	0.0
-jaccard_micro	0.0
-jaccard_macro	0.0
-jaccard_weighted	0.0
+method	accuracy	balanced_accuracy	f1_micro	f1_macro	f1_weighted	precision_micro	precision_macro	precision_weighted	recall_micro	recall_macro	recall_weighted	jaccard_micro	jaccard_macro	jaccard_weighted
+metaxa2	0.0035211267605633804	0.004748338081671415	0.0035211267605633804	0.003079838900734423	0.003051643192488263	0.0035211267605633804	0.0028429282160625444	0.0028169014084507044	0.0035211267605633804	0.0035536602700781805	0.0035211267605633804	0.001763668430335097	0.0028429282160625444	0.0028169014084507044

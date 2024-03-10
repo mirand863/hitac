@@ -16,22 +16,50 @@ rule taxxi2rdp:
         """
 
 
-rule rdp:
+rule train_rdp:
     input:
         reference_taxonomy = "results/temp/{dataset}/rdp/reference_taxonomy.txt",
-        reference_reads = "results/temp/{dataset}/rdp/reference_reads.fasta",
-        test = "data/test/{dataset}.fasta",
+        reference_reads = "results/temp/{dataset}/rdp/reference_reads.fasta"
     output:
-        properties = temp("results/temp/{dataset}/rdp/rRNAClassifier.properties"),
         tree = temp("results/temp/{dataset}/rdp/bergeyTrainingTree.xml"),
         probabilities = temp("results/temp/{dataset}/rdp/genus_wordConditionalProbList.txt"),
         prior = temp("results/temp/{dataset}/rdp/logWordPrior.txt"),
-        array = temp("results/temp/{dataset}/rdp/wordConditionalProbIndexArr.txt"),
+        array = temp("results/temp/{dataset}/rdp/wordConditionalProbIndexArr.txt")
+    params:
+        tmpdir = temp(directory("results/temp/{dataset}/rdp"))
+    benchmark:
+        repeat("results/benchmark/{dataset}/train/rdp.tsv", config["benchmark"]["repeat"])
+    threads:
+        config["threads"]
+    container:
+        config["containers"]["rdp"]
+    shell:
+        """
+        java \
+            -Xmx8g \
+            -cp /usr/bin/rdp_classifier_2.13/dist/classifier.jar \
+            edu/msu/cme/rdp/classifier/train/ClassifierTraineeMaker \
+            train \
+            -t {input.reference_taxonomy} \
+            -s {input.reference_reads} \
+            -o {params.tmpdir}
+        """
+
+
+rule classify_rdp:
+    input:
+        test = "data/test/{dataset}.fasta",
+        tree = "results/temp/{dataset}/rdp/bergeyTrainingTree.xml",
+        probabilities = "results/temp/{dataset}/rdp/genus_wordConditionalProbList.txt",
+        prior = "results/temp/{dataset}/rdp/logWordPrior.txt",
+        array = "results/temp/{dataset}/rdp/wordConditionalProbIndexArr.txt"
+    output:
+        properties = temp("results/temp/{dataset}/rdp/rRNAClassifier.properties"),
         predictions = temp("results/temp/{dataset}/rdp/predictions.tsv")
     params:
         tmpdir = temp(directory("results/temp/{dataset}/rdp"))
     benchmark:
-        repeat("results/benchmark/{dataset}/rdp.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/rdp.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
@@ -45,15 +73,6 @@ rule rdp:
         props=$(find $rd | grep rRNAClassifier.properties | head -1)
 
         cp $props {output.properties}
-
-        java \
-            -Xmx8g \
-            -cp /usr/bin/rdp_classifier_2.13/dist/classifier.jar \
-            edu/msu/cme/rdp/classifier/train/ClassifierTraineeMaker \
-            train \
-            -t {input.reference_taxonomy} \
-            -s {input.reference_reads} \
-            -o {params.tmpdir}
 
         java \
             -Xmx1g \

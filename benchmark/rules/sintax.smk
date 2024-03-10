@@ -1,11 +1,11 @@
-rule sintax:
+rule classify_sintax:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta"
     output:
         predictions = temp("results/temp/{dataset}/sintax/predictions.tsv")
     benchmark:
-        repeat("results/benchmark/{dataset}/sintax.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/sintax.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

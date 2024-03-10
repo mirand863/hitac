@@ -1,4 +1,5 @@
 """QIIME2 plugin setup."""
+
 from qiime2.plugin import Citations, Plugin
 
 import hitac

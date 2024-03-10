@@ -1,5 +1,5 @@
-sp_rdp_its	fl	90	TPR	blca	g	65.3
-sp_rdp_its	fl	90	UCR	blca	g	18.3
-sp_rdp_its	fl	90	MCR	blca	g	16.4
+sp_rdp_its	fl	90	TPR	blca	g	65.0
+sp_rdp_its	fl	90	UCR	blca	g	19.1
+sp_rdp_its	fl	90	MCR	blca	g	15.9
 sp_rdp_its	fl	90	OCR	blca	g	72.4
-sp_rdp_its	fl	90	Acc	blca	g	58.7
+sp_rdp_its	fl	90	Acc	blca	g	58.4

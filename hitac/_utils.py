@@ -1,6 +1,8 @@
 """Helper functions for data manipulation."""
+
 import concurrent.futures
 import itertools
+import logging
 from itertools import product
 from multiprocessing import cpu_count
 
@@ -12,7 +14,28 @@ from typing import List, TextIO
 from hitac.filter import Filter
 
 
-def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.array:
+# Create logger
+logger = logging.getLogger("HiTaC")
+logger.setLevel(5)
+
+# Create console handler and set verbose level
+if not logger.hasHandlers():
+    ch = logging.StreamHandler()
+    ch.setLevel(5)
+
+    # Create formatter
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+
+    # Add formatter to ch
+    ch.setFormatter(formatter)
+
+    # Add ch to logger
+    logger.addHandler(ch)
+
+
+def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.ndarray:
     """
     Compute all kmer possibilities based on given alphabet.
 
@@ -25,9 +48,10 @@ def compute_possible_kmers(kmer_size: int = 6, alphabet: str = "ACGT") -> np.arr
 
     Returns
     -------
-    kmers : np.array
+    kmers : np.ndarray
         Numpy array containing all possible k-mers.
     """
+    logger.info("Computing possible k-mers")
     kmers = ["".join(c) for c in product(alphabet, repeat=kmer_size)]
     return np.array(kmers)
 
@@ -133,6 +157,7 @@ def compute_frequencies(
     frequencies : np.array
         Numpy array containing frequencies for all sequences.
     """
+    logger.info("Computing k-mer frequency")
     sequences = [s.decode("utf-8") for s in sequences]
     executor = concurrent.futures.ProcessPoolExecutor(threads)
     futures = [
@@ -305,6 +330,7 @@ def load_fasta(fasta_path: str, reference) -> tuple:
     sequences, taxonomy : tuple
         Sequences and taxonomy loaded from FASTA file.
     """
+    logger.info(f"Loading FASTA file {fasta_path}")
     with open(fasta_path) as fin:
         header = None
         sequence = None
@@ -416,7 +442,9 @@ def get_logistic_regression() -> LogisticRegression:
     return logistic_regression
 
 
-def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
+def get_hierarchical_classifier(
+    threads: int, tmp_dir: str = None
+) -> LocalClassifierPerParentNode:
     """
     Build the hierarchical classifier.
 
@@ -424,6 +452,9 @@ def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
     ----------
     threads : int
         The number of threads for training in parallel.
+    tmp_dir : str
+        Temporary directory to persist local classifiers that are trained. If the job needs to be restarted,
+         it will skip the pre-trained local classifier found in the temporary directory.
 
     Returns
     -------
@@ -432,12 +463,12 @@ def get_hierarchical_classifier(threads: int) -> LocalClassifierPerParentNode:
     """
     logistic_regression = get_logistic_regression()
     hierarchical_classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=threads
+        local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
     )
     return hierarchical_classifier
 
 
-def get_hierarchical_filter(threads: int) -> Filter:
+def get_hierarchical_filter(threads: int, tmp_dir: str = None) -> Filter:
     """
     Build the hierarchical filter.
 
@@ -445,6 +476,9 @@ def get_hierarchical_filter(threads: int) -> Filter:
     ----------
     threads : int
         The number of threads for training in parallel.
+    tmp_dir : str
+        Temporary directory to persist local classifiers that are trained. If the job needs to be restarted,
+         it will skip the pre-trained local classifier found in the temporary directory.
 
     Returns
     -------
@@ -452,7 +486,9 @@ def get_hierarchical_filter(threads: int) -> Filter:
         The hierarchical filter.
     """
     logistic_regression = get_logistic_regression()
-    hierarchical_filter = Filter(local_classifier=logistic_regression, n_jobs=threads)
+    hierarchical_filter = Filter(
+        local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
+    )
     return hierarchical_filter
 
 
