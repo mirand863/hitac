@@ -52,6 +52,13 @@ def parse_args(args: list) -> Namespace:
         help="Number of threads to train in parallel [default: all]",
     )
     parser.add_argument(
+        "--tmp_dir",
+        type=str,
+        required=False,
+        default=None,
+        help="Temporary directory to persist local classifiers that are trained. If the job needs to be restarted, it will skip the pre-trained local classifier found in the temporary directory [default=None].",
+    )
+    parser.add_argument(
         "--filter",
         type=str,
         required=True,
