@@ -15,7 +15,7 @@ rule train_hitac_filter_standalone:
         time = '5-00:00:00'
     threads: 1
     benchmark:
-        "results/hitac_filter_standlone/unite/{dataset}/developer/sh_refs_qiime_{filename}.tsv"
+        "results/hitac_filter_standalone/unite/{dataset}/developer/sh_refs_qiime_{filename}.tsv"
     conda:
         "../envs/hitac.yml"
     shell:
