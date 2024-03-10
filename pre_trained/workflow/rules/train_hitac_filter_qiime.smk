@@ -1,5 +1,5 @@
 def get_mem_kb(wildcards, attempt):
-    return attempt * config["slurm"]["memory_increments_kb"]
+    return attempt * config["slurm"]["memory_increments_kb"] - 1000000
 
 
 rule train_hitac_filter_qiime:
