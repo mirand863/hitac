@@ -5,4 +5,4 @@ dependencies:
   - python=3.8
   - pip
   - pip:
-      - git+https://github.com/mirand863/hitac.git@refs/pull/18/head
+      - hitac==2.2.2b1
