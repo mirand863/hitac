@@ -680,3 +680,4 @@ dependencies:
   - zstd=1.5.2
   - pip:
       - git+https://github.com/mirand863/hitac.git@refs/pull/18/head
+      - git+https://github.com/scikit-learn-contrib/hiclass.git@refs/pull/111/head
