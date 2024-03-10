@@ -30,7 +30,7 @@ rule train_hitac_filter_standalone:
             --reference {input.reference} \
             --kmer 6 \
             --threads {resources.cpus} \
-            --tmp_dir {params.tmp_dir} \
+            --tmp-dir {params.tmp_dir} \
             --filter {output.filter}
 
         rm -rf {params.tmp_dir}

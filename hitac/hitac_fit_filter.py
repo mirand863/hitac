@@ -52,7 +52,7 @@ def parse_args(args: list) -> Namespace:
         help="Number of threads to train in parallel [default: all]",
     )
     parser.add_argument(
-        "--tmp_dir",
+        "--tmp-dir",
         type=str,
         required=False,
         default=None,

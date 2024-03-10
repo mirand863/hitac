@@ -52,7 +52,7 @@ def main():  # pragma: no cover
                     taxonomy = taxfile.readline().split("\t")[-1].strip()
                     taxonomy = taxonomy.replace(";", ",") + ";"
                     output.write(f">{read.name};tax={taxonomy}\n")
-                    output.write(read.sequence)
+                    output.write(f"{read.sequence}\n")
 
 
 if __name__ == "__main__":  # pragma: no cover
