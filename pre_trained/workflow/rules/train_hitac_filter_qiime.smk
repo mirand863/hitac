@@ -23,7 +23,7 @@ rule train_hitac_filter_qiime:
         """
         export PYTHONUNBUFFERED=1
 
-        ulimit -m 1000000
+        ulimit -m {resources.mem_kb}
 
         mkdir -p {params.tmp_dir}
 
