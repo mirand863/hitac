@@ -1,4 +1,5 @@
 """Init module for the library."""
+
 import importlib
 
 from ._version import get_versions

@@ -16,7 +16,7 @@ conda activate base
 Create a new environment with snakemake by running the following command:
 
 ```shell
-mamba create -c conda-forge -c bioconda -n snakemake snakemake
+mamba env create --name snakemake --file snakemake.yml
 ```
 
 The file `config.yml` holds configuration information to run the pipeline, e.g., working directory, number of threads to run tasks in parallel, number of times to repeat the benchmark, datasets, methods, taxonomic ranks, etc. For the purpose of this tutorial, we will keep most parameters intact and modify only the working directory. In order to do that, run the command:
@@ -48,3 +48,15 @@ Each parameter has the following meaning:
 - `--cores` tells Snakemake how many cpus can be used overall (the more cpus you can spare, the faster the pipeline will finish).
 
 The benchmarks, predictions and metrics for each model are saved in the results folder.
+
+After running the previous pipeline, you can optionally recreate the tables and figures by running the command:
+
+```shell
+snakemake \
+    --snakefile figures_and_tables/Snakefile \
+    --keep-going \
+    --printshellcmds \
+    --reason \
+    --use-singularity \
+    --cores 12
+```

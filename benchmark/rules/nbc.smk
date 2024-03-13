@@ -1,11 +1,11 @@
-rule nbc:
+rule classify_nbc:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta"
     output:
         predictions = temp("results/temp/{dataset}/nbc/predictions.tsv")
     benchmark:
-        repeat("results/benchmark/{dataset}/nbc.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/nbc.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

@@ -1,4 +1,4 @@
-rule microclass:
+rule classify_microclass:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta",
@@ -6,7 +6,7 @@ rule microclass:
     output:
         predictions = temp("results/temp/{dataset}/microclass/predictions.tsv")
     benchmark:
-        repeat("results/benchmark/{dataset}/microclass.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/microclass.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

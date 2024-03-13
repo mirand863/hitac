@@ -3,11 +3,13 @@ name: Test PR
 on: [pull_request]
 
 jobs:
+
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: psf/black@stable
+
   test:
     runs-on: ubuntu-latest
     container:
@@ -32,3 +34,76 @@ jobs:
         coverage xml
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v2
+
+#  bump:
+#    needs: test
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v2
+#      with:
+#        fetch-depth: '0'
+#    - name: Bump version and push tag
+#      id: tag
+#      uses: anothrNick/github-tag-action@1.36.0
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        WITH_V: false
+#        DEFAULT_BUMP: patch
+#    outputs:
+#      new_tag: ${{steps.tag.outputs.new_tag}}
+#
+#  pypi:
+#    needs: bump
+#    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v1
+#    - name: Set up Python 3.8
+#      uses: actions/setup-python@v2
+#      with:
+#        python-version: 3.8
+#    - name: Install pypa/build
+#      run: |
+#        git fetch --tags
+#        git branch --create-reflog main origin/main
+#        python -m pip install build --user .
+#    - name: Build a binary wheel and a source tarball
+#      run: |
+#        python -m build --sdist --wheel --outdir dist/ .
+#    - name: Publish distribution 📦 to PyPI
+#      uses: pypa/gh-action-pypi-publish@release/v1
+#      with:
+#        user: __token__
+#        password: ${{ secrets.PYPI_API_TOKEN }}
+#        verbose: true
+
+#  docker:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+##        container: [blca, btop, usearch, hitac, knn, spingo, rdp, microclass, pandas, metaxa2]
+##       container: [hitac_qiime, hitac_standalone]
+#       container: [r_base]
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Docker meta
+#        id: meta
+#        uses: docker/metadata-action@v4
+#        with:
+#          images: mirand863/${{ matrix.container }}
+#          tags: |
+#            type=raw,value=4.3.2
+#      - name: Login to DockerHub
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#      - name: Build and push
+#        uses: docker/build-push-action@v4
+#        with:
+#          file: benchmark/dockerfiles/${{ matrix.container }}.dockerfile
+#          context: .
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}

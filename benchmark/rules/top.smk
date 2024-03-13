@@ -1,11 +1,11 @@
-rule top:
+rule classify_top:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta"
     output:
         predictions = "results/predictions/{dataset}/top.tsv"
     benchmark:
-        repeat("results/benchmark/{dataset}/top.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/top.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

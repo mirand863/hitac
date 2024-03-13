@@ -13,7 +13,7 @@ Please make sure all tests pass before submitting a pull request. It is also goo
 To test the code locally you need an environment with QIIME2 installed. Please, look into [QIIME2 documentation](https://docs.qiime2.org/2022.8/install/) to install the latest version for your operating system. After installing QIIME2, you can install the dependencies to test HiTaC with:
 
 ```shell
-pip install -e ".[dev]
+pip install -e ".[dev]"
 ```
 
 To run the tests simply execute:

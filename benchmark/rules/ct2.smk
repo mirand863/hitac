@@ -1,11 +1,11 @@
-rule ct2:
+rule classify_ct2:
     input:
         train = "data/train/{dataset}.fasta",
         test = "data/test/{dataset}.fasta"
     output:
         predictions = "results/predictions/{dataset}/ct2.tsv"
     benchmark:
-        repeat("results/benchmark/{dataset}/ct2.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/ct2.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

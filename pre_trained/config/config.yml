@@ -1,0 +1,11 @@
+workdir: /home/fabio/Desktop/hitac/pre_trained
+
+urls:
+  unite:
+    fungi_refs: "https://files.plutof.ut.ee/public/orig/FB/78/FB78E30E44793FB02E5A4D3AE18EB4A6621A2FAEB7A4E94421B8F7B65D46CA4A.tgz"
+    fungi_global: "https://files.plutof.ut.ee/public/orig/37/71/3771274B094D9CA6252DF01359756B60A2FBEEF87854CC01C2577182DBB123C7.tgz"
+    eukaryotes_refs: "https://files.plutof.ut.ee/public/orig/1C/C2/1CC2477429B3A703CC1C7A896A7EFF457BB0D471877CB8D18074959DBB630D10.tgz"
+    eukaryotes_global: "https://files.plutof.ut.ee/public/orig/7D/0C/7D0C329980D2C644CC157A8C76BBD11E78DB8B13286C98D4FEB6ECAC79D67D6F.tgz"
+
+slurm:
+  memory_increments_kb: 20000000  # increment memory allocation if task fails

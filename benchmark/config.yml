@@ -1,4 +1,4 @@
-workdir: /run/media/fabio/9a846308-6659-4a3e-b18f-58210fc0f88a1/hitac/benchmark
+workdir: /home/fabio/Desktop/hitac/benchmark
 
 threads: 12
 
@@ -37,6 +37,7 @@ scripts:
     - microclass2tab.py
     - fasta_utax2rdp.py
     - compute_ml_metrics.py
+    - compute_hierarchical_metrics.py
 
 methods:
     - blca
@@ -67,6 +68,7 @@ methods:
 metrics:
     - taxxi  # original metrics from taxxi benchmark
     - ml  # standard machine learning metrics, e.g., f-score, accuracy, etc
+    - hierarchical  # hierarchical machine learning metrics , i.e., f1, precision and recall
 
 ranks:
     - p  # phylum
@@ -77,8 +79,8 @@ ranks:
     - s  # species
 
 containers:
-    hitac_qiime: "docker://mirand863/hitac_qiime:2.1.0"
-    hitac_standalone: "docker://mirand863/hitac_standalone:2.1.0"
+    hitac_qiime: "docker://mirand863/hitac_qiime:2.2.2"
+    hitac_standalone: "docker://mirand863/hitac_standalone:2.2.2"
     blca: "docker://mirand863/blca:2.3"
     btop: "docker://mirand863/btop:2.10.1"
     usearch: "docker://mirand863/usearch:11.0.667"
@@ -92,6 +94,9 @@ containers:
     qiime2: "docker://quay.io/qiime2/core:2023.2"
     python2: "docker://python:2.7-slim"
     metrics: "docker://mirand863/metrics:1.0"
+    hierarchical_metrics: "docker://mirand863/hierarchical_metrics:1.0"
+    seaborn: "docker://mirand863/seaborn:0.13.2"
+    r_base: "docker://mirand863/r_base:4.3.2"
 
 urls:
     train: "https://drive5.com/taxxi/benchmark/trainfa/{dataset}"

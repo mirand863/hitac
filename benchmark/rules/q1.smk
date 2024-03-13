@@ -16,7 +16,7 @@ rule taxxi_to_qiime1:
         """
 
 
-rule q1:
+rule classify_q1:
     input:
         test = "data/test/{dataset}.fasta",
         reference_reads = "results/temp/{dataset}/q1/reference_reads.fasta",
@@ -27,7 +27,7 @@ rule q1:
     params:
         tmpdir = "results/temp/{dataset}/q1"
     benchmark:
-        repeat("results/benchmark/{dataset}/q1.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/q1.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:

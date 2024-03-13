@@ -1,5 +1,5 @@
-sp_rdp_its	fl	100	TPR	metaxa2	s	4.5
-sp_rdp_its	fl	100	UCR	metaxa2	s	95.5
+sp_rdp_its	fl	100	TPR	metaxa2	s	78.0
+sp_rdp_its	fl	100	UCR	metaxa2	s	22.0
 sp_rdp_its	fl	100	MCR	metaxa2	s	0.0
 sp_rdp_its	fl	100	OCR	metaxa2	s	.
-sp_rdp_its	fl	100	Acc	metaxa2	s	4.5
+sp_rdp_its	fl	100	Acc	metaxa2	s	78.0

@@ -1,0 +1,38 @@
+configfile: "config/config.yml"
+
+workdir: config["workdir"]
+
+include: "rules/download_unite.smk"
+include: "rules/extract_unite.smk"
+include: "rules/fix_formatting_unite.smk"
+include: "rules/import_sequences_unite.smk"
+include: "rules/import_taxonomy_unite.smk"
+include: "rules/train_hitac_qiime.smk"
+include: "rules/train_hitac_filter_qiime.smk"
+include: "rules/convert_taxxi.smk"
+include: "rules/train_hitac_standalone.smk"
+include: "rules/train_hitac_filter_standalone.smk"
+
+
+rule all:
+    input:
+        [f"results/complete/unite/{dataset}.out" for dataset in config["urls"]["unite"]]
+
+
+def aggregate(wildcards):
+    files = []
+    checkpoints.extract_unite.get(dataset=wildcards.dataset)
+    filesnames = glob_wildcards(f"results/data/unite/{wildcards.dataset}/developer/sh_refs_qiime_{{filename}}.fasta").filename
+    for filename in filesnames:
+        files.append(f"results/hitac_standalone/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.pkl")
+        # files.append(f"results/hitac_filter_standalone/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.pkl")
+        # files.append(f"results/hitac_qiime/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.qza")
+        # files.append(f"results/hitac_filter_qiime/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.qza")
+    return files
+
+
+rule do_everything:
+    input:
+        aggregate
+    output:
+        touch("results/complete/unite/{dataset}.out")

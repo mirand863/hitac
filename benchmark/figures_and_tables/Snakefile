@@ -1,0 +1,42 @@
+configfile: "config.yml"
+
+workdir: config["workdir"]
+
+include: "rules/benchmark_table.smk"
+include: "rules/taxxi_table.smk"
+include: "rules/ml_table.smk"
+include: "rules/hierarchical_table.smk"
+include: "rules/hierarchical_barplot.smk"
+include: "rules/fscore_boxplot.smk"
+include: "rules/sensitivity_barplot.smk"
+include: "rules/accuracy_lollipop.smk"
+include: "rules/ocr_ucr_scatterplot.smk"
+include: "rules/mcr_barplot.smk"
+
+rule all:
+    input:
+        benchmark_tables = expand(
+            "results/figures_and_tables/benchmarks/{dataset}.csv",
+            dataset=config["datasets"],
+        ),
+        taxxi_and_ml_tables = expand(
+            "results/figures_and_tables/{metric}_metrics/{dataset}/{rank}.csv",
+            dataset=config["datasets"],
+            rank=config["ranks"],
+            metric=["taxxi", "ml"]
+        ),
+        hierarchical_tables_and_plots = expand(
+            "results/figures_and_tables/hierarchical_metrics/{dataset}.{extension}",
+            dataset=config["datasets"],
+            extension=["csv", "pdf"]
+        ),
+        fscore = "results/figures_and_tables/hierarchical_metrics/fscore.pdf",
+        mcr = "results/figures_and_tables/taxxi_metrics/mcr.pdf",
+        sensitivity_and_accuracy = expand(
+            "results/figures_and_tables/taxxi_metrics/{metric}.pdf",
+            metric=["sensitivity", "accuracy"]
+        ),
+        ocr_ucr = expand(
+            "results/figures_and_tables/taxxi_metrics/{dataset}.pdf",
+            dataset=config["datasets"]
+        )

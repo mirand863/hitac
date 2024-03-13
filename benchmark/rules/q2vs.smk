@@ -1,4 +1,4 @@
-rule q2vs:
+rule classify_q2vs:
     input:
         query_reads = "results/temp/{dataset}/qiime2/query_reads.qza",
         reference_reads = "results/temp/{dataset}/qiime2/reference_reads.qza",
@@ -7,7 +7,7 @@ rule q2vs:
         predictions = temp("results/temp/{dataset}/q2vs/predictions.qza"),
         search_results = temp("results/temp/{dataset}/q2vs/search_results.qza")
     benchmark:
-        repeat("results/benchmark/{dataset}/q2vs.tsv", config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/classify/q2vs.tsv", config["benchmark"]["repeat"])
     threads:
         config["threads"]
     container:
