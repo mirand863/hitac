@@ -312,7 +312,7 @@ GU827310	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalin
 JN943699	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
 ```
 
-## Quick start for QIIME2 plugin
+## Pre-trained models
 
 In order to speed up the process for users, we provide pre-trained models on the public database UNITE. Some of these pre-trained models contain all eukaryotic ITS sequences available on UNITE, which enable detection and removal of nonfungal sequences mistakenly amplified by polymerase chain reaction (PCR). Furthermore, HiTaC uses the unique species hypotheses identifiers provided in the database UNITE as the last taxonomic level in the hierarchy during training and reports them to the user, which increases taxonomic reproducibility.
 
