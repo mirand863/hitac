@@ -6,7 +6,8 @@ rule train_hitac_filter_standalone:
     input:
         reference = "results/converted_taxxi/unite/{dataset}/developer/sh_refs_qiime_{filename}.fasta"
     output:
-        filter = "results/hitac_filter_standalone/unite/{dataset}/developer/sh_refs_qiime_{filename}.pkl"
+        filter = "results/hitac_filter_standalone/unite/{dataset}/developer/sh_refs_qiime_{filename}.pkl",
+        md5 = "results/hitac_filter_standalone/unite/{dataset}/developer/sh_refs_qiime_{filename}.md5"
     params:
         tmp_dir = "results/hitac_filter_standalone/unite/{dataset}/developer/sh_refs_qiime_{filename}_tmpdir"
     resources:
@@ -34,4 +35,7 @@ rule train_hitac_filter_standalone:
             --filter {output.filter}
 
         rm -rf {params.tmp_dir}
+        
+        md5sum {output.classifier} \
+            > {output.md5}
         """

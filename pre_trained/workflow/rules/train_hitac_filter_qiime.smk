@@ -7,7 +7,8 @@ rule train_hitac_filter_qiime:
         reference = "results/imported_qiime2/unite/{dataset}/developer/sh_refs_qiime_{filename}.qza",
         taxonomy = "results/imported_qiime2/unite/{dataset}/developer/sh_taxonomy_qiime_{filename}.qza"
     output:
-        classifier = "results/hitac_filter_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}.qza"
+        classifier = "results/hitac_filter_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}.qza",
+        md5 = "results/hitac_filter_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}.md5"
     params:
         tmp_dir = "results/hitac_filter_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}_tmpdir"
     resources:
@@ -37,4 +38,7 @@ rule train_hitac_filter_qiime:
             --verbose
 
         rm -rf {params.tmp_dir}
+        
+        md5sum {output.classifier} \
+            > {output.md5}
         """
