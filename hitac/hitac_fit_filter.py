@@ -73,7 +73,7 @@ def main():  # pragma: no cover
     kmers = compute_possible_kmers(args.kmer)
     training_sequences, y_train = load_fasta(fasta_path=args.reference, reference=True)
     x_train = compute_frequencies(training_sequences, kmers, args.threads)
-    hierarchical_classifier = get_hierarchical_filter(args.threads)
+    hierarchical_classifier = get_hierarchical_filter(args.threads, args.tmp_dir)
     hierarchical_classifier.fit(x_train, y_train)
     pickle.dump(hierarchical_classifier, open(args.filter, "wb"))
 
