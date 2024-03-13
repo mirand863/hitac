@@ -11,6 +11,7 @@ HiTaC is an open-source hierarchical taxonomic classifier for fungal ITS sequenc
 - [Quick start for standalone version](#quick-start-for-standalone-version)
 - [Install as a QIIME2 plugin](#install-as-a-qiime2-plugin)
 - [Quick start for QIIME2 plugin](#quick-start-for-qiime2-plugin)
+- [Pre-trained models](#pre-trained-models)
 - [Support](#support)
 - [Contributing](#contributing)
 - [Getting the latest updates](#getting-the-latest-updates)
@@ -310,6 +311,19 @@ UDB016040	d__Fungi; p__Basidiomycota; c__Agaricomycetes; o__Russulales; f__Russu
 GU827310	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Ramalinaceae; g__Ramalina	-1
 JN943699	d__Fungi; p__Ascomycota; c__Lecanoromycetes; o__Lecanorales; f__Parmeliaceae; g__Punctelia	-1
 ```
+
+## Quick start for QIIME2 plugin
+
+In order to speed up the process for users, we provide pre-trained models on the public database UNITE. Some of these pre-trained models contain all eukaryotic ITS sequences available on UNITE, which enable detection and removal of nonfungal sequences mistakenly amplified by polymerase chain reaction (PCR). Furthermore, HiTaC uses the unique species hypotheses identifiers provided in the database UNITE as the last taxonomic level in the hierarchy during training and reports them to the user, which increases taxonomic reproducibility.
+
+- [Pre-trained QIIME2 models for HiTaC (UNITE all eukaryotes)](https://zenodo.org/records/10812410)
+- [Pre-trained QIIME2 models for HiTaC (UNITE only fungi)](https://zenodo.org/records/10813018)
+- [Pre-trained QIIME2 models for HiTaC_Filter (UNITE all eukaryotes)]()
+- [Pre-trained QIIME2 models for HiTaC_Filter (UNITE only fungi)]()
+- [Pre-trained standalone models for HiTaC (UNITE all eukaryotes)]()
+- [Pre-trained standalone models for HiTaC (UNITE only fungi)]()
+- [Pre-trained standalone models for HiTaC_Filter (UNITE all eukaryotes)]()
+- [Pre-trained standalone models for HiTaC_Filter (UNITE only fungi)]()
 
 ## Support
 
