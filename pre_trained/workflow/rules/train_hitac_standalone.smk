@@ -34,8 +34,8 @@ rule train_hitac_standalone:
             --tmp-dir {params.tmp_dir} \
             --classifier {output.classifier}
 
-        rm -rf {params.tmp_dir}
-        
         md5sum {output.classifier} \
             > {output.md5}
+
+        rm -rf {params.tmp_dir}
         """
