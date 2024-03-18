@@ -1,6 +1,5 @@
-import hashlib
-import pickle
 import os
+import pickle
 from os.path import exists
 
 
