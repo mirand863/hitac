@@ -1,4 +1,5 @@
 def get_mem_kb(wildcards, attempt):
+    print("hello")
     return attempt * config["slurm"]["memory_increments_kb"]
 
 

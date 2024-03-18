@@ -5,7 +5,7 @@ help: ## display this help
 .PHONY: local
 local:  ## Run pipeline without slurm
 	-sed -i "s?workdir.*?workdir: `pwd`?" config/config.yml
-	-snakemake --printshellcmds --reason --use-conda --cores 1 --conda-frontend mamba
+	-snakemake --printshellcmds --reason --use-conda --cores 1 --conda-frontend mamba --resources mem_kb=480000000
 
 .PHONY: delab
 delab:  ## Run pipeline on delab with slurm
