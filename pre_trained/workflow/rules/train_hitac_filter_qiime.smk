@@ -10,8 +10,7 @@ def get_mem_gb(wildcards, attempt):
     allocated_memory = attempt * config["slurm"]["memory_increments_gb"]
     if exists(filename):
         (_, stored_attempt) = pickle.load(open(filename,"rb"))
-        attempt = max(stored_attempt + 1, attempt)
-        allocated_memory = attempt * config["slurm"]["memory_increments_gb"]
+        allocated_memory = max(stored_attempt + 1, attempt) * config["slurm"]["memory_increments_gb"]
     with open(filename,"wb") as file:
         pickle.dump(("attempt", attempt),file)
     return allocated_memory
