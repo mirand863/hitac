@@ -59,7 +59,7 @@ def fit(
     """
     kmers = compute_possible_kmers(kmer)
     _, training_sequences = _extract_reads(reference_reads)
-    x_train = compute_frequencies(training_sequences, kmers, threads)
+    x_train = compute_frequencies(training_sequences, kmers, threads, tmp_dir)
     y_train = extract_qiime2_taxonomy(reference_taxonomy)
     hierarchical_classifier = get_hierarchical_classifier(threads, tmp_dir)
     hierarchical_classifier.fit(x_train, y_train)
@@ -180,7 +180,7 @@ def fit_filter(
     """
     kmers = compute_possible_kmers(kmer)
     _, training_sequences = _extract_reads(reference_reads)
-    X_train = compute_frequencies(training_sequences, kmers, threads)
+    X_train = compute_frequencies(training_sequences, kmers, threads, tmp_dir)
     Y_train = extract_qiime2_taxonomy(reference_taxonomy)
     hierarchical_filter = get_hierarchical_filter(threads, tmp_dir)
     hierarchical_filter.fit(X_train, Y_train)
