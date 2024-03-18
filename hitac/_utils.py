@@ -139,7 +139,11 @@ def compute_group_frequency(sequences_and_kmers: tuple) -> np.array:
 
 
 def compute_frequencies(
-    sequences: list, kmers: list, threads: int = cpu_count(), tmp_dir: str = None, batch_size: int = 100
+    sequences: list,
+    kmers: list,
+    threads: int = cpu_count(),
+    tmp_dir: str = None,
+    batch_size: int = 100,
 ) -> np.array:
     """
     Compute k-mer frequency for all sequences.
@@ -167,9 +171,7 @@ def compute_frequencies(
         filename = f"{tmp_dir}/{md5}.sav"
         if exists(filename):
             (_, frequencies) = pickle.load(open(filename, "rb"))
-            logger.info(
-                f"Loaded k-mer frequencies from file {filename}"
-            )
+            logger.info(f"Loaded k-mer frequencies from file {filename}")
             return frequencies
     logger.info("Computing k-mer frequency")
     sequences = [s.decode("utf-8") for s in sequences]
@@ -186,9 +188,7 @@ def compute_frequencies(
         filename = f"{tmp_dir}/{md5}.sav"
         with open(filename, "wb") as file:
             pickle.dump(("kmer-frequencies", frequencies), file)
-            logger.info(
-                f"Stored k-mer frequencies in file {filename}"
-            )
+            logger.info(f"Stored k-mer frequencies in file {filename}")
     return frequencies
 
 
