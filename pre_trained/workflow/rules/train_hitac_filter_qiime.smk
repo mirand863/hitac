@@ -9,8 +9,8 @@ def get_mem_kb(wildcards, attempt):
     filename = f"{path}/allocated_memory.sav"
     allocated_memory = attempt * config["slurm"]["memory_increments_kb"]
     if exists(filename):
-        (_, attempt) = pickle.load(open(filename,"rb"))
-        attempt = attempt + 1
+        (_, stored_attempt) = pickle.load(open(filename,"rb"))
+        attempt = max(stored_attempt + 1, attempt)
         allocated_memory = attempt * config["slurm"]["memory_increments_kb"]
     with open(filename,"wb") as file:
         pickle.dump(("attempt", attempt),file)
