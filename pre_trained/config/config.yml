@@ -8,4 +8,4 @@ urls:
     eukaryotes_global: "https://files.plutof.ut.ee/public/orig/7D/0C/7D0C329980D2C644CC157A8C76BBD11E78DB8B13286C98D4FEB6ECAC79D67D6F.tgz"
 
 slurm:
-  memory_increments_gb: 20  # increment memory allocation if task fails
+  memory_increments_kb: 20000000  # increment memory allocation if task fails

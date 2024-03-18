@@ -1,19 +1,23 @@
-import os
-import pickle
-from os.path import exists
+# import os
+# import pickle
+# from os.path import exists
+#
+#
+# def get_mem_kb(wildcards, attempt):
+#     path = f"results/hitac_filter_qiime/unite/{wildcards.dataset}/developer/sh_refs_qiime_{wildcards.filename}_tmpdir"
+#     os.makedirs(path,exist_ok=True)
+#     filename = f"{path}/allocated_memory.sav"
+#     allocated_memory = attempt * config["slurm"]["memory_increments_kb"]
+#     if exists(filename):
+#         (_, stored_attempt) = pickle.load(open(filename,"rb"))
+#         attempt = max(stored_attempt + 1, attempt)
+#         allocated_memory = attempt * config["slurm"]["memory_increments_kb"]
+#     with open(filename,"wb") as file:
+#         pickle.dump(("attempt", attempt),file)
+#     return allocated_memory
 
-
-def get_mem_gb(wildcards, attempt):
-    path = f"results/hitac_filter_qiime/unite/{wildcards.dataset}/developer/sh_refs_qiime_{wildcards.filename}_tmpdir"
-    os.makedirs(path,exist_ok=True)
-    filename = f"{path}/allocated_memory.sav"
-    allocated_memory = attempt * config["slurm"]["memory_increments_gb"]
-    if exists(filename):
-        (_, stored_attempt) = pickle.load(open(filename,"rb"))
-        allocated_memory = max(stored_attempt + 1, attempt) * config["slurm"]["memory_increments_gb"]
-    with open(filename,"wb") as file:
-        pickle.dump(("attempt", attempt),file)
-    return allocated_memory
+def get_mem_kb(wildcards, attempt):
+    return attempt * config["slurm"]["memory_increments_kb"]
 
 
 rule train_hitac_filter_qiime:
@@ -26,7 +30,7 @@ rule train_hitac_filter_qiime:
     params:
         tmp_dir = "results/hitac_filter_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}_tmpdir"
     resources:
-        mem_gb = get_mem_gb,
+        mem_kb = get_mem_kb,
         cpus = 1,
         time = '5-00:00:00'
     threads: 1
@@ -37,6 +41,9 @@ rule train_hitac_filter_qiime:
     shell:
         """
         export PYTHONUNBUFFERED=1
+
+        ulimit -m {resources.mem_kb}
+        ulimit -v {resources.mem_kb}
 
         mkdir -p {params.tmp_dir}
 

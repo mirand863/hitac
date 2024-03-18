@@ -1,5 +1,5 @@
-def get_mem_gb(wildcards, attempt):
-    return attempt * config["slurm"]["memory_increments_gb"]
+def get_mem_kb(wildcards, attempt):
+    return attempt * config["slurm"]["memory_increments_kb"]
 
 
 rule train_hitac_filter_standalone:
@@ -11,7 +11,7 @@ rule train_hitac_filter_standalone:
     params:
         tmp_dir = "results/hitac_filter_standalone/unite/{dataset}/developer/sh_refs_qiime_{filename}_tmpdir"
     resources:
-        mem_gb = get_mem_gb,
+        mem_kb = get_mem_kb,
         cpus = 1,
         time = '5-00:00:00'
     threads: 1
@@ -22,6 +22,9 @@ rule train_hitac_filter_standalone:
     shell:
         """
         export PYTHONUNBUFFERED=1
+
+        ulimit -m {resources.mem_kb}
+        ulimit -v {resources.mem_kb}
 
         mkdir -p {params.tmp_dir}
 
