@@ -5,10 +5,9 @@ from os.path import exists
 
 
 def get_mem_kb(wildcards, attempt):
-    md5 = hashlib.md5(f"hitac_filter_qiime/{wildcards.dataset}/{wildcards.filename}".encode("utf-8")).hexdigest()
     path = "results/hitac_filter_qiime/unite/{wildcards.dataset}/developer/sh_refs_qiime_{wildcards.filename}_tmpdir"
     os.makedirs(path,exist_ok=True)
-    filename = f"{path}/{md5}.sav"
+    filename = f"{path}/allocated_memory.sav"
     if exists(filename):
         (_, attempt) = pickle.load(open(filename,"rb"))
         print(f"Loaded allocated memory from file {filename}")

@@ -170,9 +170,12 @@ def compute_frequencies(
         md5 = hashlib.md5("kmer-frequencies".encode("utf-8")).hexdigest()
         filename = f"{tmp_dir}/{md5}.sav"
         if exists(filename):
-            (_, frequencies) = pickle.load(open(filename, "rb"))
-            logger.info(f"Loaded k-mer frequencies from file {filename}")
-            return frequencies
+            try:
+                (_, frequencies) = pickle.load(open(filename, "rb"))
+                logger.info(f"Loaded k-mer frequencies from file {filename}")
+                return frequencies
+            except pickle.UnpicklingError:
+                logger.error(f"Could not load frequencies from file {filename}")
     logger.info("Computing k-mer frequency")
     sequences = [s.decode("utf-8") for s in sequences]
     executor = concurrent.futures.ProcessPoolExecutor(threads)
