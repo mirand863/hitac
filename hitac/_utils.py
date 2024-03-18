@@ -1,21 +1,19 @@
 """Helper functions for data manipulation."""
 
 import concurrent.futures
-import hashlib
 import itertools
 import logging
 import pickle
 from itertools import product
 from multiprocessing import cpu_count
 from os.path import exists
+from typing import List, TextIO
 
 import numpy as np
 from hiclass import LocalClassifierPerParentNode
 from sklearn.linear_model import LogisticRegression
-from typing import List, TextIO
 
 from hitac.filter import Filter
-
 
 # Create logger
 logger = logging.getLogger("HiTaC")
@@ -173,7 +171,7 @@ def compute_frequencies(
                 (_, frequencies) = pickle.load(open(filename, "rb"))
                 logger.info(f"Loaded k-mer frequencies from file {filename}")
                 return frequencies
-            except pickle.UnpicklingError:
+            except (pickle.UnpicklingError, EOFError):
                 logger.error(f"Could not load frequencies from file {filename}")
     logger.info("Computing k-mer frequency")
     sequences = [s.decode("utf-8") for s in sequences]
