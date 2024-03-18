@@ -166,9 +166,8 @@ def compute_frequencies(
     frequencies : np.ndarray
         Numpy array containing frequencies for all sequences.
     """
+    filename = f"{tmp_dir}/kmer-frequencies.sav"
     if tmp_dir:
-        md5 = hashlib.md5("kmer-frequencies".encode("utf-8")).hexdigest()
-        filename = f"{tmp_dir}/{md5}.sav"
         if exists(filename):
             try:
                 (_, frequencies) = pickle.load(open(filename, "rb"))
@@ -187,8 +186,6 @@ def compute_frequencies(
     frequencies = [f.result() for f in futures]
     frequencies = np.array(list(itertools.chain(*frequencies)))
     if tmp_dir:
-        md5 = hashlib.md5("kmer-frequencies".encode("utf-8")).hexdigest()
-        filename = f"{tmp_dir}/{md5}.sav"
         with open(filename, "wb") as file:
             pickle.dump(("kmer-frequencies", frequencies), file)
             logger.info(f"Stored k-mer frequencies in file {filename}")
