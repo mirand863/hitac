@@ -34,11 +34,12 @@ include: "rules/compute_hierarchical_metrics.smk"
 
 rule all:
     input:
-        classifier = expand(
-            "results/temp/{dataset}/{method}/{calibration_method}/classifier.pkl",
+        classifiers = expand(
+            "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/{calibration_percentage}/classifier.pkl",
             dataset=config["datasets"],
             method=config["methods"],
             calibration_method=config["calibration_methods"],
+            calibration_percentage=config["calibration_percentages"],
         )
         # ml_and_taxxi_metrics = expand(
         #     "results/{metric}_metrics/{method}/{dataset}/{rank}.tsv",

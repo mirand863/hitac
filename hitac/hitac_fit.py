@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """Script to fit hierarchical classifier."""
+import sys
+
 import argparse
 import pickle
-import sys
 from argparse import Namespace
-from multiprocessing import cpu_count
-
 from hitac._utils import (
     load_fasta,
     compute_frequencies,
     compute_possible_kmers,
     get_hierarchical_classifier,
 )
+from multiprocessing import cpu_count
+from sklearn.model_selection import train_test_split
 
 
 def parse_args(args: list) -> Namespace:
@@ -55,14 +56,15 @@ def parse_args(args: list) -> Namespace:
         "--calibration-method",
         type=str,
         required=False,
+        default=None,
         help="Calibration method to compute prediction probability",
     )
     parser.add_argument(
-        "--tmp-dir",
-        type=str,
+        "--calibration-percentage",
+        type=int,
         required=False,
         default=None,
-        help="Temporary directory to persist local classifiers that are trained. If the job needs to be restarted, it will skip the pre-trained local classifier found in the temporary directory [default=None].",
+        help="Percentage of training sequences allocated for calibration",
     )
     parser.add_argument(
         "--classifier",
@@ -77,10 +79,17 @@ def main():  # pragma: no cover
     """Fit HiTaC."""
     args = parse_args(sys.argv[1:])
     kmers = compute_possible_kmers(args.kmer)
-    training_sequences, y_train = load_fasta(fasta_path=args.reference, reference=True)
-    x_train = compute_frequencies(training_sequences, kmers, args.threads)
-    hierarchical_classifier = get_hierarchical_classifier(args.threads, args.tmp_dir, args.calibration_method)
+    training_sequences, hierarchy = load_fasta(fasta_path=args.reference, reference=True)
+    frequencies = compute_frequencies(training_sequences, kmers, args.threads)
+    x_train, x_cal, y_train, y_cal = train_test_split(
+        frequencies, hierarchy, test_size=args.calibration_percentage, random_state=42
+    )
+    hierarchical_classifier = get_hierarchical_classifier(
+        threads=args.threads,
+        calibration_method=args.calibration_method,
+    )
     hierarchical_classifier.fit(x_train, y_train)
+    hierarchical_classifier.calibrate(x_cal, y_cal)
     pickle.dump(hierarchical_classifier, open(args.classifier, "wb"))
 
 
