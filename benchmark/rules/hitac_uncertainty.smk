@@ -2,9 +2,9 @@ rule train_hitac_uncertainty:
     input:
         reference = "data/train/{dataset}.fasta"
     output:
-        classifier = temp("results/temp/{dataset}/hitac_uncertainty/classifier.pkl")
+        classifier = "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/classifier.pkl"
     benchmark:
-        repeat("results/benchmark/{dataset}/train/hitac_uncertainty.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/train/{calibration_method}/hitac_uncertainty.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
     conda:
@@ -15,6 +15,7 @@ rule train_hitac_uncertainty:
             --reference {input.reference} \
             --kmer 6 \
             --threads {threads} \
+            --calibration-method {wildcards.calibration_method} \
             --classifier {output.classifier}
         """
 

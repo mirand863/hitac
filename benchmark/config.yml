@@ -39,6 +39,12 @@ scripts:
     - compute_ml_metrics.py
     - compute_hierarchical_metrics.py
 
+calibration_methods:
+    - ivap
+    - cvap
+    - platt
+    - isotonic
+
 methods:
     - hitac_uncertainty
 #    - blca

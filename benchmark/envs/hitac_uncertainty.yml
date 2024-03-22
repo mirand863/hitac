@@ -5,5 +5,5 @@ dependencies:
   - python=3.8
   - pip
   - pip:
-      - git+https://github.com/LukasDrews97/hitac.git@uncertainty
-      - git+https://github.com/LukasDrews97/hiclass.git@uncertainty
+      - -e /home/fabio/Desktop/hitac_uncertainty
+      - -e /home/fabio/Desktop/hitac_uncertainty/benchmark/hiclass_uncertainty

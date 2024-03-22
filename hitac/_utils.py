@@ -443,7 +443,7 @@ def get_logistic_regression() -> LogisticRegression:
 
 
 def get_hierarchical_classifier(
-    threads: int, tmp_dir: str = None
+    threads: int, tmp_dir: str = None, calibration_method: str = None
 ) -> LocalClassifierPerParentNode:
     """
     Build the hierarchical classifier.
@@ -455,6 +455,8 @@ def get_hierarchical_classifier(
     tmp_dir : str
         Temporary directory to persist local classifiers that are trained. If the job needs to be restarted,
          it will skip the pre-trained local classifier found in the temporary directory.
+    calibration_method : str
+        The calibration method to compute the prediction probability.
 
     Returns
     -------
@@ -463,7 +465,11 @@ def get_hierarchical_classifier(
     """
     logistic_regression = get_logistic_regression()
     hierarchical_classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
+        local_classifier=logistic_regression,
+        n_jobs=threads,
+        verbose=5,
+        calibration_method=calibration_method,
+        return_all_probabilities=True,
     )
     return hierarchical_classifier
 
@@ -487,7 +493,7 @@ def get_hierarchical_filter(threads: int, tmp_dir: str = None) -> Filter:
     """
     logistic_regression = get_logistic_regression()
     hierarchical_filter = Filter(
-        local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
+        local_classifier=logistic_regression, n_jobs=threads, verbose=5
     )
     return hierarchical_filter
 
