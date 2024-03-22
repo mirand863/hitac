@@ -35,6 +35,7 @@ snakemake \
     --keep-going \
     --printshellcmds \
     --reason \
+    --use-conda \
     --use-singularity \
     --cores 12
 ```
