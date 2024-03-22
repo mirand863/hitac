@@ -3,8 +3,6 @@ rule train_hitac_uncertainty:
         reference = "data/train/{dataset}.fasta"
     output:
         classifier = "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/{calibration_percentage}/classifier.pkl"
-    params:
-        calibration_percentage = 15
     benchmark:
         repeat("results/benchmark/{dataset}/train/{calibration_method}/{calibration_percentage}/hitac_uncertainty.tsv",config["benchmark"]["repeat"])
     threads:
@@ -18,7 +16,7 @@ rule train_hitac_uncertainty:
             --kmer 6 \
             --threads {threads} \
             --calibration-method {wildcards.calibration_method} \
-            --calibration-percentage {params.calibration_percentage} \
+            --calibration-percentage {wildcards.calibration_percentage} \
             --classifier {output.classifier}
         """
 
