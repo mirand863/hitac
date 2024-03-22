@@ -61,7 +61,7 @@ def parse_args(args: list) -> Namespace:
     )
     parser.add_argument(
         "--calibration-percentage",
-        type=int,
+        type=float,
         required=False,
         default=None,
         help="Percentage of training sequences allocated for calibration",
