@@ -41,8 +41,8 @@ scripts:
 
 calibration_methods:
     - ivap
-    - cvap
-    - platt
+#    - cvap
+#    - platt
     - isotonic
 
 calibration_percentages:

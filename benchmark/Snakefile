@@ -34,8 +34,8 @@ include: "rules/compute_hierarchical_metrics.smk"
 
 rule all:
     input:
-        classifiers = expand(
-            "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/{calibration_percentage}/classifier.pkl",
+        predictions = expand(
+            "results/temp/{dataset}/{method}/{calibration_method}/{calibration_percentage}/probabilities.pkl",
             dataset=config["datasets"],
             method=config["methods"],
             calibration_method=config["calibration_methods"],
