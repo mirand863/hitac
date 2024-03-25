@@ -75,9 +75,10 @@ def main():  # pragma: no cover
     x_test = compute_frequencies(test_sequences, kmers, args.threads)
     classifier = pickle.load(open(args.classifier, "rb"))
     predictions = classifier.predict(x_test)
-    taxonomy = convert_taxonomy_to_taxxi(predictions)
-    with open(args.classification, "w") as output:
-        save_tsv(output, seq_ids, taxonomy)
+    pickle.dump(predictions, open(args.classification, "wb"))
+    # taxonomy = convert_taxonomy_to_taxxi(predictions)
+    # with open(args.classification, "w") as output:
+    #     save_tsv(output, seq_ids, taxonomy)
 
 
 if __name__ == "__main__":  # pragma: no cover

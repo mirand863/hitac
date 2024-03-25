@@ -35,7 +35,7 @@ include: "rules/compute_hierarchical_metrics.smk"
 rule all:
     input:
         predictions = expand(
-            "results/temp/{dataset}/{method}/{calibration_method}/{calibration_percentage}/probabilities.pkl",
+            "results/predictions/{dataset}/{calibration_method}/{calibration_percentage}/{method}.tsv",
             dataset=config["datasets"],
             method=config["methods"],
             calibration_method=config["calibration_methods"],

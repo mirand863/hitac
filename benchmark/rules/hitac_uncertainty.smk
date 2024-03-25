@@ -26,7 +26,7 @@ rule predict_hitac_uncertainty:
         query = "data/test/{dataset}.fasta",
         classifier = "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/{calibration_percentage}/classifier.pkl"
     output:
-        predictions = "results/predictions/{dataset}/{calibration_method}/{calibration_percentage}/hitac_uncertainty.tsv"
+        predictions = "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/{calibration_percentage}/predictions.pkl"
     benchmark:
         repeat("results/benchmark/{dataset}/predict/{calibration_method}/{calibration_percentage}/hitac_uncertainty.tsv",config["benchmark"]["repeat"])
     threads:
@@ -64,4 +64,30 @@ rule probability_hitac_uncertainty:
             --kmer 6 \
             --threads {threads} \
             --probabilities {output.probabilities}
+        """
+
+
+rule filter_hitac_uncertainty:
+    input:
+        query = "data/test/{dataset}.fasta",
+        classifier = "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/{calibration_percentage}/classifier.pkl",
+        predictions = "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/{calibration_percentage}/predictions.pkl",
+        probabilities = "results/temp/{dataset}/hitac_uncertainty/{calibration_method}/{calibration_percentage}/probabilities.pkl"
+    output:
+        filtered_sequences = "results/predictions/{dataset}/{calibration_method}/{calibration_percentage}/hitac_uncertainty.tsv"
+    benchmark:
+        repeat("results/benchmark/{dataset}/predict/{calibration_method}/{calibration_percentage}/hitac_uncertainty_filtered.tsv",config["benchmark"]["repeat"])
+    threads:
+        config["threads"]
+    conda:
+        "../envs/hitac_uncertainty.yml"
+    shell:
+        """
+        hitac-filter \
+            --classifier {input.classifier} \
+            --classification {input.predictions} \
+            --probabilities {input.probabilities} \
+            --reads {input.query} \
+            --threshold 0.1 \
+            --filtered-sequences {output.filtered_sequences}
         """

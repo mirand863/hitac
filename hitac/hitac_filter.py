@@ -1,20 +1,12 @@
 #!/usr/bin/env python3
-"""Script to filter sequences with hierarchical filter."""
-import argparse
-import pickle
+"""Script to classify sequences with hierarchical classifier."""
 import sys
-from argparse import Namespace
-from multiprocessing import cpu_count
 
-from hitac._utils import (
-    compute_possible_kmers,
-    load_fasta,
-    compute_frequencies,
-    convert_taxonomy_to_taxxi,
-    save_tsv,
-    load_classification,
-    compute_confidence,
-)
+import argparse
+import numpy as np
+import pickle
+from argparse import Namespace
+from hitac._utils import convert_taxonomy_to_taxxi, load_fasta, save_tsv
 
 
 def parse_args(args: list) -> Namespace:
@@ -32,71 +24,68 @@ def parse_args(args: list) -> Namespace:
         Parsed arguments.
     """
     parser = argparse.ArgumentParser(
-        description="Filter sequences with HiTaC",
+        description="Predict with hierarchical classifier",
     )
     parser.add_argument(
-        "--filter",
+        "--classifier",
         type=str,
         required=True,
-        help="Path to trained hierarchical filter",
+        help="Path to trained hierarchical classifier",
     )
     parser.add_argument(
-        "--reads",
+        "--probabilities",
         type=str,
         required=True,
-        help="Input FASTA file with sequence(s) to filter",
+        help="Path to stored probabilities",
     )
     parser.add_argument(
         "--classification",
         type=str,
         required=True,
-        help="Path to predictions made by HiTaC's classifier",
+        help="Path to stored predictions",
+    )
+    parser.add_argument(
+        "--filtered-sequences",
+        type=str,
+        required=True,
+        help="Path to stored filtered predictions",
     )
     parser.add_argument(
         "--threshold",
         type=float,
-        required=False,
-        default=0.7,
-        help="Confidence threshold for limiting taxonomic depth. Set to 0 to compute confidence score but not apply it to limit the taxonomic depth of the assignments. [default: 0.7]",
+        required=True,
+        help="Threshold to filter sequences",
     )
     parser.add_argument(
-        "--kmer",
-        type=int,
-        required=False,
-        default=6,
-        help="K-mer size for feature extraction [default: 6]",
-    )
-    parser.add_argument(
-        "--threads",
-        type=int,
-        required=False,
-        default=cpu_count(),
-        help="Number of threads to train in parallel [default: all]",
-    )
-    parser.add_argument(
-        "--filtered-classification",
+        "--reads",
         type=str,
         required=True,
-        help="Path to store predictions",
+        help="Input FASTA file with sequence(s) to classify",
     )
     return parser.parse_args(args)
 
 
 def main():  # pragma: no cover
-    """Classify sequences using HiTaC."""
+    """Compute the probabilities of sequences using HiTaC."""
     args = parse_args(sys.argv[1:])
-    kmers = compute_possible_kmers(args.kmer)
+    all_predictions = pickle.load(open(args.classification, "rb"))
+    classifier = pickle.load(open(args.classifier, "rb"))
+    all_probabilities = pickle.load(open(args.probabilities, "rb"))
+    for level in range(len(all_probabilities) - 1, -1, -1):
+        predictions = all_predictions[:,level]
+        probabilities = all_probabilities[level]
+        classes = np.array([c.split(classifier.separator_)[-1] for c in classifier.classes_[level]])
+        classes_columns = {k:v for (v, k) in enumerate(classes)}
+        filtered_predictions = []
+        for prob, pred in zip(probabilities, predictions):
+            if prob[classes_columns[pred]] >= args.threshold:
+                filtered_predictions.append(pred)
+            else:
+                filtered_predictions.append("")
+        all_predictions[:, level] = filtered_predictions
+    taxonomy = convert_taxonomy_to_taxxi(all_predictions)
     test_sequences, seq_ids = load_fasta(fasta_path=args.reads, reference=False)
-    x_test = compute_frequencies(test_sequences, kmers, args.threads)
-    hierarchical_filter = pickle.load(open(args.filter, "rb"))
-    predict_proba = hierarchical_filter.predict_proba(x_test)
-    classes = hierarchical_filter.classes_
-    classification = load_classification(args.classification)
-    predictions, confidence = compute_confidence(
-        classification, classes, predict_proba, args.threshold
-    )
-    taxonomy = [tax.rstrip(",") for tax in convert_taxonomy_to_taxxi(predictions)]
-    with open(args.filtered_classification, "w") as output:
+    with open(args.filtered_sequences, "w") as output:
         save_tsv(output, seq_ids, taxonomy)
 
 

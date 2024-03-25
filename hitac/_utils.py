@@ -396,9 +396,10 @@ def convert_taxonomy_to_taxxi(predictions: np.array) -> list:
     for prediction in predictions:
         tax = ""
         for i in range(len(prediction) - 1):
-            tax = tax + prediction[i] + ","
+            if prediction[i] != "":
+                tax = tax + prediction[i] + ","
         tax = tax + prediction[-1]
-        taxonomy.append(tax)
+        taxonomy.append(tax.strip(","))
     return taxonomy
 
 
