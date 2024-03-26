@@ -88,6 +88,6 @@ rule filter_hitac_uncertainty:
             --classification {input.predictions} \
             --probabilities {input.probabilities} \
             --reads {input.query} \
-            --threshold 0.01 \
+            --threshold 0 \
             --filtered-sequences {output.filtered_sequences}
         """
