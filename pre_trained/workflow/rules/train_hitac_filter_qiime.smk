@@ -8,8 +8,8 @@ rule train_hitac_filter_qiime:
     params:
         tmp_dir = "results/hitac_filter_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}_tmpdir"
     resources:
-        mem_kb = 480000000,
-        cpus = 256,
+        mem_kb = 400000000,
+        cpus = 128,
         time = '5-00:00:00'
     threads: 1
     benchmark:
