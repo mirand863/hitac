@@ -1,7 +1,3 @@
-def get_mem_kb(wildcards, attempt):
-    return attempt * config["slurm"]["memory_increments_kb"]
-
-
 rule train_hitac_filter_qiime:
     input:
         reference = "results/imported_qiime2/unite/{dataset}/developer/sh_refs_qiime_{filename}.qza",
@@ -12,7 +8,7 @@ rule train_hitac_filter_qiime:
     params:
         tmp_dir = "results/hitac_filter_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}_tmpdir"
     resources:
-        mem_kb = get_mem_kb,
+        mem_kb = 480000000,
         cpus = 256,
         time = '5-00:00:00'
     threads: 1
