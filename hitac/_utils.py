@@ -457,7 +457,7 @@ def get_logistic_regression() -> LogisticRegression:
         class_weight="balanced",
         max_iter=10000,
         verbose=5,
-        n_jobs=32,
+        n_jobs=1,
     )
     return logistic_regression
 
