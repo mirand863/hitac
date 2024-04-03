@@ -457,7 +457,7 @@ def get_logistic_regression() -> LogisticRegression:
         class_weight="balanced",
         max_iter=10000,
         verbose=5,
-        n_jobs=32,
+        n_jobs=128,
     )
     return logistic_regression
 
@@ -483,7 +483,7 @@ def get_hierarchical_classifier(
     """
     logistic_regression = get_logistic_regression()
     hierarchical_classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
+        local_classifier=logistic_regression, n_jobs=1, verbose=5, tmp_dir=tmp_dir
     )
     return hierarchical_classifier
 
@@ -507,7 +507,7 @@ def get_hierarchical_filter(threads: int, tmp_dir: str = None) -> Filter:
     """
     logistic_regression = get_logistic_regression()
     hierarchical_filter = Filter(
-        local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
+        local_classifier=logistic_regression, n_jobs=1, verbose=5, tmp_dir=tmp_dir
     )
     return hierarchical_filter
 
