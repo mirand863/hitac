@@ -74,7 +74,7 @@ def main():  # pragma: no cover
     for level in range(len(all_probabilities) - 1, -1, -1):
         predictions = all_predictions[:,level]
         probabilities = all_probabilities[level]
-        classes = np.array([c.split(classifier.separator_)[-1] for c in classifier.classes_[level]])
+        classes = classifier.classes_[level]
         classes_columns = {k:v for (v, k) in enumerate(classes)}
         filtered_predictions = []
         for prob, pred in zip(probabilities, predictions):
