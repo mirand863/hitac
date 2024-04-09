@@ -422,7 +422,7 @@ def save_tsv(output: TextIO, ids: List[str], taxonomy: List[str]) -> None:
         output.write("\n")
 
 
-def get_logistic_regression() -> LogisticRegression:
+def get_logistic_regression(penalty, solver, threads) -> LogisticRegression:
     """
     Build a logistic regression classifier.
 
@@ -432,18 +432,19 @@ def get_logistic_regression() -> LogisticRegression:
         The logistic regression classifier
     """
     logistic_regression = LogisticRegression(
-        solver="liblinear",
         multi_class="auto",
         class_weight="balanced",
         max_iter=10000,
-        verbose=0,
-        n_jobs=1,
+        verbose=1,
+        n_jobs=threads,
+        penalty=penalty,
+        solver=solver,
     )
     return logistic_regression
 
 
 def get_hierarchical_classifier(
-    threads: int, tmp_dir: str = None
+    threads: int, penalty, solver, tmp_dir: str = None
 ) -> LocalClassifierPerParentNode:
     """
     Build the hierarchical classifier.
@@ -461,7 +462,7 @@ def get_hierarchical_classifier(
     hierarchical_classifier : LocalClassifierPerParentNode
         The hierarchical classifier.
     """
-    logistic_regression = get_logistic_regression()
+    logistic_regression = get_logistic_regression(penalty=penalty, solver=solver, threads=threads)
     hierarchical_classifier = LocalClassifierPerParentNode(
         local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
     )
