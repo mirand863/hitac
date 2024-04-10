@@ -1,6 +1,6 @@
 workdir: /home/fabio/Desktop/hitac_speed/benchmark
 
-threads: 12
+threads: 8
 
 benchmark:
     repeat: 1
@@ -13,17 +13,17 @@ datasets:
 #    - sp_rdp_its.100
 
 penalty:
-    - l1
+#    - l1
     - l2
-    - elasticnet
-    - None
+#    - elasticnet
+#    - None
 
 solver:
-    - lbfgs
-    - liblinear
-    - newton-cg
-    - newton-cholesky
-    - sag
+#    - lbfgs
+#    - liblinear
+#    - newton-cg
+#    - newton-cholesky
+#    - sag
     - saga
 
 scripts:

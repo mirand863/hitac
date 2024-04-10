@@ -464,7 +464,7 @@ def get_hierarchical_classifier(
     """
     logistic_regression = get_logistic_regression(penalty=penalty, solver=solver, threads=threads)
     hierarchical_classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
+        local_classifier=logistic_regression, n_jobs=1, verbose=5, tmp_dir=tmp_dir
     )
     return hierarchical_classifier
 

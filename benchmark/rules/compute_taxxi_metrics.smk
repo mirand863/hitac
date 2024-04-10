@@ -11,7 +11,7 @@ rule compute_taxxi_metrics:
         """
         python scripts/taxbenchx.py \
             {wildcards.dataset} \
-            {wildcards.method} \
+            {wildcards.penalty}/{wildcards.solver}/{wildcards.method} \
             {wildcards.rank} \
             > {output.metrics}
         """
