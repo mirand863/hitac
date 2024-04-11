@@ -13,17 +13,17 @@ datasets:
 #    - sp_rdp_its.100
 
 penalty:
-    - l1
+#    - l1
     - l2
-    - elasticnet
+#    - elasticnet
 #    - None
 
 solver:
-#    - lbfgs
+    - lbfgs
 #    - liblinear
-#    - newton-cg
+    - newton-cg
 #    - newton-cholesky
-#    - sag
+    - sag
     - saga
 
 scripts:
@@ -61,7 +61,7 @@ methods:
 #    - hitac_qiime
     - hitac_standalone
 #    - hitac_filter_qiime
-#    - hitac_filter_standalone
+    - hitac_filter_standalone
 #    - knn
 #    - ktop
 #    - metaxa2

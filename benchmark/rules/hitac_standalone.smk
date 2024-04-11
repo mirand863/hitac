@@ -13,7 +13,7 @@ rule train_hitac_standalone:
         "../envs/hitac_tuning.yml"
     shell:
         """
-        timeout 72h \
+        timeout 24h \
         hitac-fit \
             --reference {input.reference} \
             --kmer 6 \

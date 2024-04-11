@@ -440,7 +440,7 @@ def get_logistic_regression(penalty, solver, threads) -> LogisticRegression:
         penalty=penalty,
         solver=solver,
         tol=0.001,
-        l1_ratio=0.5,
+        # l1_ratio=0.5,
     )
     return logistic_regression
 
@@ -471,7 +471,7 @@ def get_hierarchical_classifier(
     return hierarchical_classifier
 
 
-def get_hierarchical_filter(threads: int, tmp_dir: str = None) -> Filter:
+def get_hierarchical_filter(threads: int, penalty, solver, tmp_dir: str = None) -> Filter:
     """
     Build the hierarchical filter.
 
@@ -488,7 +488,7 @@ def get_hierarchical_filter(threads: int, tmp_dir: str = None) -> Filter:
     hierarchical_filter : Filter
         The hierarchical filter.
     """
-    logistic_regression = get_logistic_regression()
+    logistic_regression = get_logistic_regression(penalty=penalty, solver=solver, threads=threads)
     hierarchical_filter = Filter(
         local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
     )

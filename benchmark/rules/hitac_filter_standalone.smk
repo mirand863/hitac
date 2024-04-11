@@ -11,10 +11,13 @@ rule train_hitac_filter_standalone:
         config["containers"]["hitac_standalone"]
     shell:
         """
+        timeout 24h \
         hitac-fit-filter \
             --reference {input.reference} \
             --kmer 6 \
             --threads {threads} \
+            --penalty {wildcards.penalty} \
+            --solver {wildcards.solver} \
             --filter {output.filter}
         """
 
