@@ -21,7 +21,7 @@ rule train_hitac_filter_standalone:
             --penalty {wildcards.penalty} \
             --solver {wildcards.solver} \
             --filter {output.filter} \
-            > {log} 2>&1s
+            > {log} 2>&1
         """
 
 
