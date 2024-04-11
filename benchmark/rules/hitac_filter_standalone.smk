@@ -7,10 +7,10 @@ rule train_hitac_filter_standalone:
         repeat("results/benchmark/{dataset}/{penalty}/{solver}/train/hitac_filter_standalone.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
-    container:
-        config["containers"]["hitac_standalone"]
+    conda:
+        "../envs/hitac_tuning.yml"
     log:
-        "results/logs/{dataset}_{penalty}_{solver}_train_hitac_filter_sstandalone.txt"
+        "results/logs/{dataset}_{penalty}_{solver}_train_hitac_filter_standalone.txt"
     shell:
         """
         timeout 24h \
@@ -36,8 +36,8 @@ rule classify_hitac_filter_standalone:
         repeat("results/benchmark/{dataset}/{penalty}/{solver}/classify/hitac_filter_standalone.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
-    container:
-        config["containers"]["hitac_standalone"]
+    conda:
+        "../envs/hitac_tuning.yml"
     log:
         "results/logs/{dataset}_{penalty}_{solver}_classify_hitac_filter_standalone.txt"
     shell:
