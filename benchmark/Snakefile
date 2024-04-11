@@ -33,19 +33,15 @@ include: "rules/compute_hierarchical_metrics.smk"
 
 rule all:
     input:
-        "results/taxxi_metrics/hitac_standalone/sp_rdp_its.90/l1/liblinear/g.tsv",
-        "results/taxxi_metrics/hitac_standalone/sp_rdp_its.90/l2/lbfgs/g.tsv",
-        "results/taxxi_metrics/hitac_standalone/sp_rdp_its.90/l2/liblinear/g.tsv",
-        "results/taxxi_metrics/hitac_standalone/sp_rdp_its.90/l2/newton-cg/g.tsv"
-        # ml_and_taxxi_metrics = expand(
-        #     "results/{metric}_metrics/{method}/{dataset}/{penalty}/{solver}/{rank}.tsv",
-        #     metric=["ml", "taxxi"],
-        #     method=config["methods"],
-        #     dataset=config["datasets"],
-        #     penalty=config["penalty"],
-        #     solver=config["solver"],
-        #     rank=config["ranks"],
-        # ),
+        ml_and_taxxi_metrics = expand(
+            "results/{metric}_metrics/{method}/{dataset}/{penalty}/{solver}/{rank}.tsv",
+            metric=["ml", "taxxi"],
+            method=config["methods"],
+            dataset=config["datasets"],
+            penalty=config["penalty"],
+            solver=config["solver"],
+            rank=config["ranks"],
+        ),
         # hierarchical_metrics = expand(
         #     "results/hierarchical_metrics/{method}/{dataset}/{penalty}/{solver}.tsv",
         #     method=config["methods"],
