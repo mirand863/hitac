@@ -434,11 +434,13 @@ def get_logistic_regression(penalty, solver, threads) -> LogisticRegression:
     logistic_regression = LogisticRegression(
         multi_class="auto",
         class_weight="balanced",
-        max_iter=10000,
+        max_iter=200,
         verbose=1,
         n_jobs=threads,
         penalty=penalty,
         solver=solver,
+        tol=0.001,
+        l1_ratio=0.5,
     )
     return logistic_regression
 
@@ -464,7 +466,7 @@ def get_hierarchical_classifier(
     """
     logistic_regression = get_logistic_regression(penalty=penalty, solver=solver, threads=threads)
     hierarchical_classifier = LocalClassifierPerParentNode(
-        local_classifier=logistic_regression, n_jobs=1, verbose=5, tmp_dir=tmp_dir
+        local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
     )
     return hierarchical_classifier
 

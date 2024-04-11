@@ -13,9 +13,9 @@ datasets:
 #    - sp_rdp_its.100
 
 penalty:
-#    - l1
+    - l1
     - l2
-#    - elasticnet
+    - elasticnet
 #    - None
 
 solver:
