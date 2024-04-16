@@ -13,7 +13,6 @@ rule train_hitac_filter_standalone:
         "results/logs/{dataset}_{penalty}_{solver}_train_hitac_filter_standalone.txt"
     shell:
         """
-        timeout 24h \
         hitac-fit-filter \
             --reference {input.reference} \
             --kmer 6 \
@@ -42,7 +41,6 @@ rule classify_hitac_filter_standalone:
         "results/logs/{dataset}_{penalty}_{solver}_classify_hitac_filter_standalone.txt"
     shell:
         """
-        timeout 1h \
         hitac-filter \
             --filter {input.filter} \
             --reads {input.query} \

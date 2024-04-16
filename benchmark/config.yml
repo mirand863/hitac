@@ -23,7 +23,7 @@ solver:
 #    - liblinear
     - newton-cg
 #    - newton-cholesky
-    - sag
+#    - sag
     - saga
 
 scripts:
