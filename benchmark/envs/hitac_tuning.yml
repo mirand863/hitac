@@ -6,3 +6,4 @@ dependencies:
   - pip
   - pip:
       - -e /home/fabio/Desktop/hitac_speed
+      - scikit-learn-intelex

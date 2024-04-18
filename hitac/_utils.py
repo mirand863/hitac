@@ -3,15 +3,17 @@
 import concurrent.futures
 import itertools
 import logging
-from itertools import product
-from multiprocessing import cpu_count
-
 import numpy as np
 from hiclass import LocalClassifierPerParentNode
+from itertools import product
+from multiprocessing import cpu_count
 from sklearn.linear_model import LogisticRegression
+from sklearnex import patch_sklearn
 from typing import List, TextIO
 
 from hitac.filter import Filter
+
+patch_sklearn()
 
 
 # Create logger
