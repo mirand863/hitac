@@ -9,7 +9,4 @@ RUN apt-get update -y && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get install python3.9 python3.9-distutils snakemake curl -y && \
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3.9 get-pip.py && \
-    pip install --extra-index-url=https://pypi.nvidia.com cuml-cu12==24.4.* && \
-    pip install . --ignore-installed --no-deps -vv && \
-    pip install hiclass
+    python3.9 get-pip.py
