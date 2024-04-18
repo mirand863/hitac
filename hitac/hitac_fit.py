@@ -70,12 +70,6 @@ def parse_args(args: list) -> Namespace:
         required=True,
         help="Model penalty",
     )
-    parser.add_argument(
-        "--solver",
-        type=str,
-        required=True,
-        help="Model solver",
-    )
     return parser.parse_args(args)
 
 
