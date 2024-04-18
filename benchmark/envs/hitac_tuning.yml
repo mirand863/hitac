@@ -5,5 +5,4 @@ dependencies:
   - python=3.8
   - pip
   - pip:
-      - -e /home/fabio/Desktop/hitac_speed
-      - scikit-learn-intelex
+      - -e /hpi/fs00/scratch/fabio.malchermiranda/hitac_cuml

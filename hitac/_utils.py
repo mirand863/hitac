@@ -7,13 +7,10 @@ import numpy as np
 from hiclass import LocalClassifierPerParentNode
 from itertools import product
 from multiprocessing import cpu_count
-from sklearn.linear_model import LogisticRegression
-from sklearnex import patch_sklearn
+from cuml.linear_model import LogisticRegression
 from typing import List, TextIO
 
 from hitac.filter import Filter
-
-patch_sklearn()
 
 
 # Create logger
@@ -434,15 +431,12 @@ def get_logistic_regression(penalty, solver, threads) -> LogisticRegression:
         The logistic regression classifier
     """
     logistic_regression = LogisticRegression(
-        multi_class="auto",
         class_weight="balanced",
         max_iter=200,
         verbose=1,
-        n_jobs=threads,
         penalty=penalty,
-        solver=solver,
+        solver="qn",
         tol=0.001,
-        # l1_ratio=0.5,
     )
     return logistic_regression
 

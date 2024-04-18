@@ -1,6 +1,10 @@
-workdir: /home/fabio/Desktop/hitac_speed/benchmark
+workdir: /hpi/fs00/scratch/fabio.malchermiranda/hitac_cuml/benchmark
 
-threads: 8
+slurm:
+  gpu_partition: sorcery
+  memory_increments_gb: 10  # increment memory allocation if task fails
+
+threads: 12
 
 benchmark:
     repeat: 1
@@ -13,18 +17,10 @@ datasets:
 #    - sp_rdp_its.100
 
 penalty:
-#    - l1
+    - l1
     - l2
-#    - elasticnet
-#    - None
-
-solver:
-    - lbfgs
-#    - liblinear
-    - newton-cg
-#    - newton-cholesky
-#    - sag
-    - saga
+    - elasticnet
+    - None
 
 scripts:
     - fasta_utax2_to_blca.py
