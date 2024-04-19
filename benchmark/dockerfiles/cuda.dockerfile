@@ -13,6 +13,7 @@ RUN apt-get update -y && \
     /root/miniforge-pypy3/bin/conda create \
         -c conda-forge -c bioconda -n snakemake \
         snakemake=5.32.2 -y && \
+    /root/miniforge-pypy3/bin/conda config --set channel_priority flexible && \
     echo "conda activate snakemake" >> ~/.bashrc && \
     apt-get update && \
     apt-get install -y \
