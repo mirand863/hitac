@@ -9,4 +9,4 @@ dependencies:
   - cuda-version=11.2
   - pip
   - pip:
-      - -e /hpi/fs00/scratch/fabio.malchermiranda/hitac_cuml
+      - -e ..
