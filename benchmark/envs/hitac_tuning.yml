@@ -9,4 +9,4 @@ dependencies:
   - cuda-version=11.2
   - pip
   - pip:
-      - -e /hitac/benchmark
+      - -e /hitac_cuml
