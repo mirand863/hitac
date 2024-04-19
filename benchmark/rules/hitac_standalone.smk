@@ -37,7 +37,7 @@ rule classify_hitac_standalone:
         query = "data/test/{dataset}.fasta",
         classifier = "results/temp/{dataset}/{penalty}/hitac_standalone/classifier.pkl"
     output:
-        predictions = "results/predictions/{dataset}/{penalty}hitac_standalone.tsv"
+        predictions = "results/predictions/{dataset}/{penalty}/hitac_standalone.tsv"
     benchmark:
         repeat("results/benchmark/{dataset}/{penalty}/classify/hitac_standalone.tsv",config["benchmark"]["repeat"])
     threads:
