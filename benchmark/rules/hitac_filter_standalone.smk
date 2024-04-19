@@ -27,7 +27,7 @@ rule train_hitac_filter_standalone:
 rule classify_hitac_filter_standalone:
     input:
         query = "data/test/{dataset}.fasta",
-        unfiltered_predictions = "results/predictions/{dataset}/{penalty}hitac_standalone.tsv",
+        unfiltered_predictions = "results/predictions/{dataset}/{penalty}/hitac_standalone.tsv",
         filter = "results/temp/{dataset}/{penalty}/hitac_filter_standalone/classifier.pkl"
     output:
         filtered_predictions = "results/predictions/{dataset}/{penalty}/hitac_filter_standalone.tsv"
