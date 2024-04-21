@@ -8,7 +8,7 @@ ARG GO=https://dl.google.com/go/go1.21.9.linux-amd64.tar.gz
 SHELL ["/usr/bin/bash", "-c"]
 
 RUN apt-get update -y && \
-    apt-get install wget -y && \
+    apt-get install wget build-essential -y && \
     wget $MINIFORGE && \
     bash Miniforge-pypy3-Linux-x86_64.sh -b && \
     /root/miniforge-pypy3/bin/conda init && \
@@ -35,8 +35,7 @@ RUN apt-get update -y && \
 #        squashfs-tools-ng \
 #        uidmap \
 #        wget \
-#        zlib1g-dev \
-#        build-essential && \
+#        zlib1g-dev && \
 #    wget -O /tmp/go.tar.gz $GO && \
 #    tar -C /usr/local -xzf /tmp/go.tar.gz && \
 #    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc && \
