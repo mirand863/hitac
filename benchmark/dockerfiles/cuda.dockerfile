@@ -5,6 +5,8 @@ ARG MINIFORGE=https://github.com/conda-forge/miniforge/releases/latest/download/
 ARG SINGULARITY=https://github.com/sylabs/singularity.git
 ARG GO=https://dl.google.com/go/go1.21.9.linux-amd64.tar.gz
 
+SHELL ["/bin/bash", "-c"]
+
 RUN apt-get update -y && \
     apt-get install wget -y && \
     wget $MINIFORGE && \
