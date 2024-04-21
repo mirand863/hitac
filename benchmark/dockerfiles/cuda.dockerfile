@@ -5,7 +5,7 @@ ARG MINIFORGE=https://github.com/conda-forge/miniforge/releases/latest/download/
 ARG SINGULARITY=https://github.com/sylabs/singularity.git
 ARG GO=https://dl.google.com/go/go1.21.9.linux-amd64.tar.gz
 
-SHELL ["/bin/bash", "-c"]
+SHELL ["/usr/bin/bash", "-c"]
 
 RUN apt-get update -y && \
     apt-get install wget -y && \
@@ -15,8 +15,8 @@ RUN apt-get update -y && \
     /root/miniforge-pypy3/bin/conda create \
         -c conda-forge -c bioconda -n snakemake \
         snakemake=5.32.2 -y && \
-    /root/miniforge-pypy3/bin/conda config --set channel_priority flexible && \
-    echo "conda activate snakemake" >> ~/.bashrc
+    /root/miniforge-pypy3/bin/conda config --set channel_priority flexible
+#    echo "conda activate snakemake" >> ~/.bashrc
 #    apt-get update && \
 #    apt-get install -y \
 #        autoconf \
