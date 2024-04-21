@@ -421,7 +421,7 @@ def save_tsv(output: TextIO, ids: List[str], taxonomy: List[str]) -> None:
         output.write("\n")
 
 
-def get_logistic_regression(penalty, solver, threads) -> LogisticRegression:
+def get_logistic_regression(penalty, threads) -> LogisticRegression:
     """
     Build a logistic regression classifier.
 
@@ -442,7 +442,7 @@ def get_logistic_regression(penalty, solver, threads) -> LogisticRegression:
 
 
 def get_hierarchical_classifier(
-    threads: int, penalty, solver, tmp_dir: str = None
+    threads: int, penalty, tmp_dir: str = None
 ) -> LocalClassifierPerParentNode:
     """
     Build the hierarchical classifier.
@@ -460,14 +460,14 @@ def get_hierarchical_classifier(
     hierarchical_classifier : LocalClassifierPerParentNode
         The hierarchical classifier.
     """
-    logistic_regression = get_logistic_regression(penalty=penalty, solver=solver, threads=threads)
+    logistic_regression = get_logistic_regression(penalty=penalty, threads=threads)
     hierarchical_classifier = LocalClassifierPerParentNode(
         local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
     )
     return hierarchical_classifier
 
 
-def get_hierarchical_filter(threads: int, penalty, solver, tmp_dir: str = None) -> Filter:
+def get_hierarchical_filter(threads: int, penalty, tmp_dir: str = None) -> Filter:
     """
     Build the hierarchical filter.
 
@@ -484,7 +484,7 @@ def get_hierarchical_filter(threads: int, penalty, solver, tmp_dir: str = None) 
     hierarchical_filter : Filter
         The hierarchical filter.
     """
-    logistic_regression = get_logistic_regression(penalty=penalty, solver=solver, threads=threads)
+    logistic_regression = get_logistic_regression(penalty=penalty, threads=threads)
     hierarchical_filter = Filter(
         local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
     )
