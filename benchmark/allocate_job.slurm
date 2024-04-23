@@ -11,8 +11,7 @@
 #SBATCH --container-writable
 ###SBATCH --constraint="GPU_SKU:A100&GPU_MEM:80GB"
 
-eval "$(conda shell.bash hook)"
-conda activate snakemake
+root/miniforge-pypy3/bin/conda activate snakemake
 cd /hitac_cuml/benchmark
 export PATH=/root/miniforge-pypy3/bin:$PATH
 sed -i "s?workdir.*?workdir: `pwd`?" config.yml
