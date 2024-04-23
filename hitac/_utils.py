@@ -431,13 +431,16 @@ def get_logistic_regression(penalty, threads) -> LogisticRegression:
     logistic_regression : LogisticRegression
         The logistic regression classifier
     """
-    logistic_regression = LogisticRegression(
-        class_weight="balanced",
-        max_iter=200,
-        verbose=1,
-        penalty=penalty,
-        solver="qn",
-        tol=0.001,
+    logistic_regression = MulticlassClassifier(
+        LogisticRegression(
+            class_weight="balanced",
+            max_iter=200,
+            verbose=1,
+            penalty=penalty,
+            solver="qn",
+            tol=0.001,
+        ),
+        strategy="ovr"
     )
     return logistic_regression
 
