@@ -10,3 +10,4 @@ dependencies:
   - pip
   - pip:
       - -e /hitac_cuml
+      - git+https://github.com/scikit-learn-contrib/hiclass.git@refs/pull/121/head
