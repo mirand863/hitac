@@ -9,8 +9,6 @@ rule train_hitac_filter_standalone:
         config["threads"]
     conda:
         "../envs/hitac_tuning.yml"
-    log:
-        "results/logs/{dataset}_{penalty}_train_hitac_filter_standalone.txt"
     shell:
         """
         timeout 48h \
@@ -19,8 +17,7 @@ rule train_hitac_filter_standalone:
             --kmer 6 \
             --threads {threads} \
             --penalty {wildcards.penalty} \
-            --filter {output.filter} \
-            > {log} 2>&1
+            --filter {output.filter}
         """
 
 
@@ -37,8 +34,6 @@ rule classify_hitac_filter_standalone:
         config["threads"]
     conda:
         "../envs/hitac_tuning.yml"
-    log:
-        "results/logs/{dataset}_{penalty}_classify_hitac_filter_standalone.txt"
     shell:
         """
         hitac-filter \
@@ -48,6 +43,5 @@ rule classify_hitac_filter_standalone:
             --threshold 0.7 \
             --kmer 6 \
             --threads {threads} \
-            --filtered-classification {output.filtered_predictions} \
-            > {log} 2>&1
+            --filtered-classification {output.filtered_predictions}
         """
