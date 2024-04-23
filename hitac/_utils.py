@@ -166,7 +166,7 @@ def compute_frequencies(
     concurrent.futures.wait(futures)
     frequencies = [f.result() for f in futures]
     frequencies = list(itertools.chain(*frequencies))
-    frequencies = np.array(frequencies, dtype=float64)
+    frequencies = np.array(frequencies, dtype=np.float64)
     logger.info(frequencies)
     return frequencies
 
