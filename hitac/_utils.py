@@ -166,7 +166,9 @@ def compute_frequencies(
     concurrent.futures.wait(futures)
     frequencies = [f.result() for f in futures]
     frequencies = list(itertools.chain(*frequencies))
-    return np.array(frequencies)
+    frequencies = np.array(frequencies, dtype=float64)
+    logger.info(frequencies)
+    return frequencies
 
 
 def extract_qiime2_ranks(taxonomy: str) -> np.array:
