@@ -167,7 +167,6 @@ def compute_frequencies(
     frequencies = [f.result() for f in futures]
     frequencies = list(itertools.chain(*frequencies))
     frequencies = np.array(frequencies, dtype=np.float64)
-    logger.info(frequencies)
     return frequencies
 
 
