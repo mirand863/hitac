@@ -20,9 +20,7 @@ local:  ## Run pipeline without slurm
 
 .PHONY: delab
 delab:  ## Run pipeline on delab with slurm
-	-sed -i "s?workdir.*?workdir: `pwd`?" config.yml
-	-rm -rf slurm*.out
-	-sbatch -J hitac allocate_job.slurm
+	-sbatch -J cuml allocate_job.slurm
 
 .PHONY: clean
 clean:  ## delete temporary files from Snakemake

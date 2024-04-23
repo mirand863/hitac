@@ -2,7 +2,7 @@ workdir: /hpi/fs00/scratch/fabio.malchermiranda/hitac_cuml/benchmark
 
 slurm:
   gpu_partition: sorcery
-  memory_increments_gb: 10  # increment memory allocation if task fails
+  memory_increments_gb: 20  # increment memory allocation if task fails
 
 threads: 12
 
