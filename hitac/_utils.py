@@ -4,14 +4,14 @@ import concurrent.futures
 import itertools
 import logging
 import numpy as np
-from hiclass import LocalClassifierPerParentNode
+from cuml.linear_model import LogisticRegression
+from cuml.multiclass import MulticlassClassifier
 from itertools import product
 from multiprocessing import cpu_count
-from cuml.linear_model import LogisticRegression
 from typing import List, TextIO
 
+from hiclass import LocalClassifierPerParentNode
 from hitac.filter import Filter
-
 
 # Create logger
 logger = logging.getLogger("HiTaC")
