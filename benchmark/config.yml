@@ -20,7 +20,7 @@ penalty:
     - l1
     - l2
     - elasticnet
-    - None
+    - none
 
 scripts:
     - fasta_utax2_to_blca.py
