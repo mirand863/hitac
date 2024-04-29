@@ -13,7 +13,6 @@ rule train_hitac_filter_standalone:
         "results/logs/{dataset}_{penalty}_{solver}_train_hitac_filter_standalone.txt"
     shell:
         """
-        timeout 48h \
         hitac-fit-filter \
             --reference {input.reference} \
             --kmer 6 \
