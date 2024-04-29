@@ -5,5 +5,5 @@ dependencies:
   - python=3.8
   - pip
   - pip:
-      - -e /home/fabio/Desktop/hitac_speed
+      - -e /hitac_tuning
       - scikit-learn-intelex
