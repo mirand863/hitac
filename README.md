@@ -320,8 +320,9 @@ In order to speed up the process for users, we provide pre-trained models on the
 - [Pre-trained QIIME2 models for HiTaC (UNITE only fungi)](https://zenodo.org/records/10813018)
 - [Pre-trained QIIME2 models for HiTaC_Filter (UNITE all eukaryotes)]()
 - [Pre-trained QIIME2 models for HiTaC_Filter (UNITE only fungi)]()
-- [Pre-trained standalone models for HiTaC (UNITE all eukaryotes)]()
-- [Pre-trained standalone models for HiTaC (UNITE only fungi)]()
+- [Pre-trained standalone models for HiTaC (UNITE eukaryotes global)](https://zenodo.org/records/11520628)
+- [Pre-trained standalone models for HiTaC (UNITE eukaryotes refs)](https://zenodo.org/records/11520913)
+- [Pre-trained standalone models for HiTaC (UNITE only fungi)](https://zenodo.org/records/11521140)
 - [Pre-trained standalone models for HiTaC_Filter (UNITE all eukaryotes)]()
 - [Pre-trained standalone models for HiTaC_Filter (UNITE only fungi)]()
 
