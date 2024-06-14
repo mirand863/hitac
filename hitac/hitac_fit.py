@@ -64,6 +64,12 @@ def parse_args(args: list) -> Namespace:
         required=True,
         help="Path to store trained hierarchical classifier",
     )
+    parser.add_argument(
+        "--penalty",
+        type=str,
+        required=True,
+        help="Model penalty",
+    )
     return parser.parse_args(args)
 
 
@@ -73,7 +79,7 @@ def main():  # pragma: no cover
     kmers = compute_possible_kmers(args.kmer)
     training_sequences, y_train = load_fasta(fasta_path=args.reference, reference=True)
     x_train = compute_frequencies(training_sequences, kmers, args.threads)
-    hierarchical_classifier = get_hierarchical_classifier(args.threads, args.tmp_dir)
+    hierarchical_classifier = get_hierarchical_classifier(args.threads, args.penalty, args.tmp_dir)
     hierarchical_classifier.fit(x_train, y_train)
     pickle.dump(hierarchical_classifier, open(args.classifier, "wb"))
 

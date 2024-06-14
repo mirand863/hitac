@@ -3,16 +3,15 @@
 import concurrent.futures
 import itertools
 import logging
+import numpy as np
+from cuml.linear_model import LogisticRegression
+from cuml.multiclass import MulticlassClassifier
 from itertools import product
 from multiprocessing import cpu_count
-
-import numpy as np
-from hiclass import LocalClassifierPerParentNode
-from sklearn.linear_model import LogisticRegression
 from typing import List, TextIO
 
+from hiclass import LocalClassifierPerParentNode
 from hitac.filter import Filter
-
 
 # Create logger
 logger = logging.getLogger("HiTaC")
@@ -167,7 +166,8 @@ def compute_frequencies(
     concurrent.futures.wait(futures)
     frequencies = [f.result() for f in futures]
     frequencies = list(itertools.chain(*frequencies))
-    return np.array(frequencies)
+    frequencies = np.array(frequencies, dtype=np.float64)
+    return frequencies
 
 
 def extract_qiime2_ranks(taxonomy: str) -> np.array:
@@ -422,7 +422,7 @@ def save_tsv(output: TextIO, ids: List[str], taxonomy: List[str]) -> None:
         output.write("\n")
 
 
-def get_logistic_regression() -> LogisticRegression:
+def get_logistic_regression(penalty, threads) -> LogisticRegression:
     """
     Build a logistic regression classifier.
 
@@ -431,19 +431,22 @@ def get_logistic_regression() -> LogisticRegression:
     logistic_regression : LogisticRegression
         The logistic regression classifier
     """
-    logistic_regression = LogisticRegression(
-        solver="liblinear",
-        multi_class="auto",
-        class_weight="balanced",
-        max_iter=10000,
-        verbose=0,
-        n_jobs=1,
+    logistic_regression = MulticlassClassifier(
+        LogisticRegression(
+            class_weight="balanced",
+            max_iter=200,
+            verbose=1,
+            penalty=penalty,
+            solver="qn",
+            tol=0.001,
+        ),
+        strategy="ovr"
     )
     return logistic_regression
 
 
 def get_hierarchical_classifier(
-    threads: int, tmp_dir: str = None
+    threads: int, penalty, tmp_dir: str = None
 ) -> LocalClassifierPerParentNode:
     """
     Build the hierarchical classifier.
@@ -461,14 +464,14 @@ def get_hierarchical_classifier(
     hierarchical_classifier : LocalClassifierPerParentNode
         The hierarchical classifier.
     """
-    logistic_regression = get_logistic_regression()
+    logistic_regression = get_logistic_regression(penalty=penalty, threads=threads)
     hierarchical_classifier = LocalClassifierPerParentNode(
         local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
     )
     return hierarchical_classifier
 
 
-def get_hierarchical_filter(threads: int, tmp_dir: str = None) -> Filter:
+def get_hierarchical_filter(threads: int, penalty, tmp_dir: str = None) -> Filter:
     """
     Build the hierarchical filter.
 
@@ -485,7 +488,7 @@ def get_hierarchical_filter(threads: int, tmp_dir: str = None) -> Filter:
     hierarchical_filter : Filter
         The hierarchical filter.
     """
-    logistic_regression = get_logistic_regression()
+    logistic_regression = get_logistic_regression(penalty=penalty, threads=threads)
     hierarchical_filter = Filter(
         local_classifier=logistic_regression, n_jobs=threads, verbose=5, tmp_dir=tmp_dir
     )
