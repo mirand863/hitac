@@ -25,6 +25,7 @@ rule train_hitac_qiime:
         export PYTHONUNBUFFERED=1
 
         ulimit -m {resources.mem_kb}
+        ulimit -v {resources.mem_kb}
 
         mkdir -p {params.tmp_dir}
 

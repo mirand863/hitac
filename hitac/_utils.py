@@ -3,16 +3,17 @@
 import concurrent.futures
 import itertools
 import logging
+import pickle
 from itertools import product
 from multiprocessing import cpu_count
+from os.path import exists
+from typing import List, TextIO
 
 import numpy as np
 from hiclass import LocalClassifierPerParentNode
 from sklearn.linear_model import LogisticRegression
-from typing import List, TextIO
 
 from hitac.filter import Filter
-
 
 # Create logger
 logger = logging.getLogger("HiTaC")
@@ -136,7 +137,11 @@ def compute_group_frequency(sequences_and_kmers: tuple) -> np.array:
 
 
 def compute_frequencies(
-    sequences: list, kmers: list, threads: int = cpu_count(), batch_size: int = 100
+    sequences: list,
+    kmers: list,
+    threads: int = cpu_count(),
+    tmp_dir: str = None,
+    batch_size: int = 100,
 ) -> np.array:
     """
     Compute k-mer frequency for all sequences.
@@ -149,14 +154,25 @@ def compute_frequencies(
         List containing all possible k-mers.
     threads : int, default='all CPUs'
         Number of threads to compute in parallel.
+    tmp_dir : str, default=None
+        The temporary directory to store results.
     batch_size : int, default=100
         Size of each batch to run in parallel.
 
     Returns
     -------
-    frequencies : np.array
+    frequencies : np.ndarray
         Numpy array containing frequencies for all sequences.
     """
+    filename = f"{tmp_dir}/kmer-frequencies.sav"
+    if tmp_dir:
+        if exists(filename):
+            try:
+                (_, frequencies) = pickle.load(open(filename, "rb"))
+                logger.info(f"Loaded k-mer frequencies from file {filename}")
+                return frequencies
+            except (pickle.UnpicklingError, EOFError):
+                logger.error(f"Could not load frequencies from file {filename}")
     logger.info("Computing k-mer frequency")
     sequences = [s.decode("utf-8") for s in sequences]
     executor = concurrent.futures.ProcessPoolExecutor(threads)
@@ -166,8 +182,12 @@ def compute_frequencies(
     ]
     concurrent.futures.wait(futures)
     frequencies = [f.result() for f in futures]
-    frequencies = list(itertools.chain(*frequencies))
-    return np.array(frequencies)
+    frequencies = np.array(list(itertools.chain(*frequencies)))
+    if tmp_dir:
+        with open(filename, "wb") as file:
+            pickle.dump(("kmer-frequencies", frequencies), file)
+            logger.info(f"Stored k-mer frequencies in file {filename}")
+    return frequencies
 
 
 def extract_qiime2_ranks(taxonomy: str) -> np.array:
@@ -436,7 +456,7 @@ def get_logistic_regression() -> LogisticRegression:
         multi_class="auto",
         class_weight="balanced",
         max_iter=10000,
-        verbose=0,
+        verbose=5,
         n_jobs=1,
     )
     return logistic_regression
