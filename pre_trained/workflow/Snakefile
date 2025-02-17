@@ -24,10 +24,10 @@ def aggregate(wildcards):
     checkpoints.extract_unite.get(dataset=wildcards.dataset)
     filesnames = glob_wildcards(f"results/data/unite/{wildcards.dataset}/developer/sh_refs_qiime_{{filename}}.fasta").filename
     for filename in filesnames:
-        files.append(f"results/hitac_standalone/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.pkl")
-        files.append(f"results/hitac_filter_standalone/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.pkl")
+        # files.append(f"results/hitac_standalone/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.pkl")
+        # files.append(f"results/hitac_filter_standalone/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.pkl")
         files.append(f"results/hitac_qiime/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.qza")
-        files.append(f"results/hitac_filter_qiime/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.qza")
+        # files.append(f"results/hitac_filter_qiime/unite/{wildcards.dataset}/developer/sh_refs_qiime_{filename}.qza")
     return files
 
 
