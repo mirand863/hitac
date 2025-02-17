@@ -19,7 +19,7 @@ rule train_hitac_qiime:
     benchmark:
         "results/hitac_qiime/unite/{dataset}/developer/sh_refs_qiime_{filename}.tsv"
     conda:
-        "../envs/qiime2_2023.2.yml"
+        "../envs/qiime2_2024.10.yml"
     shell:
         """
         export PYTHONUNBUFFERED=1
