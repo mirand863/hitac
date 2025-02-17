@@ -155,7 +155,6 @@ dependencies:
 - harfbuzz=8.5.0
 - hdf5=1.14.3
 - hdmedians=0.14.2
-- hitac=2.2.2
 - hmmer=3.4
 - htslib=1.21
 - humanize=4.11.0
@@ -755,3 +754,5 @@ dependencies:
 - zlib-ng=2.2.2
 - zstandard=0.23.0
 - zstd=1.5.6
+- pip:
+  - hitac==2.2.2

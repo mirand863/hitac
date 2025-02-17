@@ -4,7 +4,7 @@ rule import_taxonomy_unite:
     output:
         qza = "results/imported_qiime2/unite/{dataset}/developer/sh_taxonomy_qiime_{filename}.qza"
     conda:
-        "../envs/qiime2_2023.2.yml"
+        "../envs/qiime2_2024.10.yml"
     shell:
         """
         qiime tools import \
