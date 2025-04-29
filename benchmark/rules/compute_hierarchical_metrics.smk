@@ -1,9 +1,9 @@
 rule compute_hierarchical_metrics:
     input:
         scripts = expand("scripts/{script}",script=config["scripts"]),
-        predictions = "results/predictions/{dataset}/{method}.tsv"
+        predictions = "results/predictions/{dataset}/{penalty}/{solver}/{method}.tsv"
     output:
-        metrics = "results/hierarchical_metrics/{method}/{dataset}.tsv"
+        metrics = "results/hierarchical_metrics/{method}/{dataset}/{penalty}/{solver}.tsv"
     container:
         config["containers"]["hierarchical_metrics"]
     shell:

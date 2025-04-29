@@ -1,9 +1,9 @@
 rule compute_ml_metrics:
     input:
         scripts = expand("scripts/{script}",script=config["scripts"]),
-        predictions = "results/predictions/{dataset}/{method}.tsv"
+        predictions = "results/predictions/{dataset}/{penalty}/{method}.tsv"
     output:
-        metrics = "results/ml_metrics/{method}/{dataset}/{rank}.tsv"
+        metrics = "results/ml_metrics/{method}/{dataset}/{penalty}/{rank}.tsv"
     container:
         config["containers"]["metrics"]
     shell:

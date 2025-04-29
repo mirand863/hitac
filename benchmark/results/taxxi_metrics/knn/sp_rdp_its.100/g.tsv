@@ -1,5 +1,0 @@
-sp_rdp_its	fl	100	TPR	knn	g	57.6
-sp_rdp_its	fl	100	UCR	knn	g	42.4
-sp_rdp_its	fl	100	MCR	knn	g	0.0
-sp_rdp_its	fl	100	OCR	knn	g	.
-sp_rdp_its	fl	100	Acc	knn	g	57.6

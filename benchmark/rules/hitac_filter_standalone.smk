@@ -2,19 +2,21 @@ rule train_hitac_filter_standalone:
     input:
         reference = "data/train/{dataset}.fasta"
     output:
-        filter = temp("results/temp/{dataset}/hitac_filter_standalone/classifier.pkl")
+        filter = temp("results/temp/{dataset}/{penalty}/hitac_filter_standalone/classifier.pkl")
     benchmark:
-        repeat("results/benchmark/{dataset}/train/hitac_filter_standalone.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/{penalty}/train/hitac_filter_standalone.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
-    container:
-        config["containers"]["hitac_standalone"]
+    conda:
+        "../envs/hitac_tuning.yml"
     shell:
         """
+        timeout 48h \
         hitac-fit-filter \
             --reference {input.reference} \
             --kmer 6 \
             --threads {threads} \
+            --penalty {wildcards.penalty} \
             --filter {output.filter}
         """
 
@@ -22,16 +24,16 @@ rule train_hitac_filter_standalone:
 rule classify_hitac_filter_standalone:
     input:
         query = "data/test/{dataset}.fasta",
-        unfiltered_predictions = "results/predictions/{dataset}/hitac_standalone.tsv",
-        filter = "results/temp/{dataset}/hitac_filter_standalone/classifier.pkl"
+        unfiltered_predictions = "results/predictions/{dataset}/{penalty}/hitac_standalone.tsv",
+        filter = "results/temp/{dataset}/{penalty}/hitac_filter_standalone/classifier.pkl"
     output:
-        filtered_predictions = "results/predictions/{dataset}/hitac_filter_standalone.tsv"
+        filtered_predictions = "results/predictions/{dataset}/{penalty}/hitac_filter_standalone.tsv"
     benchmark:
-        repeat("results/benchmark/{dataset}/classify/hitac_filter_standalone.tsv",config["benchmark"]["repeat"])
+        repeat("results/benchmark/{dataset}/{penalty}/classify/hitac_filter_standalone.tsv",config["benchmark"]["repeat"])
     threads:
         config["threads"]
-    container:
-        config["containers"]["hitac_standalone"]
+    conda:
+        "../envs/hitac_tuning.yml"
     shell:
         """
         hitac-filter \

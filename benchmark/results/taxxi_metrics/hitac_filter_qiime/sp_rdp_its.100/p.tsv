@@ -1,5 +1,0 @@
-sp_rdp_its	fl	100	TPR	hitac_filter_qiime	p	100.0
-sp_rdp_its	fl	100	UCR	hitac_filter_qiime	p	0.0
-sp_rdp_its	fl	100	MCR	hitac_filter_qiime	p	0.0
-sp_rdp_its	fl	100	OCR	hitac_filter_qiime	p	.
-sp_rdp_its	fl	100	Acc	hitac_filter_qiime	p	100.0
